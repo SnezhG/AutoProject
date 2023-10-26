@@ -41,10 +41,10 @@ builder.Services.AddAuthentication(auth =>
     {
         ValidateIssuer = true,
         ValidateAudience = true,
-        ValidAudience = "MuAudience",
-        ValidIssuer = "MyIssuer",
+        ValidAudience = "SomeAudience",
+        ValidIssuer = "SomeIssuer",
         RequireExpirationTime = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("StanGIdle")),
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("Stan(G)I-dle")),
         ValidateIssuerSigningKey = true
     };
 });
