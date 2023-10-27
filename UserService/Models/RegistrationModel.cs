@@ -11,5 +11,7 @@ namespace UserService.Models
         public string Password { get; set; }
         [Required]
         public string ConfirmPassword { get; set; }
+
+        public string? AutoUserRole { get ; set; }
     }
 }

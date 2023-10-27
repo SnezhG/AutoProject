@@ -40,13 +40,22 @@ namespace UserService.Services
             var identityUser = new IdentityUser
             {
                 Email = model.Email,
-                UserName = model.Email
+                UserName = model.Email,
             };
 
             var result = await _userManager.CreateAsync(identityUser, model.Password);
 
             if (result.Succeeded)
             {
+                if (model.AutoUserRole == null)
+                {
+                    await _userManager.AddToRoleAsync(identityUser, "Client");
+                }
+                else 
+                {
+                    await _userManager.AddToRoleAsync(identityUser, model.AutoUserRole);
+                }
+                
                 return new UserManagerResponce
                 {
                     Message = "User created!",
