@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using UserService.Models;
 using UserService.Services;
 
@@ -21,19 +22,33 @@ namespace UserService.Controllers
             _roleManager = roleManager;
         }
 
-        [HttpGet]
+
+/*        [HttpPost("CreateRole")]
+        public async Task<IActionResult> CreateRole()
+        {
+            var roleName = new IdentityRole { Name = "dispatcher" };
+            var result = await _roleManager.CreateAsync(roleName);
+
+            if (result.Succeeded)
+            {
+                return Ok("Role created successfully");
+            }
+
+            return BadRequest("Something went wrong");
+        }*/
+
+        [HttpGet("GetEmployees")]
         public async Task<IActionResult> GetEmloyees() 
         {
-            var admins = await _userManager.GetUsersInRoleAsync("Administrator");
-
-            var dispatchers = await _userManager.GetUsersInRoleAsync("Dispather");
-
+            var admins = await _userManager.GetUsersInRoleAsync("admin");
+            var dispatchers = await _userManager.GetUsersInRoleAsync("dispatcher");
             var users = admins.Concat(dispatchers);
+
             return Ok(users);
 
         }
 
-        [HttpPost]
+        [HttpPut("ChangeUserRole")]
         public async Task<IActionResult> ChangeUserRole(int id) 
         {
             var user = await _userManager.FindByIdAsync(id.ToString());
@@ -60,7 +75,7 @@ namespace UserService.Controllers
             return BadRequest("Failed to delete user");
         }
 
-        [HttpPost]
+        [HttpPost("CreateUser")]
         public async Task<IActionResult> CreateUser([FromBody] RegistrationModel model) 
         {
             if (ModelState.IsValid)

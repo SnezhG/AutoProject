@@ -1,4 +1,5 @@
 using AutoService.Data;
+using AutoService.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +18,9 @@ builder.Services.AddDbContext<AutoContext>(
         Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.34-mysql"));
     }
 );
+
+builder.Services.AddHostedService<BookingCheckService>();
+
 
 var app = builder.Build();
 

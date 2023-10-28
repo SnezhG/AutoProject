@@ -49,7 +49,7 @@ namespace UserService.Services
             {
                 if (model.AutoUserRole == null)
                 {
-                    await _userManager.AddToRoleAsync(identityUser, "Client");
+                    await _userManager.AddToRoleAsync(identityUser, "client");
                 }
                 else 
                 {

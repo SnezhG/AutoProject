@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AutoService.Data;
 using AutoService.Models;
+using AutoService.ViewModels;
 
 namespace AutoService.Controllers
 {
@@ -30,6 +31,22 @@ namespace AutoService.Controllers
               return NotFound();
           }
             return await _context.Trips.ToListAsync();
+        }
+
+        [HttpGet("FindTrips")]
+        public async Task<ActionResult> FindTrips([FromBody] TripViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var tripsFiltered = await _context.Trips.Where(trip =>
+                    trip.DepTime == model.DepDate && 
+                    trip.Route.DepCity == model.DepCity &&
+                    trip.Route.ArrCity == model.ArrCity).ToListAsync();
+
+                return Ok(tripsFiltered);
+            }
+
+            return NotFound("Cant find trips");
         }
 
         // GET: api/Trips/5

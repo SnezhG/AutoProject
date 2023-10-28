@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AutoService.Data;
 using AutoService.Models;
+using AutoService.ViewModels;
 
 namespace AutoService.Controllers
 {
@@ -21,6 +22,8 @@ namespace AutoService.Controllers
             _context = context;
         }
 
+
+        
         // GET: api/Tickets
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Ticket>>> GetTickets()
@@ -82,8 +85,8 @@ namespace AutoService.Controllers
         }
 
         // POST: api/Tickets
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
+        //Создание билета
+/*        [HttpPost]
         public async Task<ActionResult<Ticket>> PostTicket(Ticket ticket)
         {
           if (_context.Tickets == null)
@@ -92,6 +95,92 @@ namespace AutoService.Controllers
           }
             _context.Tickets.Add(ticket);
             await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetTicket", new { id = ticket.TicketId }, ticket);
+        }*/
+
+        [HttpPost("BookTicket")]
+        public async Task<ActionResult> BookTicket([FromBody]TicketViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+
+                var passenger = new Passenger
+                {
+                    Surname = model.LastName,
+                    Name = model.Name,
+                    Patronimyc = model.Patronymic,
+                    Sex = model.Sex,
+                    DateOfBirth = model.DateOfBirth,
+                    PassportNum = model.PassNum,
+                    PassportSeries = model.PassSeries
+                };
+
+                var seatToBook = await _context.Seats.FindAsync(model.Seat);
+
+                if (seatToBook == null)
+                    return NotFound("Seat is not found");
+
+                seatToBook.Available = false;
+                _context.Seats.Update(seatToBook);
+
+                var tripToBook = await _context.Trips.FindAsync(model.Trip);
+
+                if (tripToBook == null)
+                    return NotFound("Trip is not found");
+
+                var ticketToBook = new Ticket
+                {
+                    DateTime = DateTime.Now,
+                    Status = "Забронирован",
+                    Passenger = passenger,
+                    Seat = seatToBook,
+                    Trip = tripToBook
+                };
+
+                await _context.Tickets.AddAsync(ticketToBook);
+                await _context.SaveChangesAsync();
+
+                return Ok("Ticket created");
+            }
+
+            return BadRequest("Some properties are incorrect");
+        }
+
+        [HttpPost("BuyTicket")]
+        public async Task<ActionResult<Ticket>> BuyTicket(Ticket ticket)
+        {
+            if (_context.Tickets == null)
+            {
+                return Problem("Entity set 'AutoContext.Tickets'  is null.");
+            }
+
+            ticket.DateTime = DateTime.Now;
+            ticket.Status = "Оплачен";
+            _context.Tickets.Add(ticket);
+            await _context.SaveChangesAsync();
+
+            var seat = await _context.Seats.FindAsync(ticket.SeatId);
+            seat.Available = false;
+            _context.Seats.Update(seat);
+
+            return CreatedAtAction("GetTicket", new { id = ticket.TicketId }, ticket);
+        }
+
+        [HttpPut("CancelBooking")]
+        public async Task<ActionResult<Ticket>> CancelBooking(Ticket ticket)
+        {
+            if (_context.Tickets == null)
+            {
+                return Problem("Entity set 'AutoContext.Tickets'  is null.");
+            }
+            ticket.Status = "Бронирование отменено";
+            _context.Tickets.Update(ticket);
+            await _context.SaveChangesAsync();
+
+            var seat = await _context.Seats.FindAsync(ticket.SeatId);
+            seat.Available = true;
+            _context.Seats.Update(seat);
 
             return CreatedAtAction("GetTicket", new { id = ticket.TicketId }, ticket);
         }
