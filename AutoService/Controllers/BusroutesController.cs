@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AutoService.Data;
 using AutoService.Models;
+using AutoService.ViewModels;
 
 namespace AutoService.Controllers
 {
@@ -21,7 +22,6 @@ namespace AutoService.Controllers
             _context = context;
         }
 
-        // GET: api/Busroutes
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Busroute>>> GetBusroutes()
         {
@@ -32,7 +32,6 @@ namespace AutoService.Controllers
             return await _context.Busroutes.ToListAsync();
         }
 
-        // GET: api/Busroutes/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Busroute>> GetBusroute(int id)
         {
@@ -50,75 +49,56 @@ namespace AutoService.Controllers
             return busroute;
         }
 
-        // PUT: api/Busroutes/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutBusroute(int id, Busroute busroute)
+        public async Task<IActionResult> PutBusroute(int id, [FromBody] BusRouteViewModel model)
         {
-            if (id != busroute.RouteId)
-            {
-                return BadRequest();
-            }
+            var routeToEdit = await _context.Busroutes.FindAsync(id);
 
-            _context.Entry(busroute).State = EntityState.Modified;
+            if (routeToEdit == null)
+                return NotFound("Cannot find the route");
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!BusrouteExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            routeToEdit.ArrCity = model.ArrCity;
+            routeToEdit.DepCity = model.DepCity;
 
-            return NoContent();
-        }
 
-        // POST: api/Busroutes
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Busroute>> PostBusroute(Busroute busroute)
-        {
-          if (_context.Busroutes == null)
-          {
-              return Problem("Entity set 'AutoContext.Busroutes'  is null.");
-          }
-            _context.Busroutes.Add(busroute);
+            _context.Busroutes.Update(routeToEdit);
+
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetBusroute", new { id = busroute.RouteId }, busroute);
+            return Ok("Route info updated successfuly");
         }
 
-        // DELETE: api/Busroutes/5
+        [HttpPost]
+        public async Task<ActionResult> PostBusroute([FromBody] BusRouteViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var routeToCreate = new Busroute
+                {
+                    ArrCity = model.ArrCity,
+                    DepCity = model.DepCity
+                };
+
+                _context.Busroutes.Add(routeToCreate);
+                await _context.SaveChangesAsync();
+
+                return Ok("Route created successfully");
+            };
+
+            return BadRequest("Route properties are incorrect");
+        }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBusroute(int id)
         {
-            if (_context.Busroutes == null)
-            {
-                return NotFound();
-            }
-            var busroute = await _context.Busroutes.FindAsync(id);
-            if (busroute == null)
-            {
-                return NotFound();
-            }
+            var routeToDelete = await _context.Busroutes.FindAsync(id);
+            if (routeToDelete == null)
+                return NotFound("Route not found");
 
-            _context.Busroutes.Remove(busroute);
+            _context.Busroutes.Remove(routeToDelete);
             await _context.SaveChangesAsync();
 
-            return NoContent();
-        }
-
-        private bool BusrouteExists(int id)
-        {
-            return (_context.Busroutes?.Any(e => e.RouteId == id)).GetValueOrDefault();
+            return Ok("Route deleted successfuly");
         }
     }
 }

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AutoService.Data;
 using AutoService.Models;
+using AutoService.ViewModels;
 
 namespace AutoService.Controllers
 {
@@ -21,7 +22,7 @@ namespace AutoService.Controllers
             _context = context;
         }
 
-        // GET: api/Buses
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Bus>>> GetBuses()
         {
@@ -32,7 +33,7 @@ namespace AutoService.Controllers
             return await _context.Buses.ToListAsync();
         }
 
-        // GET: api/Buses/5
+
         [HttpGet("{id}")]
         public async Task<ActionResult<Bus>> GetBus(int id)
         {
@@ -50,75 +51,60 @@ namespace AutoService.Controllers
             return bus;
         }
 
-        // PUT: api/Buses/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutBus(int id, Bus bus)
+        public async Task<IActionResult> PutBus(int id, [FromBody] BusViewModel model)
         {
-            if (id != bus.BusId)
-            {
-                return BadRequest();
-            }
+            var busToEdit = await _context.Buses.FindAsync(id);
 
-            _context.Entry(bus).State = EntityState.Modified;
+            if (busToEdit == null)
+                return NotFound("Cannot find the bus");
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!BusExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            busToEdit.SeatCapacity = model.SeatCap;
+            busToEdit.Available = model.Avail;
+            busToEdit.Model = model.Model;
+            busToEdit.Specs = model.Specs;
 
-            return NoContent();
-        }
+            _context.Buses.Update(busToEdit);
 
-        // POST: api/Buses
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Bus>> PostBus(Bus bus)
-        {
-          if (_context.Buses == null)
-          {
-              return Problem("Entity set 'AutoContext.Buses'  is null.");
-          }
-            _context.Buses.Add(bus);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetBus", new { id = bus.BusId }, bus);
+            return Ok("Bus info updated successfuly");
         }
 
-        // DELETE: api/Buses/5
+
+        [HttpPost]
+        public async Task<ActionResult> PostBus([FromBody] BusViewModel model)
+        {
+          if (ModelState.IsValid)
+          {
+                var busToCreate = new Bus
+                {
+                    SeatCapacity = model.SeatCap,
+                    Model = model.Model,
+                    Specs = model.Specs,
+                    Available = model.Avail
+                };
+
+                _context.Buses.Add(busToCreate);
+                await _context.SaveChangesAsync();
+
+                return Ok("Bus created successfully");
+          };
+            
+            return BadRequest("Some properties are incorrect");
+        }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBus(int id)
         {
-            if (_context.Buses == null)
-            {
-                return NotFound();
-            }
             var bus = await _context.Buses.FindAsync(id);
             if (bus == null)
-            {
-                return NotFound();
-            }
+                return NotFound("Bus not found");
 
             _context.Buses.Remove(bus);
             await _context.SaveChangesAsync();
 
-            return NoContent();
-        }
-
-        private bool BusExists(int id)
-        {
-            return (_context.Buses?.Any(e => e.BusId == id)).GetValueOrDefault();
+            return Ok("Bus deleted successfuly");
         }
     }
 }

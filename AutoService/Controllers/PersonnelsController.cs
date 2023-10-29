@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AutoService.Data;
 using AutoService.Models;
+using AutoService.ViewModels;
 
 namespace AutoService.Controllers
 {
@@ -21,7 +22,6 @@ namespace AutoService.Controllers
             _context = context;
         }
 
-        // GET: api/Personnels
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Personnel>>> GetPersonnel()
         {
@@ -32,7 +32,6 @@ namespace AutoService.Controllers
             return await _context.Personnel.ToListAsync();
         }
 
-        // GET: api/Personnels/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Personnel>> GetPersonnel(int id)
         {
@@ -50,75 +49,63 @@ namespace AutoService.Controllers
             return personnel;
         }
 
-        // PUT: api/Personnels/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPersonnel(int id, Personnel personnel)
+        public async Task<IActionResult> PutPersonnel(int id, [FromBody] PersonnelViewModel model)
         {
-            if (id != personnel.PersonnelId)
-            {
-                return BadRequest();
-            }
+            var persToEdit = await _context.Personnel.FindAsync(id);
 
-            _context.Entry(personnel).State = EntityState.Modified;
+            if (persToEdit == null)
+                return NotFound("Cannot find person");
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PersonnelExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            persToEdit.Surname = model.Surname;
+            persToEdit.Name = model.Name;
+            persToEdit.Patronimyc = model.Patr;
+            persToEdit.Post = model.Post;
+            persToEdit.Experience = model.Exp;
+            persToEdit.Available = model.Avail;
 
-            return NoContent();
-        }
+            _context.Personnel.Update(persToEdit);
 
-        // POST: api/Personnels
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Personnel>> PostPersonnel(Personnel personnel)
-        {
-          if (_context.Personnel == null)
-          {
-              return Problem("Entity set 'AutoContext.Personnel'  is null.");
-          }
-            _context.Personnel.Add(personnel);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetPersonnel", new { id = personnel.PersonnelId }, personnel);
+            return Ok("Persons info updated successfuly");
         }
 
-        // DELETE: api/Personnels/5
+        [HttpPost]
+        public async Task<ActionResult> PostPersonnel([FromBody] PersonnelViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var persToCreate = new Personnel
+                {
+                    Surname = model.Surname,
+                    Name = model.Name,
+                    Patronimyc = model.Patr,
+                    Post = model.Post,
+                    Experience = model.Exp,
+                    Available = model.Avail
+                };
+
+                _context.Personnel.Add(persToCreate);
+                await _context.SaveChangesAsync();
+
+                return Ok("Personnel created successfully");
+            };
+
+            return BadRequest("Some properties are incorrect");
+        }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePersonnel(int id)
         {
-            if (_context.Personnel == null)
-            {
-                return NotFound();
-            }
-            var personnel = await _context.Personnel.FindAsync(id);
-            if (personnel == null)
-            {
-                return NotFound();
-            }
+            var persToDelete = await _context.Personnel.FindAsync(id);
+            if (persToDelete == null)
+                return NotFound("Personnel not found");
 
-            _context.Personnel.Remove(personnel);
+            _context.Personnel.Remove(persToDelete);
             await _context.SaveChangesAsync();
 
-            return NoContent();
-        }
-
-        private bool PersonnelExists(int id)
-        {
-            return (_context.Personnel?.Any(e => e.PersonnelId == id)).GetValueOrDefault();
+            return Ok("Bus deleted successfuly");
         }
     }
 }
