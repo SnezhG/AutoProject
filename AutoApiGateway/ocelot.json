@@ -50,7 +50,7 @@
     },
     {
       "UpstreamPathTemplate": "/api/Busroutes",
-      "UpstreamHttpMethod": [ "Get", "Post", "Put" ],
+      "UpstreamHttpMethod": [ "Get", "Post" ],
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -62,7 +62,7 @@
     },
     {
       "UpstreamPathTemplate": "/api/Busroutes/{id}",
-      "UpstreamHttpMethod": [ "Get", "Delete" ],
+      "UpstreamHttpMethod": [ "Get", "Delete", "Put" ],
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -74,7 +74,7 @@
     },
     {
       "UpstreamPathTemplate": "/api/Buses",
-      "UpstreamHttpMethod": [ "Get", "Post", "Put" ],
+      "UpstreamHttpMethod": [ "Get", "Post" ],
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -86,7 +86,7 @@
     },
     {
       "UpstreamPathTemplate": "/api/Buses/{id}",
-      "UpstreamHttpMethod": [ "Get", "Delete" ],
+      "UpstreamHttpMethod": [ "Get", "Delete", "Put" ],
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -97,32 +97,8 @@
       "DownstreamPathTemplate": "/api/Buses/{id}"
     },
     {
-      "UpstreamPathTemplate": "/api/Passengers",
-      "UpstreamHttpMethod": [ "Get", "Post", "Put" ],
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 7089
-        }
-      ],
-      "DownstreamPathTemplate": "/api/Passengers"
-    },
-    {
-      "UpstreamPathTemplate": "/api/Passengers/{id}",
-      "UpstreamHttpMethod": [ "Get", "Delete" ],
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 7089
-        }
-      ],
-      "DownstreamPathTemplate": "/api/Passengers/{id}"
-    },
-    {
       "UpstreamPathTemplate": "/api/Personnels",
-      "UpstreamHttpMethod": [ "Get", "Post", "Put" ],
+      "UpstreamHttpMethod": [ "Get", "Post" ],
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -134,7 +110,7 @@
     },
     {
       "UpstreamPathTemplate": "/api/Personnels/{id}",
-      "UpstreamHttpMethod": [ "Get", "Delete" ],
+      "UpstreamHttpMethod": [ "Get", "Delete", "Put" ],
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -145,56 +121,8 @@
       "DownstreamPathTemplate": "/api/Personnels/{id}"
     },
     {
-      "UpstreamPathTemplate": "/api/Seats",
-      "UpstreamHttpMethod": [ "Get", "Post", "Put" ],
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 7089
-        }
-      ],
-      "DownstreamPathTemplate": "/api/Seats"
-    },
-    {
-      "UpstreamPathTemplate": "/api/Seats/{id}",
-      "UpstreamHttpMethod": [ "Get", "Delete" ],
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 7089
-        }
-      ],
-      "DownstreamPathTemplate": "/api/Seats/{id}"
-    },
-    {
-      "UpstreamPathTemplate": "/api/Tickets",
-      "UpstreamHttpMethod": [ "Get", "Post", "Put" ],
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 7089
-        }
-      ],
-      "DownstreamPathTemplate": "/api/Tickets"
-    },
-    {
-      "UpstreamPathTemplate": "/api/Tickets/{id}",
-      "UpstreamHttpMethod": [ "Get", "Delete" ],
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 7089
-        }
-      ],
-      "DownstreamPathTemplate": "/api/Tickets/{id}"
-    },
-    {
       "UpstreamPathTemplate": "/api/Trips",
-      "UpstreamHttpMethod": [ "Get", "Post", "Put" ],
+      "UpstreamHttpMethod": [ "Get", "Post" ],
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -206,7 +134,7 @@
     },
     {
       "UpstreamPathTemplate": "/api/Trips/{id}",
-      "UpstreamHttpMethod": [ "Get", "Delete" ],
+      "UpstreamHttpMethod": [ "Get", "Put" ],
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {

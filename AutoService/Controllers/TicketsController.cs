@@ -22,9 +22,6 @@ namespace AutoService.Controllers
             _context = context;
         }
 
-
-        
-        // GET: api/Tickets
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Ticket>>> GetTickets()
         {
@@ -35,7 +32,6 @@ namespace AutoService.Controllers
             return await _context.Tickets.ToListAsync();
         }
 
-        // GET: api/Tickets/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Ticket>> GetTicket(int id)
         {
@@ -53,54 +49,9 @@ namespace AutoService.Controllers
             return ticket;
         }
 
-        // PUT: api/Tickets/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutTicket(int id, Ticket ticket)
-        {
-            if (id != ticket.TicketId)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(ticket).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TicketExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/Tickets
-        //Создание билета
-/*        [HttpPost]
-        public async Task<ActionResult<Ticket>> PostTicket(Ticket ticket)
-        {
-          if (_context.Tickets == null)
-          {
-              return Problem("Entity set 'AutoContext.Tickets'  is null.");
-          }
-            _context.Tickets.Add(ticket);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetTicket", new { id = ticket.TicketId }, ticket);
-        }*/
 
         [HttpPost("BookTicket")]
-        public async Task<ActionResult> BookTicket([FromBody]TicketViewModel model)
+        public async Task<IActionResult> BookTicket([FromBody]TicketViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -157,7 +108,7 @@ namespace AutoService.Controllers
         }
 
         [HttpPost("BuyTicket")]
-        public async Task<ActionResult> BuyTicket([FromBody] TicketViewModel model)
+        public async Task<IActionResult> BuyTicket([FromBody] TicketViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -198,7 +149,7 @@ namespace AutoService.Controllers
                 var ticketToBook = new Ticket
                 {
                     DateTime = DateTime.Now,
-                    Status = "Забронирован",
+                    Status = "Оплачен",
                     Passenger = passenger,
                     SeatId = model.Seat,
                     TripId = model.Trip
@@ -214,7 +165,7 @@ namespace AutoService.Controllers
         }
 
         [HttpPut("CancelBooking")]
-        public async Task<ActionResult> CancelBooking(int ticketId)
+        public async Task<IActionResult> CancelBooking(int ticketId)
         {
             var ticketToCancel = await _context.Tickets.FindAsync(ticketId);
 
@@ -232,6 +183,14 @@ namespace AutoService.Controllers
 
             return Ok("Canceling is successful");
         }
+
+        [HttpPut("PayForTicket")]
+        public async Task<IActionResult> PayForTicket() 
+        {
+
+        }
+
+
 
         // DELETE: api/Tickets/5
         [HttpDelete("{id}")]
