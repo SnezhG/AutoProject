@@ -13,7 +13,7 @@ public partial class Ticket
 
     public int? SeatId { get; set; }
 
-    public DateTime? DateTime { get; set; }
+    public DateTime DateTime { get; set; }
 
     public string? Status { get; set; }
 

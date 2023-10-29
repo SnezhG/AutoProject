@@ -18,9 +18,8 @@ builder.Services.AddDbContext<AutoContext>(
         Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.34-mysql"));
     }
 );
-/*
-builder.Services.AddHostedService<BookingCheckService>();
-*/
+
+builder.Services.ScheduleJob();
 
 var app = builder.Build();
 

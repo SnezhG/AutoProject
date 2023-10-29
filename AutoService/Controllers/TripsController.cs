@@ -22,19 +22,9 @@ namespace AutoService.Controllers
             _context = context;
         }
 
-        // GET: api/Trips
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Trip>>> GetTrips()
-        {
-          if (_context.Trips == null)
-          {
-              return NotFound();
-          }
-            return await _context.Trips.ToListAsync();
-        }
 
         [HttpGet("FindTrips")]
-        public async Task<ActionResult> FindTrips([FromBody] TripViewModel model)
+        public async Task<ActionResult> FindTrips([FromBody] FindTripViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -49,7 +39,6 @@ namespace AutoService.Controllers
             return NotFound("Cant find trips");
         }
 
-        // GET: api/Trips/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Trip>> GetTrip(int id)
         {
@@ -67,75 +56,77 @@ namespace AutoService.Controllers
             return trip;
         }
 
-        // PUT: api/Trips/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTrip(int id, Trip trip)
+        public async Task<IActionResult> PutTrip(int id, [FromBody] TripViewModel model)
         {
-            if (id != trip.TripId)
-            {
-                return BadRequest();
-            }
+            var tripToEdit = await _context.Trips.FindAsync(id);
 
-            _context.Entry(trip).State = EntityState.Modified;
+            if (tripToEdit == null)
+                return NotFound("Cannot find the trip");
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TripExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            tripToEdit.DepTime = model.DepTime;
+            tripToEdit.ArrTime = model.ArrTime;
+            tripToEdit.BusId = model.BusId;
+            tripToEdit.RouteId = model.RouteId;
+            tripToEdit.DriverId = model.DriverId;
+            tripToEdit.ConductorId = model.CondId;
+            tripToEdit.Price = model.Price;
 
-            return NoContent();
+            _context.Trips.Update(tripToEdit);
+
+            await _context.SaveChangesAsync();
+
+            return Ok("Trip info updated successfuly");
         }
 
-        // POST: api/Trips
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+
         [HttpPost]
-        public async Task<ActionResult<Trip>> PostTrip(Trip trip)
+        public async Task<ActionResult> PostTrip([FromBody] TripViewModel model)
         {
-          if (_context.Trips == null)
-          {
-              return Problem("Entity set 'AutoContext.Trips'  is null.");
-          }
-            _context.Trips.Add(trip);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetTrip", new { id = trip.TripId }, trip);
-        }
-
-        // DELETE: api/Trips/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTrip(int id)
-        {
-            if (_context.Trips == null)
+            if (ModelState.IsValid)
             {
-                return NotFound();
-            }
-            var trip = await _context.Trips.FindAsync(id);
-            if (trip == null)
-            {
-                return NotFound();
-            }
+                var tripToCreate = new Trip
+                {
+                    DepTime = model.DepTime,
+                    ArrTime = model.ArrTime,
+                    BusId = model.BusId,
+                    RouteId = model.RouteId,
+                    DriverId = model.DriverId,
+                    ConductorId = model.CondId,
+                    Price = model.Price
+                };
 
-            _context.Trips.Remove(trip);
-            await _context.SaveChangesAsync();
+                var bus = await _context.Buses.FindAsync(model.BusId);
 
-            return NoContent();
-        }
+                if (bus == null)
+                    return NotFound("Couldnt find bus");
 
-        private bool TripExists(int id)
-        {
-            return (_context.Trips?.Any(e => e.TripId == id)).GetValueOrDefault();
+                var driver = await _context.Personnel.FindAsync(model.DriverId);
+
+                if (driver == null)
+                    return NotFound("Couldnt find driver");
+
+                var conductor = await _context.Personnel.FindAsync(model.CondId);
+
+                if (conductor == null)
+                    return NotFound("Couldnt find conductor");
+
+                bus.Available = false;
+                driver.Available = false;
+                conductor.Available = false;
+
+                _context.Buses.Update(bus);
+                _context.Personnel.Update(driver);
+                _context.Personnel.Update(conductor);
+
+                _context.Trips.Add(tripToCreate);
+
+                await _context.SaveChangesAsync();
+
+                return Ok("Trip created successfully");
+            };
+
+            return BadRequest("Some properties are incorrect");
         }
     }
 }
