@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using UserService.Models;
 using UserService.Services;
@@ -31,6 +32,13 @@ namespace UserService.Controllers
             }
 
             return BadRequest("Some properties are not valid!");
+        }
+
+        [Authorize(Roles = "client")]
+        [HttpGet]
+        public async Task<IActionResult> Test()
+        {
+            return Ok("Nice");
         }
 
         [HttpPost("Login")]
