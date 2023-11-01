@@ -1,6 +1,9 @@
 using AutoService.Data;
 using AutoService.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +21,7 @@ builder.Services.AddDbContext<AutoContext>(
         Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.34-mysql"));
     }
 );
+
 
 builder.Services.ScheduleJob();
 

@@ -58,7 +58,14 @@
           "Port": 7089
         }
       ],
-      "DownstreamPathTemplate": "/api/Busroutes"
+      "DownstreamPathTemplate": "/api/Busroutes",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": {
+        "Role": "admin"
+      }
     },
     {
       "UpstreamPathTemplate": "/api/Busroutes/{id}",

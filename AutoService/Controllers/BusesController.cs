@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using AutoService.Data;
 using AutoService.Models;
 using AutoService.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AutoService.Controllers
 {
@@ -22,7 +23,7 @@ namespace AutoService.Controllers
             _context = context;
         }
 
-
+        
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Bus>>> GetBuses()
         {

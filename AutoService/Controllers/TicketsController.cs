@@ -187,7 +187,7 @@ namespace AutoService.Controllers
         [HttpPut("PayForTicket")]
         public async Task<IActionResult> PayForTicket() 
         {
-
+            return BadRequest("Not implemented yet");
         }
 
 
