@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using AutoService.Data;
 using AutoService.Models;
 using AutoService.ViewModels;
+using AutoService.Services;
 
 namespace AutoService.Controllers
 {
@@ -15,68 +16,45 @@ namespace AutoService.Controllers
     [ApiController]
     public class TripsController : ControllerBase
     {
-        private readonly AutoContext _context;
+        private readonly TripsService _tripsService;
 
-        public TripsController(AutoContext context)
+        public TripsController(TripsService tripsService)
         {
-            _context = context;
+            _tripsService = tripsService;
         }
 
 
         [HttpGet("FindTrips")]
-        public async Task<ActionResult> FindTrips([FromBody] FindTripViewModel model)
+        public async Task<ActionResult<IEnumerable<Trip>>> FindTrips([FromBody] FindTripViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var tripsFiltered = await _context.Trips.Where(trip =>
-                    trip.DepTime == model.DepDate && 
-                    trip.Route.DepCity == model.DepCity &&
-                    trip.Route.ArrCity == model.ArrCity).ToListAsync();
+                var tripsFiltered = await _tripsService.FindTrips(model);
+                if (tripsFiltered == null)
+                    return NotFound();
 
                 return Ok(tripsFiltered);
             }
 
-            return NotFound("Cant find trips");
+            return BadRequest();
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Trip>> GetTrip(int id)
         {
-          if (_context.Trips == null)
-          {
-              return NotFound();
-          }
-            var trip = await _context.Trips.FindAsync(id);
-
+            var trip = await _tripsService.GetTrip(id);
             if (trip == null)
-            {
                 return NotFound();
-            }
-
-            return trip;
+            return Ok(trip);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> PutTrip(int id, [FromBody] TripViewModel model)
         {
-            var tripToEdit = await _context.Trips.FindAsync(id);
-
-            if (tripToEdit == null)
-                return NotFound("Cannot find the trip");
-
-            tripToEdit.DepTime = model.DepTime;
-            tripToEdit.ArrTime = model.ArrTime;
-            tripToEdit.BusId = model.BusId;
-            tripToEdit.RouteId = model.RouteId;
-            tripToEdit.DriverId = model.DriverId;
-            tripToEdit.ConductorId = model.CondId;
-            tripToEdit.Price = model.Price;
-
-            _context.Trips.Update(tripToEdit);
-
-            await _context.SaveChangesAsync();
-
-            return Ok("Trip info updated successfuly");
+            var result = await _tripsService.PutTrip(id, model);
+            if(result.IsSuccess)
+                return Ok();
+            return NotFound();
         }
 
 
@@ -85,45 +63,10 @@ namespace AutoService.Controllers
         {
             if (ModelState.IsValid)
             {
-                var tripToCreate = new Trip
-                {
-                    DepTime = model.DepTime,
-                    ArrTime = model.ArrTime,
-                    BusId = model.BusId,
-                    RouteId = model.RouteId,
-                    DriverId = model.DriverId,
-                    ConductorId = model.CondId,
-                    Price = model.Price
-                };
-
-                var bus = await _context.Buses.FindAsync(model.BusId);
-
-                if (bus == null)
-                    return NotFound("Couldnt find bus");
-
-                var driver = await _context.Personnel.FindAsync(model.DriverId);
-
-                if (driver == null)
-                    return NotFound("Couldnt find driver");
-
-                var conductor = await _context.Personnel.FindAsync(model.CondId);
-
-                if (conductor == null)
-                    return NotFound("Couldnt find conductor");
-
-                bus.Available = false;
-                driver.Available = false;
-                conductor.Available = false;
-
-                _context.Buses.Update(bus);
-                _context.Personnel.Update(driver);
-                _context.Personnel.Update(conductor);
-
-                _context.Trips.Add(tripToCreate);
-
-                await _context.SaveChangesAsync();
-
-                return Ok("Trip created successfully");
+                var result = await _tripsService.PostTrip(model);
+                if (result.IsSuccess)
+                    return Ok();
+                return NotFound();
             };
 
             return BadRequest("Some properties are incorrect");

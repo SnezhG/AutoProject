@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using AutoService.Data;
 using AutoService.Models;
 using AutoService.ViewModels;
+using AutoService.Services;
 
 namespace AutoService.Controllers
 {
@@ -15,57 +16,40 @@ namespace AutoService.Controllers
     [ApiController]
     public class BusroutesController : ControllerBase
     {
-        private readonly AutoContext _context;
+        private readonly BusRoutesService _busroutesService;
 
-        public BusroutesController(AutoContext context)
+        public BusroutesController(BusRoutesService busRoutesService)
         {
-            _context = context;
+            _busroutesService = busRoutesService;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Busroute>>> GetBusroutes()
         {
-          if (_context.Busroutes == null)
-          {
-              return NotFound();
-          }
-            return await _context.Busroutes.ToListAsync();
+            var routes = await _busroutesService.GetBusroutes();
+            if (routes == null)
+                return NotFound();
+            return Ok(routes);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Busroute>> GetBusroute(int id)
         {
-          if (_context.Busroutes == null)
-          {
-              return NotFound();
-          }
-            var busroute = await _context.Busroutes.FindAsync(id);
-
-            if (busroute == null)
-            {
+            var route = await _busroutesService.GetBusroute(id);
+            if(route == null) 
                 return NotFound();
-            }
-
-            return busroute;
+            return Ok(route);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> PutBusroute(int id, [FromBody] BusRouteViewModel model)
         {
-            var routeToEdit = await _context.Busroutes.FindAsync(id);
+            var result = await _busroutesService.PutBusroute(id, model);
 
-            if (routeToEdit == null)
-                return NotFound("Cannot find the route");
+            if (result.IsSuccess)
+                return Ok();
 
-            routeToEdit.ArrCity = model.ArrCity;
-            routeToEdit.DepCity = model.DepCity;
-
-
-            _context.Busroutes.Update(routeToEdit);
-
-            await _context.SaveChangesAsync();
-
-            return Ok("Route info updated successfuly");
+            return BadRequest();
         }
 
         [HttpPost]
@@ -73,16 +57,10 @@ namespace AutoService.Controllers
         {
             if (ModelState.IsValid)
             {
-                var routeToCreate = new Busroute
-                {
-                    ArrCity = model.ArrCity,
-                    DepCity = model.DepCity
-                };
-
-                _context.Busroutes.Add(routeToCreate);
-                await _context.SaveChangesAsync();
-
-                return Ok("Route created successfully");
+                var result = await _busroutesService.PostBusroute(model);
+                if (result.IsSuccess)
+                    return Ok();
+                return BadRequest();
             };
 
             return BadRequest("Route properties are incorrect");
@@ -91,14 +69,10 @@ namespace AutoService.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBusroute(int id)
         {
-            var routeToDelete = await _context.Busroutes.FindAsync(id);
-            if (routeToDelete == null)
-                return NotFound("Route not found");
-
-            _context.Busroutes.Remove(routeToDelete);
-            await _context.SaveChangesAsync();
-
-            return Ok("Route deleted successfuly");
+            var result = await _busroutesService.DeleteBusroute(id);
+            if (result.IsSuccess)
+                return Ok();
+            return NotFound();
         }
     }
 }

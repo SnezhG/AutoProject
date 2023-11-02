@@ -34,7 +34,14 @@
           "Port": 7069
         }
       ],
-      "DownstreamPathTemplate": "/api/AutoUser"
+      "DownstreamPathTemplate": "/api/AutoUser",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": {
+        "Role": "admin"
+      }
     },
     {
       "UpstreamPathTemplate": "/api/AutoUser/GetEmployees",
@@ -46,7 +53,14 @@
           "Port": 7069
         }
       ],
-      "DownstreamPathTemplate": "/api/AutoUser/GetEmployees"
+      "DownstreamPathTemplate": "/api/AutoUser/GetEmployees",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": {
+        "Role": "admin"
+      }
     },
     {
       "UpstreamPathTemplate": "/api/Busroutes",
@@ -64,7 +78,7 @@
         "AllowedScopes": []
       },
       "RouteClaimsRequirement": {
-        "Role": "admin"
+        "Role": "client"
       }
     },
     {
@@ -77,7 +91,14 @@
           "Port": 7089
         }
       ],
-      "DownstreamPathTemplate": "/api/Busroutes/{id}"
+      "DownstreamPathTemplate": "/api/Busroutes/{id}",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": {
+        "Role": "client"
+      }
     },
     {
       "UpstreamPathTemplate": "/api/Buses",
@@ -89,7 +110,14 @@
           "Port": 7089
         }
       ],
-      "DownstreamPathTemplate": "/api/Buses"
+      "DownstreamPathTemplate": "/api/Buses",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": {
+        "Role": "client"
+      }
     },
     {
       "UpstreamPathTemplate": "/api/Buses/{id}",
@@ -101,7 +129,14 @@
           "Port": 7089
         }
       ],
-      "DownstreamPathTemplate": "/api/Buses/{id}"
+      "DownstreamPathTemplate": "/api/Buses/{id}",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": {
+        "Role": "admin"
+      }
     },
     {
       "UpstreamPathTemplate": "/api/Personnels",
@@ -113,7 +148,14 @@
           "Port": 7089
         }
       ],
-      "DownstreamPathTemplate": "/api/Personnels"
+      "DownstreamPathTemplate": "/api/Personnels",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": {
+        "Role": "admin"
+      }
     },
     {
       "UpstreamPathTemplate": "/api/Personnels/{id}",
@@ -125,7 +167,14 @@
           "Port": 7089
         }
       ],
-      "DownstreamPathTemplate": "/api/Personnels/{id}"
+      "DownstreamPathTemplate": "/api/Personnels/{id}",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": {
+        "Role": "admin"
+      }
     },
     {
       "UpstreamPathTemplate": "/api/Trips",
@@ -137,11 +186,18 @@
           "Port": 7089
         }
       ],
-      "DownstreamPathTemplate": "/api/Trips"
+      "DownstreamPathTemplate": "/api/Trips",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": {
+        "Role": "admin"
+      }
     },
     {
       "UpstreamPathTemplate": "/api/Trips/{id}",
-      "UpstreamHttpMethod": [ "Get", "Put" ],
+      "UpstreamHttpMethod": ["Get"],
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -149,7 +205,14 @@
           "Port": 7089
         }
       ],
-      "DownstreamPathTemplate": "/api/Trips/{id}"
+      "DownstreamPathTemplate": "/api/Trips/{id}",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": {
+        "Role": "admin"
+      }
     }
   ],
   "GlobalConfiguration": {

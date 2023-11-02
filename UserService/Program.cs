@@ -32,24 +32,6 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 }).AddEntityFrameworkStores<AutoUsersContext>()
 .AddDefaultTokenProviders();
 
-builder.Services.AddAuthentication(auth => 
-{
-    auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    auth.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(options => 
-{
-    options.SaveToken = true;
-    options.RequireHttpsMetadata = false;
-    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
-    {
-        ValidateIssuerSigningKey = false,
-        ValidateIssuer = false,
-        ValidateAudience = false,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWTAuth:SecretKey"]))
-    };
-});
-
-
 builder.Services.AddScoped<IUserService, AutoUserService>();
 
 var app = builder.Build();

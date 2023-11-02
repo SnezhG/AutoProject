@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using AutoService.Data;
 using AutoService.Models;
 using AutoService.ViewModels;
+using AutoService.Services;
 
 namespace AutoService.Controllers
 {
@@ -15,38 +16,29 @@ namespace AutoService.Controllers
     [ApiController]
     public class TicketsController : ControllerBase
     {
-        private readonly AutoContext _context;
+        private readonly TicketsService _ticketService;
 
-        public TicketsController(AutoContext context)
+        public TicketsController(TicketsService ticketsService)
         {
-            _context = context;
+            _ticketService = ticketsService;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Ticket>>> GetTickets()
         {
-          if (_context.Tickets == null)
-          {
-              return NotFound();
-          }
-            return await _context.Tickets.ToListAsync();
+            var tickets = await _ticketService.GetTickets();
+            if (tickets == null)
+                return NotFound();
+            return Ok(tickets);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Ticket>> GetTicket(int id)
         {
-          if (_context.Tickets == null)
-          {
-              return NotFound();
-          }
-            var ticket = await _context.Tickets.FindAsync(id);
-
+            var ticket = await _ticketService.GetTicket(id);
             if (ticket == null)
-            {
                 return NotFound();
-            }
-
-            return ticket;
+            return Ok(ticket);
         }
 
 
@@ -55,53 +47,10 @@ namespace AutoService.Controllers
         {
             if (ModelState.IsValid)
             {
-                var checkPassenger = await _context.Passengers.FirstOrDefaultAsync(p =>
-                    p.PassportNum == model.PassNum && p.PassportSeries == model.PassSeries
-                );
-
-                Passenger passenger;
-
-                if (checkPassenger == null)
-                {
-                    passenger = new Passenger
-                    {
-                        Surname = model.LastName,
-                        Name = model.Name,
-                        Patronimyc = model.Patronymic,
-                        Sex = model.Sex,
-                        DateOfBirth = model.DateOfBirth,
-                        PassportNum = model.PassNum,
-                        PassportSeries = model.PassSeries
-                    };
-
-                    await _context.Passengers.AddAsync(passenger);
-                }
-                else 
-                {
-                    passenger = checkPassenger;
-                }
-
-                var seatToBook = await _context.Seats.FindAsync(model.Seat);
-
-                if (seatToBook == null)
-                    return NotFound("Seat is not found");
-
-                seatToBook.Available = false;
-                _context.Seats.Update(seatToBook);
-
-                var ticketToBook = new Ticket
-                {
-                    DateTime = DateTime.Now,
-                    Status = "Забронирован",
-                    Passenger = passenger,
-                    SeatId = model.Seat,
-                    TripId = model.Trip
-                };
-
-                await _context.Tickets.AddAsync(ticketToBook);
-                await _context.SaveChangesAsync();
-
-                return Ok("Ticket created");
+                var result = await _ticketService.BookTicket(model);
+                if (result.IsSuccess)
+                    return Ok();
+                return NotFound();
             }
 
             return BadRequest("Some properties are incorrect");
@@ -112,53 +61,10 @@ namespace AutoService.Controllers
         {
             if (ModelState.IsValid)
             {
-                var checkPassenger = await _context.Passengers.FirstOrDefaultAsync(p =>
-                    p.PassportNum == model.PassNum && p.PassportSeries == model.PassSeries
-                );
-
-                Passenger passenger;
-
-                if (checkPassenger == null)
-                {
-                    passenger = new Passenger
-                    {
-                        Surname = model.LastName,
-                        Name = model.Name,
-                        Patronimyc = model.Patronymic,
-                        Sex = model.Sex,
-                        DateOfBirth = model.DateOfBirth,
-                        PassportNum = model.PassNum,
-                        PassportSeries = model.PassSeries
-                    };
-
-                    await _context.Passengers.AddAsync(passenger);
-                }
-                else
-                {
-                    passenger = checkPassenger;
-                }
-
-                var seatToBook = await _context.Seats.FindAsync(model.Seat);
-
-                if (seatToBook == null)
-                    return NotFound("Seat is not found");
-
-                seatToBook.Available = false;
-                _context.Seats.Update(seatToBook);
-
-                var ticketToBook = new Ticket
-                {
-                    DateTime = DateTime.Now,
-                    Status = "Оплачен",
-                    Passenger = passenger,
-                    SeatId = model.Seat,
-                    TripId = model.Trip
-                };
-
-                await _context.Tickets.AddAsync(ticketToBook);
-                await _context.SaveChangesAsync();
-
-                return Ok("Ticket created");
+                var result = await _ticketService.BookTicket(model);
+                if (result.IsSuccess)
+                    return Ok();
+                return NotFound();
             }
 
             return BadRequest("Some properties are incorrect");
@@ -167,54 +73,28 @@ namespace AutoService.Controllers
         [HttpPut("CancelBooking")]
         public async Task<IActionResult> CancelBooking(int ticketId)
         {
-            var ticketToCancel = await _context.Tickets.FindAsync(ticketId);
-
-            if (ticketToCancel == null)
-                return NotFound("Ticket not found");
-
-            ticketToCancel.Status = "Бронирование отменено";
-            _context.Tickets.Update(ticketToCancel);
-
-            var seat = await _context.Seats.FindAsync(ticketToCancel.SeatId);
-            seat.Available = true;
-            _context.Seats.Update(seat);
-
-            await _context.SaveChangesAsync();
-
-            return Ok("Canceling is successful");
+            var result = await _ticketService.CancelBooking(ticketId);
+            if (result.IsSuccess)
+                return Ok();
+            return NotFound();
         }
 
         [HttpPut("PayForTicket")]
-        public async Task<IActionResult> PayForTicket() 
+        public async Task<IActionResult> PayForTicket(int id) 
         {
-            return BadRequest("Not implemented yet");
+            var result = await _ticketService.PayForTicket(id);
+            if (result.IsSuccess)
+                return Ok();
+            return NotFound();
         }
 
-
-
-        // DELETE: api/Tickets/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTicket(int id)
         {
-            if (_context.Tickets == null)
-            {
-                return NotFound();
-            }
-            var ticket = await _context.Tickets.FindAsync(id);
-            if (ticket == null)
-            {
-                return NotFound();
-            }
-
-            _context.Tickets.Remove(ticket);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool TicketExists(int id)
-        {
-            return (_context.Tickets?.Any(e => e.TicketId == id)).GetValueOrDefault();
+            var result = await _ticketService.DeleteTicket(id);
+            if (result.IsSuccess)
+                return Ok();
+            return NotFound();
         }
     }
 }

@@ -9,6 +9,7 @@ using AutoService.Data;
 using AutoService.Models;
 using AutoService.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using AutoService.Services;
 
 namespace AutoService.Controllers
 {
@@ -16,60 +17,48 @@ namespace AutoService.Controllers
     [ApiController]
     public class BusesController : ControllerBase
     {
-        private readonly AutoContext _context;
+        private readonly BusService _busService;
 
-        public BusesController(AutoContext context)
+        public BusesController(BusService busService)
         {
-            _context = context;
+            _busService = busService;
         }
 
         
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Bus>>> GetBuses()
         {
-          if (_context.Buses == null)
-          {
-              return NotFound();
-          }
-            return await _context.Buses.ToListAsync();
+            var buses = await _busService.GetBusesAsync();
+
+            if (buses == null)
+                return NotFound();
+
+            return Ok(buses);
         }
 
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Bus>> GetBus(int id)
         {
-          if (_context.Buses == null)
-          {
-              return NotFound();
-          }
-            var bus = await _context.Buses.FindAsync(id);
+
+            var bus = await _busService.GetBus(id);
 
             if (bus == null)
-            {
                 return NotFound();
-            }
 
-            return bus;
+            return Ok(bus);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> PutBus(int id, [FromBody] BusViewModel model)
         {
-            var busToEdit = await _context.Buses.FindAsync(id);
 
-            if (busToEdit == null)
-                return NotFound("Cannot find the bus");
+            var result = await _busService.PutBus(id, model);
 
-            busToEdit.SeatCapacity = model.SeatCap;
-            busToEdit.Available = model.Avail;
-            busToEdit.Model = model.Model;
-            busToEdit.Specs = model.Specs;
+            if (result.IsSuccess)
+                return Ok();
 
-            _context.Buses.Update(busToEdit);
-
-            await _context.SaveChangesAsync();
-
-            return Ok("Bus info updated successfuly");
+            return NotFound();
         }
 
 
@@ -78,34 +67,26 @@ namespace AutoService.Controllers
         {
           if (ModelState.IsValid)
           {
-                var busToCreate = new Bus
-                {
-                    SeatCapacity = model.SeatCap,
-                    Model = model.Model,
-                    Specs = model.Specs,
-                    Available = model.Avail
-                };
+                var result = await _busService.PostBus(model);
 
-                _context.Buses.Add(busToCreate);
-                await _context.SaveChangesAsync();
+                if (result.IsSuccess)
+                    return Ok();
 
-                return Ok("Bus created successfully");
+                return BadRequest();
           };
-            
+
             return BadRequest("Some properties are incorrect");
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBus(int id)
         {
-            var bus = await _context.Buses.FindAsync(id);
-            if (bus == null)
-                return NotFound("Bus not found");
+            var result = await _busService.DeleteBus(id);
 
-            _context.Buses.Remove(bus);
-            await _context.SaveChangesAsync();
+            if (result.IsSuccess)
+                return Ok();
 
-            return Ok("Bus deleted successfuly");
+            return NotFound();
         }
     }
 }

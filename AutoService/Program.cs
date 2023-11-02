@@ -1,4 +1,5 @@
 using AutoService.Data;
+using AutoService.ServiceInterfaces;
 using AutoService.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -23,6 +24,11 @@ builder.Services.AddDbContext<AutoContext>(
 );
 
 
+builder.Services.AddScoped<BusService>();
+builder.Services.AddScoped<BusRoutesService>();
+builder.Services.AddScoped<PersonnelsService>();
+builder.Services.AddScoped<TicketsService>();
+builder.Services.AddScoped<TripsService>();
 builder.Services.ScheduleJob();
 
 var app = builder.Build();

@@ -50,15 +50,17 @@ namespace UserService.Services
 
             if (result.Succeeded)
             {
-                if (model.AutoUserRole == null)
+/*                if (model.AutoUserRole == null)
                 {
                     await _userManager.AddToRoleAsync(identityUser, "client");
                 }
                 else 
                 {
                     await _userManager.AddToRoleAsync(identityUser, model.AutoUserRole);
-                }
+                }*/
                 
+                await _userManager.AddToRoleAsync(identityUser, UserRoles.Client);
+
                 return new UserManagerResponce
                 {
                     Message = "User created!",
@@ -73,57 +75,6 @@ namespace UserService.Services
                 Errors = result.Errors.Select(e => e.Description)
             };
         }
-
-
-        /*        public async Task<UserManagerResponce> LoginUserAsync(LoginModel model) 
-                {
-                    var user = await _userManager.FindByEmailAsync(model.Email);
-
-                    if (user == null) 
-                    {
-                        return new UserManagerResponce
-                        {
-                            Message = "User not found!",
-                            IsSuccess = false
-                        };
-                    }
-
-                    var result = await _userManager.CheckPasswordAsync(user, model.Password);
-
-                    if (!result) 
-                    {
-                        return new UserManagerResponce
-                        {
-                            Message = "Invalid password!",
-                            IsSuccess = false
-                        };
-                    }
-
-                    var claims = new[] 
-                    {
-                        new Claim("Email", model.Email),
-                        new Claim(ClaimTypes.NameIdentifier, user.Id)
-                    };
-
-                    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["AuthSettings:Key"]));
-
-                    var token = new JwtSecurityToken(
-                        issuer: _configuration["AuthSettings:Issuer"],
-                        audience: _configuration["AuthSettings:Audience"],
-                        claims: claims,
-                        expires: DateTime.Now.AddDays(30),
-                        signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256)
-                        );
-
-                    string tokenString = new JwtSecurityTokenHandler().WriteToken(token);
-
-                    return new UserManagerResponce
-                    {
-                        Message = tokenString,
-                        IsSuccess = true,
-                        ExpireDate = token.ValidTo
-                    };
-                }*/
 
         public async Task<UserManagerResponce> LoginUserAsync(LoginModel model)
         {

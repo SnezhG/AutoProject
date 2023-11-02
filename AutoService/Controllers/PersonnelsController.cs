@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using AutoService.Data;
 using AutoService.Models;
 using AutoService.ViewModels;
+using AutoService.Services;
 
 namespace AutoService.Controllers
 {
@@ -15,60 +16,38 @@ namespace AutoService.Controllers
     [ApiController]
     public class PersonnelsController : ControllerBase
     {
-        private readonly AutoContext _context;
+        private readonly PersonnelsService _personnelsService;
 
-        public PersonnelsController(AutoContext context)
+        public PersonnelsController(PersonnelsService personnelsService)
         {
-            _context = context;
+            _personnelsService = personnelsService;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Personnel>>> GetPersonnel()
         {
-          if (_context.Personnel == null)
-          {
-              return NotFound();
-          }
-            return await _context.Personnel.ToListAsync();
+            var personnels = await _personnelsService.GetPersonnels();
+            if (personnels == null)
+                return NotFound();
+            return Ok(personnels);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Personnel>> GetPersonnel(int id)
         {
-          if (_context.Personnel == null)
-          {
-              return NotFound();
-          }
-            var personnel = await _context.Personnel.FindAsync(id);
-
+            var personnel = await _personnelsService.GetPersonnel(id);
             if (personnel == null)
-            {
                 return NotFound();
-            }
-
-            return personnel;
+            return Ok(personnel);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPersonnel(int id, [FromBody] PersonnelViewModel model)
         {
-            var persToEdit = await _context.Personnel.FindAsync(id);
-
-            if (persToEdit == null)
-                return NotFound("Cannot find person");
-
-            persToEdit.Surname = model.Surname;
-            persToEdit.Name = model.Name;
-            persToEdit.Patronimyc = model.Patr;
-            persToEdit.Post = model.Post;
-            persToEdit.Experience = model.Exp;
-            persToEdit.Available = model.Avail;
-
-            _context.Personnel.Update(persToEdit);
-
-            await _context.SaveChangesAsync();
-
-            return Ok("Persons info updated successfuly");
+            var result = await _personnelsService.PutPersonnel(id, model);
+            if (result.IsSuccess)
+                return Ok();
+            return BadRequest();
         }
 
         [HttpPost]
@@ -76,20 +55,10 @@ namespace AutoService.Controllers
         {
             if (ModelState.IsValid)
             {
-                var persToCreate = new Personnel
-                {
-                    Surname = model.Surname,
-                    Name = model.Name,
-                    Patronimyc = model.Patr,
-                    Post = model.Post,
-                    Experience = model.Exp,
-                    Available = model.Avail
-                };
-
-                _context.Personnel.Add(persToCreate);
-                await _context.SaveChangesAsync();
-
-                return Ok("Personnel created successfully");
+                var result = await _personnelsService.PostPersonnel(model);
+                if (result.IsSuccess)
+                    return Ok();
+                return BadRequest();
             };
 
             return BadRequest("Some properties are incorrect");
@@ -98,14 +67,10 @@ namespace AutoService.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePersonnel(int id)
         {
-            var persToDelete = await _context.Personnel.FindAsync(id);
-            if (persToDelete == null)
-                return NotFound("Personnel not found");
-
-            _context.Personnel.Remove(persToDelete);
-            await _context.SaveChangesAsync();
-
-            return Ok("Bus deleted successfuly");
+            var result = await _personnelsService.DeletePersonnel(id);
+            if (result.IsSuccess)
+                return Ok();
+            return NotFound();
         }
     }
 }
