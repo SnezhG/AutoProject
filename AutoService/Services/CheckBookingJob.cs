@@ -21,13 +21,13 @@ namespace AutoService.Services
             _logger.LogInformation("job being done {UtcNow}", DateTime.UtcNow);
 
             var ticketsToCheck = await _context.Tickets.Where(ticket =>
-                ticket.Status == "Забронирован").ToListAsync();
+                ticket.Status == "booked").ToListAsync();
 
             foreach(var tick in ticketsToCheck) 
             {
                 if (DateTime.Now > tick.DateTime.AddMinutes(1)) 
                 {
-                    tick.Status = "Бронирование отменено";
+                    tick.Status = "expired";
                     _context.Tickets.Update(tick);
                 }
             }

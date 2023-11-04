@@ -11,7 +11,7 @@ namespace AutoService.ServiceInterfaces
         Task<ServiceResponce> BookTicket(TicketViewModel model);
         Task<ServiceResponce> BuyTicket(TicketViewModel model);
         Task<ServiceResponce> CancelBooking(int ticketId);
+        Task<Ticket> IssueTicket(TicketViewModel model);
         Task<ServiceResponce> PayForTicket(int id);
-        Task<ServiceResponce> DeleteTicket(int id);
     }
 }

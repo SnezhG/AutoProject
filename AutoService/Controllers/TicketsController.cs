@@ -87,14 +87,6 @@ namespace AutoService.Controllers
                 return Ok();
             return NotFound();
         }
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTicket(int id)
-        {
-            var result = await _ticketService.DeleteTicket(id);
-            if (result.IsSuccess)
-                return Ok();
-            return NotFound();
-        }
+        
     }
 }

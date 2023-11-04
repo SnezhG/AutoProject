@@ -38,6 +38,36 @@ namespace AutoService.Services
                     IsSuccess = false
                 };
 
+            if (tripToEdit.Bus.BusId != model.BusId)
+            {
+                var newBus = await _context.Buses.FindAsync(model.BusId);
+                var oldBus = await _context.Buses.FindAsync(tripToEdit.Bus.BusId);
+                oldBus.Available = true;
+                newBus.Available = false;
+                _context.Buses.Update(oldBus);
+                _context.Buses.Update(newBus);
+            }
+            
+            if (tripToEdit.DriverId != model.DriverId)
+            {
+                var newDriver = await _context.Personnel.FindAsync(model.DriverId);
+                var oldDriver = await _context.Personnel.FindAsync(tripToEdit.DriverId);
+                oldDriver.Available = true;
+                newDriver.Available = false;
+                _context.Personnel.Update(oldDriver);
+                _context.Personnel.Update(newDriver);
+            }
+            
+            if (tripToEdit.ConductorId != model.CondId)
+            {
+                var newCond = await _context.Personnel.FindAsync(model.CondId);
+                var oldCond = await _context.Personnel.FindAsync(tripToEdit.ConductorId);
+                oldCond.Available = true;
+                newCond.Available = false;
+                _context.Personnel.Update(oldCond);
+                _context.Personnel.Update(newCond);
+            }
+
             tripToEdit.DepTime = model.DepTime;
             tripToEdit.ArrTime = model.ArrTime;
             tripToEdit.BusId = model.BusId;
@@ -47,12 +77,12 @@ namespace AutoService.Services
             tripToEdit.Price = model.Price;
 
             _context.Trips.Update(tripToEdit);
-
+            
             await _context.SaveChangesAsync();
 
             return new ServiceResponce 
             {
-                IsSuccess = false
+                IsSuccess = true
             };
         }
         public async Task<ServiceResponce> PostTrip(TripViewModel model) 
