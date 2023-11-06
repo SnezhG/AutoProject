@@ -10,9 +10,9 @@ namespace UserService.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private IUserService _userService;
+        private AutoUserAuthService _userService;
 
-        public AuthController(IUserService userService)
+        public AuthController(AutoUserAuthService userService)
         {
             _userService = userService;
         }
@@ -32,13 +32,6 @@ namespace UserService.Controllers
             }
 
             return BadRequest("Some properties are not valid!");
-        }
-
-        [Authorize(Roles = "client")]
-        [HttpGet]
-        public async Task<IActionResult> Test()
-        {
-            return Ok("Nice");
         }
 
         [HttpPost("Login")]

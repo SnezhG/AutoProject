@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using UserService.Models;
+using UserService.ServiceInterfaces;
 using UserService.Services;
 
 namespace UserService.Controllers
@@ -11,68 +12,40 @@ namespace UserService.Controllers
     [ApiController]
     public class AutoUserController : ControllerBase
     {
+        
+        private readonly IAutoUser _autoUserService;
 
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly IUserService _userService;
-
-        public AutoUserController(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
+        public AutoUserController(IAutoUser autoUserService)
         {
-            _userManager = userManager;
-            _roleManager = roleManager;
+            _autoUserService = autoUserService;
         }
-
-
-/*        [HttpPost("CreateRole")]
-        public async Task<IActionResult> CreateRole()
-        {
-            var roleName = new IdentityRole { Name = "dispatcher" };
-            var result = await _roleManager.CreateAsync(roleName);
-
-            if (result.Succeeded)
-            {
-                return Ok("Role created successfully");
-            }
-
-            return BadRequest("Something went wrong");
-        }*/
-
+        
         [HttpGet("GetEmployees")]
-        public async Task<IActionResult> GetEmloyees() 
+        public async Task<ActionResult<IEnumerable<AutoUserViewModel>>> GetEmployees()
         {
-            var admins = await _userManager.GetUsersInRoleAsync("admin");
-            var dispatchers = await _userManager.GetUsersInRoleAsync("dispatcher");
-            var users = admins.Concat(dispatchers);
-
+            var users = await _autoUserService.GetEmployees();
+            if (users == null)
+                return NotFound();
             return Ok(users);
-
         }
 
-        [HttpPut("ChangeUserRole")]
-        public async Task<IActionResult> ChangeUserRole(int id) 
+        [HttpPost("ChangeUserRole")]
+        public async Task<IActionResult> ChangeUserRole([FromBody] ChangeUserRoleModel model)
         {
-            var user = await _userManager.FindByIdAsync(id.ToString());
-
-            if (user == null)
-                return NotFound("User not found");
-
-            return Ok();
+            var result = await _autoUserService.ChangeUserRole(model);
+            if (result.IsSuccess)
+                return Ok();
+            return BadRequest();
         }
 
         [HttpDelete]
         public async Task<IActionResult> DeleteUser(int id) 
         {
-            var user = await _userManager.FindByIdAsync(id.ToString());
+            var result = await _autoUserService.DeleteUser(id);
+            if (result.IsSuccess)
+                return Ok();
+            return BadRequest();
 
-            if (user == null)
-                return NotFound("User not found");
-
-            var result = await _userManager.DeleteAsync(user);
-
-            if (result.Succeeded)
-                return Ok("User deleted successfully");
-
-            return BadRequest("Failed to delete user");
         }
 
         [HttpPost("CreateUser")]
@@ -80,14 +53,10 @@ namespace UserService.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await _userService.RegisterUserAsync(model);
-
-                if (result.IsSuccess) 
-                {
-                    return Ok(result);
-                }
-
-                return BadRequest(result);
+                var result = await _autoUserService.CreateUser(model);
+                if (result.IsSuccess)
+                    return Ok();
+                return BadRequest();
             }
 
             return BadRequest("Some properties are not valid!");

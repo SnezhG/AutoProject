@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using UserService.ServiceInterfaces;
 using UserService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -32,7 +33,8 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 }).AddEntityFrameworkStores<AutoUsersContext>()
 .AddDefaultTokenProviders();
 
-builder.Services.AddScoped<IUserService, AutoUserService>();
+builder.Services.AddScoped<IAutoUser, AutoUserService>();
+builder.Services.AddScoped<IUserService, AutoUserAuthService>();
 
 var app = builder.Build();
 

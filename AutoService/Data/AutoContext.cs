@@ -16,6 +16,8 @@ public partial class AutoContext : DbContext
 
     public virtual DbSet<Busroute> Busroutes { get; set; }
 
+    public virtual DbSet<Clientticket> Clienttickets { get; set; }
+
     public virtual DbSet<Passenger> Passengers { get; set; }
 
     public virtual DbSet<Personnel> Personnel { get; set; }
@@ -62,6 +64,17 @@ public partial class AutoContext : DbContext
             entity.Property(e => e.DepCity)
                 .HasMaxLength(255)
                 .HasColumnName("depCity");
+        });
+
+        modelBuilder.Entity<Clientticket>(entity =>
+        {
+            entity.HasKey(e => e.TempId).HasName("PRIMARY");
+
+            entity.ToTable("clienttickets");
+
+            entity.Property(e => e.TempId).HasColumnName("tempId");
+            entity.Property(e => e.Client).HasColumnName("client");
+            entity.Property(e => e.Ticket).HasColumnName("ticket");
         });
 
         modelBuilder.Entity<Passenger>(entity =>
@@ -154,9 +167,7 @@ public partial class AutoContext : DbContext
                 .HasColumnName("dateTime");
             entity.Property(e => e.PassengerId).HasColumnName("passengerId");
             entity.Property(e => e.SeatId).HasColumnName("seatId");
-            entity.Property(e => e.Status)
-                .HasColumnType("enum('Оплачен','Забронирован','Бронирование истекло','Бронирование отменено')")
-                .HasColumnName("status");
+            entity.Property(e => e.Status).HasColumnType("enum('issued','booked','paid','expired','cancelled')");
             entity.Property(e => e.TripId).HasColumnName("tripId");
 
             entity.HasOne(d => d.Passenger).WithMany(p => p.Tickets)

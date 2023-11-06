@@ -3,6 +3,7 @@ using AutoService.Models;
 using AutoService.ServiceInterfaces;
 using AutoService.ViewModels;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace AutoService.Services
 {
@@ -15,9 +16,19 @@ namespace AutoService.Services
             _context = context;
         }
 
-        public async Task<IEnumerable<Ticket>> GetTickets() 
+        public async Task<IEnumerable<Ticket>> GetTickets(int clientId) 
         {
-            return await _context.Tickets.ToListAsync();
+            var ticketsId = await _context.Clienttickets.Where(t => t.Client == clientId).ToListAsync();
+            if (ticketsId == null)
+                return null;
+
+            var tickets = new List<Ticket>();
+            foreach (var ticketId in ticketsId) 
+            {
+                tickets.Add(await _context.Tickets.FindAsync(ticketId));
+            }
+
+            return tickets;
         }
         public async Task<Ticket> GetTicket(int id) 
         {
@@ -27,9 +38,12 @@ namespace AutoService.Services
         {
             var ticketToBook = await IssueTicket(model);
 
+            ticketToBook.TriggerState(Ticket.Trigger.Book);
+
             ticketToBook.Status = "booked";
             
             await _context.Tickets.AddAsync(ticketToBook);
+
             await _context.SaveChangesAsync();
 
             return new ServiceResponce 
@@ -63,6 +77,7 @@ namespace AutoService.Services
                     IsSuccess = false
                 };
 
+            ticketToCancel.TriggerState(Ticket.Trigger.Cancel);
             ticketToCancel.Status = "canceled";
             _context.Tickets.Update(ticketToCancel);
 
@@ -83,10 +98,11 @@ namespace AutoService.Services
             /*
             ticket.Status = "paid";
 
+            ticket.TriggerState(Ticket.Trigger.Pay);
             _context.Tickets.Update(ticket);
             await _context.SaveChangesAsync();
             */
-            
+
             return new ServiceResponce
             {
                 IsSuccess = true
@@ -137,6 +153,12 @@ namespace AutoService.Services
                 SeatId = model.Seat,
                 TripId = model.Trip
             };
+
+            await _context.Clienttickets.AddAsync(new Clientticket
+            {
+                Client = model.clientId,
+                Ticket = ticketToBook.TicketId
+            });
 
             return ticketToBook;
         }

@@ -24,9 +24,9 @@ namespace AutoService.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Ticket>>> GetTickets()
+        public async Task<ActionResult<IEnumerable<Ticket>>> GetTickets(int clientId)
         {
-            var tickets = await _ticketService.GetTickets();
+            var tickets = await _ticketService.GetTickets(clientId);
             if (tickets == null)
                 return NotFound();
             return Ok(tickets);

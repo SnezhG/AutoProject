@@ -5,6 +5,7 @@ namespace AutoService.ViewModels
 {
     public class TicketViewModel
     {
+        public int clientId { get; set; }
         public string LastName { get; set; }
 
         public string Name { get; set; }
