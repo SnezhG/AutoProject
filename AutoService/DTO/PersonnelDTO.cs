@@ -1,6 +1,6 @@
-﻿namespace AutoService.ViewModels
+﻿namespace AutoService.DTO
 {
-    public class PersonnelViewModel
+    public class PersonnelDTO
     {
         public string Surname { get; set; }
 

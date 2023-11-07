@@ -1,17 +1,17 @@
 ﻿using AutoService.Models;
-using AutoService.ViewModels;
+using AutoService.DTO;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AutoService.ServiceInterfaces
 {
     public interface ITicketsService
     {
-        Task<IEnumerable<Ticket>> GetTickets(string clientId);
+        Task<IEnumerable<Ticket>> GetTickets();
         Task<Ticket> GetTicket(int id);
-        Task<ServiceResponce> BookTicket(TicketViewModel model);
-        Task<ServiceResponce> BuyTicket(TicketViewModel model);
+        Task<ServiceResponce> BookTicket(TicketDTO model);
+        Task<ServiceResponce> BuyTicket(TicketDTO model);
         Task<ServiceResponce> CancelBooking(int ticketId);
-        Task<int> IssueTicket(TicketViewModel model);
+        Task<int> IssueTicket(TicketDTO model);
         Task<ServiceResponce> PayForTicket(int id);
     }
 }

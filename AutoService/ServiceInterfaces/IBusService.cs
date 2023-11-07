@@ -1,5 +1,5 @@
 ﻿using AutoService.Models;
-using AutoService.ViewModels;
+using AutoService.DTO;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AutoService.ServiceInterfaces
@@ -8,8 +8,8 @@ namespace AutoService.ServiceInterfaces
     {
         Task<IEnumerable<Bus>> GetBusesAsync();
         Task<Bus> GetBus(int id);
-        Task<ServiceResponce> PutBus(int id, BusViewModel model);
-        Task<ServiceResponce> PostBus(BusViewModel model);
+        Task<ServiceResponce> PutBus(int id, BusDTO model);
+        Task<ServiceResponce> PostBus(BusDTO model);
         Task<ServiceResponce> DeleteBus(int id);
     }
 }

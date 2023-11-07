@@ -1,15 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using AutoService.Data;
+﻿using Microsoft.AspNetCore.Mvc;
 using AutoService.Models;
 using AutoService.ServiceInterfaces;
-using AutoService.ViewModels;
-using AutoService.Services;
+using AutoService.DTO;
 
 namespace AutoService.Controllers
 {
@@ -26,7 +18,7 @@ namespace AutoService.Controllers
 
 
         [HttpGet("FindTrips")]
-        public async Task<ActionResult<IEnumerable<Trip>>> FindTrips([FromBody] FindTripViewModel model)
+        public async Task<ActionResult<IEnumerable<Trip>>> FindTrips([FromBody] FindTripDTO model)
         {
             if (ModelState.IsValid)
             {
@@ -50,7 +42,7 @@ namespace AutoService.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTrip(int id, [FromBody] TripViewModel model)
+        public async Task<IActionResult> PutTrip(int id, [FromBody] TripDTO model)
         {
             var result = await _tripsService.PutTrip(id, model);
             if(result.IsSuccess)
@@ -60,7 +52,7 @@ namespace AutoService.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult> PostTrip([FromBody] TripViewModel model)
+        public async Task<ActionResult> PostTrip([FromBody] TripDTO model)
         {
             if (ModelState.IsValid)
             {

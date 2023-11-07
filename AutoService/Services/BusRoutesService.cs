@@ -1,7 +1,7 @@
 ﻿using AutoService.Data;
 using AutoService.Models;
 using AutoService.ServiceInterfaces;
-using AutoService.ViewModels;
+using AutoService.DTO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,7 +24,7 @@ namespace AutoService.Services
         {
             return await _context.Busroutes.FindAsync(id);
         }
-        public async Task<ServiceResponce> PutBusroute(int id, BusRouteViewModel model) 
+        public async Task<ServiceResponce> PutBusroute(int id, BusRouteDTO model) 
         {
             var routeToEdit = await _context.Busroutes.FindAsync(id);
 
@@ -47,7 +47,7 @@ namespace AutoService.Services
                 IsSuccess = true
             };
         }
-        public async Task<ServiceResponce> PostBusroute(BusRouteViewModel model) 
+        public async Task<ServiceResponce> PostBusroute(BusRouteDTO model) 
         {
             var routeToCreate = new Busroute
             {

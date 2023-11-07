@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using UserService.Models;
+using UserService.DTO;
 using UserService.Services;
 
 namespace UserService.Controllers
@@ -19,11 +19,11 @@ namespace UserService.Controllers
 
         [HttpPost("Registration")]
 
-        public async Task<IActionResult> RegisterAsync([FromBody] RegistrationModel model)
+        public async Task<IActionResult> RegisterAsync([FromBody] RegistrationDTO dto)
         {
             if (ModelState.IsValid)
             {
-                var result = await _userService.RegisterUserAsync(model);
+                var result = await _userService.RegisterUserAsync(dto);
 
                 if (result.IsSuccess)
                     return Ok(result);
@@ -35,11 +35,11 @@ namespace UserService.Controllers
         }
 
         [HttpPost("Login")]
-        public async Task<IActionResult> LoginAsync([FromBody] LoginModel model) 
+        public async Task<IActionResult> LoginAsync([FromBody] LoginDTO dto) 
         {
             if (ModelState.IsValid) 
             {
-                var result = await _userService.LoginUserAsync(model);
+                var result = await _userService.LoginUserAsync(dto);
 
                 if (result.IsSuccess)
                     return Ok(result);

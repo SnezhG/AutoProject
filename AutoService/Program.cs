@@ -23,7 +23,7 @@ builder.Services.AddDbContext<AutoContext>(
     }
 );
 
-
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IBusService, BusService>();
 builder.Services.AddScoped<IBusRoutesService, BusRoutesService>();
 builder.Services.AddScoped<IPersonnelsService, PersonnelsService>();

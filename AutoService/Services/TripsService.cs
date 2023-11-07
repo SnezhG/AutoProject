@@ -1,7 +1,7 @@
 ﻿using AutoService.Data;
 using AutoService.Models;
 using AutoService.ServiceInterfaces;
-using AutoService.ViewModels;
+using AutoService.DTO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,7 +16,7 @@ namespace AutoService.Services
             _context = context;
         }
 
-        public async Task<IEnumerable<Trip>> FindTrips([FromBody] FindTripViewModel model) 
+        public async Task<IEnumerable<Trip>> FindTrips([FromBody] FindTripDTO model) 
         {
             return await _context.Trips.Where(trip =>
                     trip.DepTime == model.DepDate &&
@@ -28,7 +28,7 @@ namespace AutoService.Services
         {
             return await _context.Trips.FindAsync(id);
         }
-        public async Task<ServiceResponce> PutTrip(int id, TripViewModel model) 
+        public async Task<ServiceResponce> PutTrip(int id, TripDTO model) 
         {
             var tripToEdit = await _context.Trips.FindAsync(id);
 
@@ -85,7 +85,7 @@ namespace AutoService.Services
                 IsSuccess = true
             };
         }
-        public async Task<ServiceResponce> PostTrip(TripViewModel model) 
+        public async Task<ServiceResponce> PostTrip(TripDTO model) 
         {
             var tripToCreate = new Trip
             {

@@ -1,15 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using AutoService.Data;
+﻿using Microsoft.AspNetCore.Mvc;
 using AutoService.Models;
 using AutoService.ServiceInterfaces;
-using AutoService.ViewModels;
-using AutoService.Services;
+using AutoService.DTO;
 
 namespace AutoService.Controllers
 {
@@ -43,7 +35,7 @@ namespace AutoService.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPersonnel(int id, [FromBody] PersonnelViewModel model)
+        public async Task<IActionResult> PutPersonnel(int id, [FromBody] PersonnelDTO model)
         {
             var result = await _personnelsService.PutPersonnel(id, model);
             if (result.IsSuccess)
@@ -52,7 +44,7 @@ namespace AutoService.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> PostPersonnel([FromBody] PersonnelViewModel model)
+        public async Task<ActionResult> PostPersonnel([FromBody] PersonnelDTO model)
         {
             if (ModelState.IsValid)
             {

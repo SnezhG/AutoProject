@@ -1,7 +1,7 @@
 ﻿using AutoService.Data;
 using AutoService.Models;
 using AutoService.ServiceInterfaces;
-using AutoService.ViewModels;
+using AutoService.DTO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,7 +24,7 @@ namespace AutoService.Services
         {
             return await _context.Personnel.FindAsync(id);
         }
-        public async Task<ServiceResponce> PutPersonnel(int id, PersonnelViewModel model) 
+        public async Task<ServiceResponce> PutPersonnel(int id, PersonnelDTO model) 
         {
             var persToEdit = await _context.Personnel.FindAsync(id);
 
@@ -50,7 +50,7 @@ namespace AutoService.Services
                 IsSuccess = true
             };
         }
-        public async Task<ServiceResponce> PostPersonnel(PersonnelViewModel model) 
+        public async Task<ServiceResponce> PostPersonnel(PersonnelDTO model) 
         {
             var persToCreate = new Personnel
             {
@@ -59,7 +59,7 @@ namespace AutoService.Services
                 Patronimyc = model.Patr,
                 Post = model.Post,
                 Experience = model.Exp,
-                Available = model.Avail
+                Available = true
             };
 
             _context.Personnel.Add(persToCreate);

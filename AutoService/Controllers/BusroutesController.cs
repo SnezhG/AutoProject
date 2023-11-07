@@ -1,15 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using AutoService.Data;
+﻿using Microsoft.AspNetCore.Mvc;
 using AutoService.Models;
 using AutoService.ServiceInterfaces;
-using AutoService.ViewModels;
-using AutoService.Services;
+using AutoService.DTO;
 
 namespace AutoService.Controllers
 {
@@ -43,7 +35,7 @@ namespace AutoService.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutBusroute(int id, [FromBody] BusRouteViewModel model)
+        public async Task<IActionResult> PutBusroute(int id, [FromBody] BusRouteDTO model)
         {
             var result = await _busroutesService.PutBusroute(id, model);
 
@@ -54,7 +46,7 @@ namespace AutoService.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> PostBusroute([FromBody] BusRouteViewModel model)
+        public async Task<ActionResult> PostBusroute([FromBody] BusRouteDTO model)
         {
             if (ModelState.IsValid)
             {

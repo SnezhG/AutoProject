@@ -1,10 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
-using UserService.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using UserService.DTO;
 using UserService.ServiceInterfaces;
-using UserService.Services;
 
 namespace UserService.Controllers
 {
@@ -21,7 +17,7 @@ namespace UserService.Controllers
         }
         
         [HttpGet("GetEmployees")]
-        public async Task<ActionResult<IEnumerable<AutoUserViewModel>>> GetEmployees()
+        public async Task<ActionResult<IEnumerable<AutoUserDTO>>> GetEmployees()
         {
             var users = await _autoUserService.GetEmployees();
             if (users == null)
@@ -30,9 +26,9 @@ namespace UserService.Controllers
         }
 
         [HttpPost("ChangeUserRole")]
-        public async Task<IActionResult> ChangeUserRole([FromBody] ChangeUserRoleModel model)
+        public async Task<IActionResult> ChangeUserRole([FromBody] ChangeUserRoleDTO dto)
         {
-            var result = await _autoUserService.ChangeUserRole(model);
+            var result = await _autoUserService.ChangeUserRole(dto);
             if (result.IsSuccess)
                 return Ok();
             return BadRequest();
@@ -49,11 +45,11 @@ namespace UserService.Controllers
         }
 
         [HttpPost("CreateUser")]
-        public async Task<IActionResult> CreateUser([FromBody] RegistrationModel model) 
+        public async Task<IActionResult> CreateUser([FromBody] RegistrationDTO dto) 
         {
             if (ModelState.IsValid)
             {
-                var result = await _autoUserService.CreateUser(model);
+                var result = await _autoUserService.CreateUser(dto);
                 if (result.IsSuccess)
                     return Ok();
                 return BadRequest();

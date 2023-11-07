@@ -1,4 +1,4 @@
-﻿namespace UserService.Models
+﻿namespace UserService.Services
 {
     public class UserManagerResponce
     {

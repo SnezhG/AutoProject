@@ -1,15 +1,15 @@
 ﻿using AutoService.Models;
-using AutoService.ViewModels;
+using AutoService.DTO;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AutoService.ServiceInterfaces
 {
     public interface ITripsService
     {
-        Task<IEnumerable<Trip>> FindTrips(FindTripViewModel model);
+        Task<IEnumerable<Trip>> FindTrips(FindTripDTO model);
         Task<Trip> GetTrip(int id);
-        Task<ServiceResponce> PutTrip(int id, TripViewModel model);
-        Task<ServiceResponce> PostTrip(TripViewModel model);
+        Task<ServiceResponce> PutTrip(int id, TripDTO model);
+        Task<ServiceResponce> PostTrip(TripDTO model);
 
     }
 }

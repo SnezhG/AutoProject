@@ -1,15 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace UserService.Models
+namespace UserService.DTO
 {
-    public class RegistrationModel
+    public class LoginDTO
     {
         [Required]
         [EmailAddress]
         public string Email { get; set; }
+
         [Required]
         public string Password { get; set; }
-        [Required]
-        public string ConfirmPassword { get; set; }
     }
 }

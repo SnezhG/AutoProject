@@ -1,15 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using AutoService.Data;
+﻿using Microsoft.AspNetCore.Mvc;
 using AutoService.Models;
 using AutoService.ServiceInterfaces;
-using AutoService.ViewModels;
-using AutoService.Services;
+using AutoService.DTO;
 
 namespace AutoService.Controllers
 {
@@ -25,9 +17,9 @@ namespace AutoService.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Ticket>>> GetTickets(string clientId)
+        public async Task<ActionResult<IEnumerable<Ticket>>> GetTickets()
         {
-            var tickets = await _ticketService.GetTickets(clientId);
+            var tickets = await _ticketService.GetTickets();
             if (tickets == null)
                 return NotFound();
             return Ok(tickets);
@@ -44,7 +36,7 @@ namespace AutoService.Controllers
 
 
         [HttpPost("BookTicket")]
-        public async Task<IActionResult> BookTicket([FromBody]TicketViewModel model)
+        public async Task<IActionResult> BookTicket([FromBody]TicketDTO model)
         {
             if (ModelState.IsValid)
             {
@@ -58,7 +50,7 @@ namespace AutoService.Controllers
         }
 
         [HttpPost("BuyTicket")]
-        public async Task<IActionResult> BuyTicket([FromBody] TicketViewModel model)
+        public async Task<IActionResult> BuyTicket([FromBody] TicketDTO model)
         {
             if (ModelState.IsValid)
             {

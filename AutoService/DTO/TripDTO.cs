@@ -1,8 +1,8 @@
 ﻿using System.Drawing;
 
-namespace AutoService.ViewModels
+namespace AutoService.DTO
 {
-    public class TripViewModel
+    public class TripDTO
     {
         public int RouteId { get; set; }
         public int BusId { get; set; }

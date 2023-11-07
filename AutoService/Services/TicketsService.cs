@@ -1,23 +1,30 @@
-﻿using AutoService.Data;
+﻿using System.IdentityModel.Tokens.Jwt;
+using AutoService.Data;
 using AutoService.Models;
 using AutoService.ServiceInterfaces;
-using AutoService.ViewModels;
+using AutoService.DTO;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
 
 namespace AutoService.Services
 {
     public class TicketsService : ITicketsService
     {
         private readonly AutoContext _context;
+        private readonly IHttpContextAccessor _httpContext;
+        private readonly IConfiguration _configuration;
 
-        public TicketsService(AutoContext context)
+        public TicketsService(AutoContext context, IHttpContextAccessor httpContext, IConfiguration configuration)
         {
             _context = context;
+            _httpContext = httpContext;
+            _configuration = configuration;
         }
 
-        public async Task<IEnumerable<Ticket>> GetTickets(string clientId) 
+        public async Task<IEnumerable<Ticket>> GetTickets()
         {
+            var clientId = GetClientIdFromToken();
             var ticketsId = await _context.Clienttickets.Where(t => t.Client == clientId).ToListAsync();
             if (ticketsId == null)
                 return null;
@@ -34,7 +41,7 @@ namespace AutoService.Services
         {
             return await _context.Tickets.FindAsync(id);
         }
-        public async Task<ServiceResponce> BookTicket(TicketViewModel model)
+        public async Task<ServiceResponce> BookTicket(TicketDTO model)
         {
             var ticketToBookId = await IssueTicket(model);
             if (ticketToBookId == -1)
@@ -62,7 +69,7 @@ namespace AutoService.Services
                 IsSuccess = true
             };
         }
-        public async Task<ServiceResponce> BuyTicket(TicketViewModel model)
+        public async Task<ServiceResponce> BuyTicket(TicketDTO model)
         {
             var ticketToBuyId = await IssueTicket(model);
             if (ticketToBuyId == -1)
@@ -130,7 +137,7 @@ namespace AutoService.Services
             };
         }
 
-        public async Task<int> IssueTicket(TicketViewModel model)
+        public async Task<int> IssueTicket(TicketDTO model)
         {
             var checkPassenger = await _context.Passengers.FirstOrDefaultAsync(p =>
                 p.PassportNum == model.PassNum && p.PassportSeries == model.PassSeries
@@ -175,15 +182,39 @@ namespace AutoService.Services
             };
 
             await _context.Tickets.AddAsync(newTicket);
-            await _context.SaveChangesAsync();
-            
-            /*await _context.Clienttickets.AddAsync(new Clientticket
+            var clientId = GetClientIdFromToken();
+            if (clientId == null)
+                return -1;
+            await _context.Clienttickets.AddAsync(new Clientticket
             {
-                Client = model.clientId,
+                Client = clientId,
                 Ticket = newTicket.TicketId
-            });*/
+            });
+            await _context.SaveChangesAsync();
             
             return newTicket.TicketId;
         }
+
+        private string GetClientIdFromToken()
+        {
+            var key = Encoding.UTF8.GetBytes(_configuration["JWT:SecretKey"]);
+            var authHeader = _httpContext.HttpContext?.Request.Headers["Authorization"].FirstOrDefault();
+            var token = authHeader.Replace("Bearer ", "");
+            var handler = new JwtSecurityTokenHandler();
+            var validationParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(key),
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                ClockSkew = TimeSpan.Zero
+            };
+            var claimsPrincipal = handler.ValidateToken(token, validationParameters, out var validatedToken);
+            var clientId = claimsPrincipal.Claims.FirstOrDefault(c =>
+                c.Type == "ClientId")?.Value;
+            return clientId;
+        }
+
+
     }
 }

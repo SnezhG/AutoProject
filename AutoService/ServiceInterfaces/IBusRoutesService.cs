@@ -1,5 +1,5 @@
 ﻿using AutoService.Models;
-using AutoService.ViewModels;
+using AutoService.DTO;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AutoService.ServiceInterfaces
@@ -8,8 +8,8 @@ namespace AutoService.ServiceInterfaces
     {
         Task<IEnumerable<Busroute>> GetBusroutes();
         Task<Busroute> GetBusroute(int id);
-        Task<ServiceResponce> PutBusroute(int id, BusRouteViewModel model);
-        Task<ServiceResponce> PostBusroute(BusRouteViewModel model);
+        Task<ServiceResponce> PutBusroute(int id, BusRouteDTO model);
+        Task<ServiceResponce> PostBusroute(BusRouteDTO model);
         Task<ServiceResponce> DeleteBusroute(int id);
 
     }

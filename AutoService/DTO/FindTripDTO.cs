@@ -1,6 +1,6 @@
-﻿namespace AutoService.ViewModels
+﻿namespace AutoService.DTO
 {
-    public class FindTripViewModel
+    public class FindTripDTO
     {
         public string DepCity { get; set; }
 

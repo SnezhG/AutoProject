@@ -1,6 +1,6 @@
-﻿namespace AutoService.ViewModels
+﻿namespace AutoService.DTO
 {
-    public class BusViewModel
+    public class BusDTO
     {
         public sbyte SeatCap {  get; set; }
         public string Model { get; set; }

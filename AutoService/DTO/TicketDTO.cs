@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 
-namespace AutoService.ViewModels
+namespace AutoService.DTO
 {
-    public class TicketViewModel
+    public class TicketDTO
     {
         public int clientId { get; set; }
         public string LastName { get; set; }

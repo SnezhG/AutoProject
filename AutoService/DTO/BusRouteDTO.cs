@@ -1,6 +1,6 @@
-﻿namespace AutoService.ViewModels
+﻿namespace AutoService.DTO
 {
-    public class BusRouteViewModel
+    public class BusRouteDTO
     {
         public string DepCity { get; set; }
         public string ArrCity {  get; set; } 
