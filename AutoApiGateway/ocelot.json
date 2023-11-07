@@ -25,8 +25,8 @@
       "DownstreamPathTemplate": "/api/Auth/Registration"
     },
     {
-      "UpstreamPathTemplate": "/api/AutoUser",
-      "UpstreamHttpMethod": [ "Get", "Post", "Delete", "Put" ],
+      "UpstreamPathTemplate": "/api/AutoUser/GetEmployees",
+      "UpstreamHttpMethod": [ "Get" ],
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -34,7 +34,64 @@
           "Port": 7069
         }
       ],
-      "DownstreamPathTemplate": "/api/AutoUser",
+      "DownstreamPathTemplate": "/api/AutoUser/GetEmployees",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": {
+        "Role": "admin"
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/api/AutoUser/ChangeUserRole",
+      "UpstreamHttpMethod": [ "Post" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7069
+        }
+      ],
+      "DownstreamPathTemplate": "/api/AutoUser/ChangeUserRole",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": {
+        "Role": "admin"
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/api/AutoUser/CreateUser",
+      "UpstreamHttpMethod": [ "Post" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7069
+        }
+      ],
+      "DownstreamPathTemplate": "/api/AutoUser/CreateUser",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": {
+        "Role": "admin"
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/api/AutoUser/{id}",
+      "UpstreamHttpMethod": [ "Delete" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7069
+        }
+      ],
+      "DownstreamPathTemplate": "/api/AutoUser/{id}",
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
@@ -63,8 +120,8 @@
       }
     },
     {
-      "UpstreamPathTemplate": "/api/Busroutes",
-      "UpstreamHttpMethod": [ "Get", "Post" ],
+      "UpstreamPathTemplate": "/api/Buses",
+      "UpstreamHttpMethod": [ "Get" ],
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -72,37 +129,11 @@
           "Port": 7089
         }
       ],
-      "DownstreamPathTemplate": "/api/Busroutes",
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "Role": "client"
-      }
-    },
-    {
-      "UpstreamPathTemplate": "/api/Busroutes/{id}",
-      "UpstreamHttpMethod": [ "Get", "Delete", "Put" ],
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 7089
-        }
-      ],
-      "DownstreamPathTemplate": "/api/Busroutes/{id}",
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "Role": "client"
-      }
+      "DownstreamPathTemplate": "/api/Buses"
     },
     {
       "UpstreamPathTemplate": "/api/Buses",
-      "UpstreamHttpMethod": [ "Get", "Post" ],
+      "UpstreamHttpMethod": [ "Post" ],
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -116,12 +147,24 @@
         "AllowedScopes": []
       },
       "RouteClaimsRequirement": {
-        "Role": "client"
+        "Role": "admin"
       }
     },
     {
       "UpstreamPathTemplate": "/api/Buses/{id}",
-      "UpstreamHttpMethod": [ "Get", "Delete", "Put" ],
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7089
+        }
+      ],
+      "DownstreamPathTemplate": "/api/Buses/{id}"
+    },
+    {
+      "UpstreamPathTemplate": "/api/Buses/{id}",
+      "UpstreamHttpMethod": [ "Put", "Delete" ],
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -139,8 +182,82 @@
       }
     },
     {
+      "UpstreamPathTemplate": "/api/Busroutes",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7089
+        }
+      ],
+      "DownstreamPathTemplate": "/api/Busroutes"
+    },
+    {
+      "UpstreamPathTemplate": "/api/Busroutes",
+      "UpstreamHttpMethod": [ "Post" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7089
+        }
+      ],
+      "DownstreamPathTemplate": "/api/Busroutes",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": {
+        "Role": "admin"
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/api/Busroutes/{id}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7089
+        }
+      ],
+      "DownstreamPathTemplate": "/api/Busroutes/{id}"
+    },
+    {
+      "UpstreamPathTemplate": "/api/Busroutes/{id}",
+      "UpstreamHttpMethod": [ "Put", "Delete" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7089
+        }
+      ],
+      "DownstreamPathTemplate": "/api/Busroutes/{id}",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": {
+        "Role": "admin"
+      }
+    },
+    {
       "UpstreamPathTemplate": "/api/Personnels",
-      "UpstreamHttpMethod": [ "Get", "Post" ],
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7089
+        }
+      ],
+      "DownstreamPathTemplate": "/api/Personnels"
+    },
+    {
+      "UpstreamPathTemplate": "/api/Personnels",
+      "UpstreamHttpMethod": [ "Post" ],
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -159,7 +276,19 @@
     },
     {
       "UpstreamPathTemplate": "/api/Personnels/{id}",
-      "UpstreamHttpMethod": [ "Get", "Delete", "Put" ],
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7089
+        }
+      ],
+      "DownstreamPathTemplate": "/api/Personnels/{id}"
+    },
+    {
+      "UpstreamPathTemplate": "/api/Personnels/{id}",
+      "UpstreamHttpMethod": [ "Put", "Delete" ],
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -177,8 +306,20 @@
       }
     },
     {
+      "UpstreamPathTemplate": "/api/Trips/FindTrips",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7089
+        }
+      ],
+      "DownstreamPathTemplate": "/api/Trips/FindTrips"
+    },
+    {
       "UpstreamPathTemplate": "/api/Trips",
-      "UpstreamHttpMethod": [ "Get", "Post" ],
+      "UpstreamHttpMethod": [ "Post" ],
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -192,12 +333,24 @@
         "AllowedScopes": []
       },
       "RouteClaimsRequirement": {
-        "Role": "admin"
+        "Role": "dispatcher"
       }
     },
     {
       "UpstreamPathTemplate": "/api/Trips/{id}",
-      "UpstreamHttpMethod": ["Get"],
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7089
+        }
+      ],
+      "DownstreamPathTemplate": "/api/Trips/{id}"
+    },
+    {
+      "UpstreamPathTemplate": "/api/Trips/{id}",
+      "UpstreamHttpMethod": [ "Put"],
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -211,7 +364,121 @@
         "AllowedScopes": []
       },
       "RouteClaimsRequirement": {
-        "Role": "admin"
+        "Role": "dispatcher"
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/api/Tickets",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7089
+        }
+      ],
+      "DownstreamPathTemplate": "/api/Tickets",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": {
+        "Role": "client"
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/api/Tickets/BookTicket",
+      "UpstreamHttpMethod": [ "Post" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7089
+        }
+      ],
+      "DownstreamPathTemplate": "/api/Tickets/BookTicket",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": {
+        "Role": "client"
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/api/Tickets/BuyTicket",
+      "UpstreamHttpMethod": [ "Post" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7089
+        }
+      ],
+      "DownstreamPathTemplate": "/api/Tickets/BuyTicket",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": {
+        "Role": "client"
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/api/Tickets/CancelBooking",
+      "UpstreamHttpMethod": [ "Put" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7089
+        }
+      ],
+      "DownstreamPathTemplate": "/api/Tickets/CancelBooking",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": {
+        "Role": "client"
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/api/Tickets/PayForTicket",
+      "UpstreamHttpMethod": [ "Put" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7089
+        }
+      ],
+      "DownstreamPathTemplate": "/api/Tickets/PayForTicket",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": {
+        "Role": "client"
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/api/Tickets/{id}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7089
+        }
+      ],
+      "DownstreamPathTemplate": "/api/Tickets/{id}",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": {
+        "Role": "client"
       }
     }
   ],

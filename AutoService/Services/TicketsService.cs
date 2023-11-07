@@ -126,7 +126,7 @@ namespace AutoService.Services
                 {
                     IsSuccess = false
                 };
-
+            ticket.TriggerState(Ticket.Trigger.Pay);
             ticket.Status = "paid";
             ticket.DateTime = DateTime.Now;
             _context.Tickets.Update(ticket);

@@ -1,4 +1,5 @@
 ﻿using AutoService.Data;
+using AutoService.Models;
 using Microsoft.Build.Framework;
 using Microsoft.EntityFrameworkCore;
 using Quartz;
@@ -27,6 +28,7 @@ namespace AutoService.Services
             {
                 if (DateTime.Now > tick.DateTime.AddMinutes(1)) 
                 {
+                    tick.TriggerState(Ticket.Trigger.Expire);
                     tick.Status = "expired";
                     _context.Tickets.Update(tick);
                 }
