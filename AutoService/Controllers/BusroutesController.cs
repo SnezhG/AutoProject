@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AutoService.Data;
 using AutoService.Models;
+using AutoService.ServiceInterfaces;
 using AutoService.ViewModels;
 using AutoService.Services;
 
@@ -16,9 +17,9 @@ namespace AutoService.Controllers
     [ApiController]
     public class BusroutesController : ControllerBase
     {
-        private readonly BusRoutesService _busroutesService;
+        private readonly IBusRoutesService _busroutesService;
 
-        public BusroutesController(BusRoutesService busRoutesService)
+        public BusroutesController(IBusRoutesService busRoutesService)
         {
             _busroutesService = busRoutesService;
         }

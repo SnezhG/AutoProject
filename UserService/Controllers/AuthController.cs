@@ -10,9 +10,9 @@ namespace UserService.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private AutoUserAuthService _userService;
+        private IUserService _userService;
 
-        public AuthController(AutoUserAuthService userService)
+        public AuthController(IUserService userService)
         {
             _userService = userService;
         }

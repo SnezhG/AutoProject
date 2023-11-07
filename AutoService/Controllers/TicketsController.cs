@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AutoService.Data;
 using AutoService.Models;
+using AutoService.ServiceInterfaces;
 using AutoService.ViewModels;
 using AutoService.Services;
 
@@ -16,15 +17,15 @@ namespace AutoService.Controllers
     [ApiController]
     public class TicketsController : ControllerBase
     {
-        private readonly TicketsService _ticketService;
+        private readonly ITicketsService _ticketService;
 
-        public TicketsController(TicketsService ticketsService)
+        public TicketsController(ITicketsService ticketsService)
         {
             _ticketService = ticketsService;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Ticket>>> GetTickets(int clientId)
+        public async Task<ActionResult<IEnumerable<Ticket>>> GetTickets(string clientId)
         {
             var tickets = await _ticketService.GetTickets(clientId);
             if (tickets == null)

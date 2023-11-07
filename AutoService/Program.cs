@@ -24,12 +24,22 @@ builder.Services.AddDbContext<AutoContext>(
 );
 
 
-builder.Services.AddScoped<BusService>();
-builder.Services.AddScoped<BusRoutesService>();
-builder.Services.AddScoped<PersonnelsService>();
-builder.Services.AddScoped<TicketsService>();
-builder.Services.AddScoped<TripsService>();
+builder.Services.AddScoped<IBusService, BusService>();
+builder.Services.AddScoped<IBusRoutesService, BusRoutesService>();
+builder.Services.AddScoped<IPersonnelsService, PersonnelsService>();
+builder.Services.AddScoped<ITicketsService, TicketsService>();
+builder.Services.AddScoped<ITripsService, TripsService>();
 builder.Services.ScheduleJob();
+
+builder.Services.AddCors(o =>
+{
+    o.AddPolicy("MyOrigin",
+        b => b
+            .WithOrigins("https://localhost:5173")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials());
+});
 
 var app = builder.Build();
 
@@ -40,8 +50,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors("MyOrigin");
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
 
 app.MapControllers();

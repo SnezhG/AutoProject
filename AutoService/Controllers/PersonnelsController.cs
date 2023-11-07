@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AutoService.Data;
 using AutoService.Models;
+using AutoService.ServiceInterfaces;
 using AutoService.ViewModels;
 using AutoService.Services;
 
@@ -16,9 +17,9 @@ namespace AutoService.Controllers
     [ApiController]
     public class PersonnelsController : ControllerBase
     {
-        private readonly PersonnelsService _personnelsService;
+        private readonly IPersonnelsService _personnelsService;
 
-        public PersonnelsController(PersonnelsService personnelsService)
+        public PersonnelsController(IPersonnelsService personnelsService)
         {
             _personnelsService = personnelsService;
         }

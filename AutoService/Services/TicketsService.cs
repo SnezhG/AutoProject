@@ -16,7 +16,7 @@ namespace AutoService.Services
             _context = context;
         }
 
-        public async Task<IEnumerable<Ticket>> GetTickets(int clientId) 
+        public async Task<IEnumerable<Ticket>> GetTickets(string clientId) 
         {
             var ticketsId = await _context.Clienttickets.Where(t => t.Client == clientId).ToListAsync();
             if (ticketsId == null)
@@ -36,13 +36,24 @@ namespace AutoService.Services
         }
         public async Task<ServiceResponce> BookTicket(TicketViewModel model)
         {
-            var ticketToBook = await IssueTicket(model);
+            var ticketToBookId = await IssueTicket(model);
+            if (ticketToBookId == -1)
+                return new ServiceResponce
+                {
+                    IsSuccess = false
+                };
 
+            var ticketToBook = await _context.Tickets.FindAsync(ticketToBookId);
+            if (ticketToBook == null)
+                return new ServiceResponce
+                {
+                    IsSuccess = false
+                };
+            
             ticketToBook.TriggerState(Ticket.Trigger.Book);
-
             ticketToBook.Status = "booked";
             
-            await _context.Tickets.AddAsync(ticketToBook);
+            _context.Tickets.Update(ticketToBook);
 
             await _context.SaveChangesAsync();
 
@@ -53,15 +64,21 @@ namespace AutoService.Services
         }
         public async Task<ServiceResponce> BuyTicket(TicketViewModel model)
         {
-            var ticketToBuy = await IssueTicket(model);
-            await _context.Tickets.AddAsync(ticketToBuy);
-            var result = await PayForTicket(ticketToBuy.TicketId);
+            var ticketToBuyId = await IssueTicket(model);
+            if (ticketToBuyId == -1)
+                return new ServiceResponce
+                {
+                    IsSuccess = false
+                };
+            
+            var result = await PayForTicket(ticketToBuyId);
 
             if(result.IsSuccess)
                 return new ServiceResponce
                 {
                     IsSuccess = true
                 };
+            
             return new ServiceResponce
             {
                 IsSuccess = false
@@ -95,21 +112,25 @@ namespace AutoService.Services
 
         public async Task<ServiceResponce> PayForTicket(int id)
         {
-            /*
+            var ticket = await _context.Tickets.FindAsync(id);
+
+            if (ticket == null)
+                return new ServiceResponce
+                {
+                    IsSuccess = false
+                };
+
             ticket.Status = "paid";
-
-            ticket.TriggerState(Ticket.Trigger.Pay);
+            ticket.DateTime = DateTime.Now;
             _context.Tickets.Update(ticket);
-            await _context.SaveChangesAsync();
-            */
-
+            
             return new ServiceResponce
             {
                 IsSuccess = true
             };
         }
 
-        public async Task<Ticket> IssueTicket(TicketViewModel model)
+        public async Task<int> IssueTicket(TicketViewModel model)
         {
             var checkPassenger = await _context.Passengers.FirstOrDefaultAsync(p =>
                 p.PassportNum == model.PassNum && p.PassportSeries == model.PassSeries
@@ -140,27 +161,29 @@ namespace AutoService.Services
             var seatToBook = await _context.Seats.FindAsync(model.Seat);
 
             if (seatToBook == null)
-                return null;
+                return -1;
 
             seatToBook.Available = false;
             _context.Seats.Update(seatToBook);
 
-            var ticketToBook = new Ticket
+            var newTicket = new Ticket
             {
-                DateTime = DateTime.Now,
                 Status = "issued",
                 Passenger = passenger,
                 SeatId = model.Seat,
                 TripId = model.Trip
             };
 
-            await _context.Clienttickets.AddAsync(new Clientticket
+            await _context.Tickets.AddAsync(newTicket);
+            await _context.SaveChangesAsync();
+            
+            /*await _context.Clienttickets.AddAsync(new Clientticket
             {
                 Client = model.clientId,
-                Ticket = ticketToBook.TicketId
-            });
-
-            return ticketToBook;
+                Ticket = newTicket.TicketId
+            });*/
+            
+            return newTicket.TicketId;
         }
     }
 }

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AutoService.Data;
 using AutoService.Models;
+using AutoService.ServiceInterfaces;
 using AutoService.ViewModels;
 using AutoService.Services;
 
@@ -16,9 +17,9 @@ namespace AutoService.Controllers
     [ApiController]
     public class TripsController : ControllerBase
     {
-        private readonly TripsService _tripsService;
+        private readonly ITripsService _tripsService;
 
-        public TripsController(TripsService tripsService)
+        public TripsController(ITripsService tripsService)
         {
             _tripsService = tripsService;
         }

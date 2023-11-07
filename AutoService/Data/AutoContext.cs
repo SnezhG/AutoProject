@@ -73,7 +73,9 @@ public partial class AutoContext : DbContext
             entity.ToTable("clienttickets");
 
             entity.Property(e => e.TempId).HasColumnName("tempId");
-            entity.Property(e => e.Client).HasColumnName("client");
+            entity.Property(e => e.Client)
+                .HasMaxLength(255)
+                .HasColumnName("client");
             entity.Property(e => e.Ticket).HasColumnName("ticket");
         });
 

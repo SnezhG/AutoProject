@@ -31,7 +31,8 @@ namespace AutoService.Services
             if (routeToEdit == null)
                 return new ServiceResponce 
                 {
-                    IsSuccess = false
+                    IsSuccess = false,
+                    Message = "Route is not found"
                 };
 
             routeToEdit.ArrCity = model.ArrCity;

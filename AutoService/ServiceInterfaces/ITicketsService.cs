@@ -6,12 +6,12 @@ namespace AutoService.ServiceInterfaces
 {
     public interface ITicketsService
     {
-        Task<IEnumerable<Ticket>> GetTickets(int clientId);
+        Task<IEnumerable<Ticket>> GetTickets(string clientId);
         Task<Ticket> GetTicket(int id);
         Task<ServiceResponce> BookTicket(TicketViewModel model);
         Task<ServiceResponce> BuyTicket(TicketViewModel model);
         Task<ServiceResponce> CancelBooking(int ticketId);
-        Task<Ticket> IssueTicket(TicketViewModel model);
+        Task<int> IssueTicket(TicketViewModel model);
         Task<ServiceResponce> PayForTicket(int id);
     }
 }

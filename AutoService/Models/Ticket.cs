@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Quartz;
 
 namespace AutoService.Models;
 
@@ -8,8 +9,8 @@ public partial class Ticket
     public enum State
     {
         Issued,
-        Paid,
         Booked,
+        Paid,
         Cancelled,
         Expired
     }
@@ -21,10 +22,6 @@ public partial class Ticket
         Cancel,
         Expire
     }
-
-    private State state = State.Issued;
-
-    public State CurrentState { get { return state; } }
 
     public int TicketId { get; set; }
 
@@ -44,6 +41,13 @@ public partial class Ticket
 
     public virtual Trip? Trip { get; set; }
 
+    private State state = State.Issued;
+
+    public State CurrentState
+    {
+        get { return state; }
+    }
+
     public void TriggerState(Trigger trigger)
     {
         state = (state, trigger) switch
@@ -56,5 +60,4 @@ public partial class Ticket
             _ => state
         };
     }
-
 }
