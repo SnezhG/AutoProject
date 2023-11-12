@@ -24,11 +24,11 @@ function Buses() {
     }, []);
 
     return (
-        <div className="FetchData">
+        <div>
             <div>
                 <Link to="/CreateBus">Create</Link>
             </div>
-            <table style={{ width: "100%" }}>
+            <table className="dataTable">
                 <thead>
                 <tr>
                     <th>Id</th>

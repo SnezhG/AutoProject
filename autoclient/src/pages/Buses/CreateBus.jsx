@@ -23,7 +23,7 @@ function CreateBus(){
     return (
         <div>
             <h1>Create new bus</h1>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className="formCreate">
                 <div>
                     <label htmlFor="seatCapacity">Seat capacity</label>
                     <input type="text" name='seatCapacity' placeholder="Enter seat capacity"

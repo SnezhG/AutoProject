@@ -40,3 +40,16 @@ body {
 .nav li:hover {
     background-color: #777;
 }
+
+.dataTable{
+    border: 1px solid;
+    width: 100%;
+}
+
+.formCreate{
+    width: 50%;
+    margin: auto;
+    background-color: #f5f5f5;
+    padding: 2rem;
+    justify-content: center;
+}
