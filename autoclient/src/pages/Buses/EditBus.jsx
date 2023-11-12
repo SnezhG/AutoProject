@@ -15,7 +15,7 @@ function EditBus(){
     useEffect(() => {
         axios.get(`https://localhost:7089/api/Buses/${id}`)
             .then(res => setValues(res.data))
-            .catch(err => cosnole.log(err))
+            .catch(err => console.log(err))
     }, []);
 
     const navigate = useNavigate();
