@@ -40,6 +40,18 @@ namespace AutoService.Controllers
 
             return Ok(bus);
         }
+        
+        [HttpGet("BusSeats/{id}")]
+        public async Task<ActionResult<IEnumerable<Seat>>> GetBusSeats(int id)
+        {
+
+            var seats = await _busService.GetBusSeats(id);
+
+            if (seats == null)
+                return NotFound();
+
+            return Ok(seats);
+        }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> PutBus(int id, [FromBody] BusDTO model)

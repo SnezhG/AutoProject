@@ -25,6 +25,12 @@ namespace AutoService.Services
         {
             return await _context.Buses.FindAsync(id);
         }
+
+        public async Task<IEnumerable<Seat>> GetBusSeats(int busId)
+        {
+            return _context.Seats.Where(s => s.BusId == busId);
+        }
+
         public async Task<ServiceResponce> PutBus(int id, BusDTO model) 
         {
             var busToEdit = await _context.Buses.FindAsync(id);
