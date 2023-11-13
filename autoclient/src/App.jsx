@@ -9,6 +9,8 @@ import Account from "./pages/Account"
 import CreateBus from "./pages/Buses/CreateBus"
 import EditBus from "./pages/Buses/EditBus"
 import IssueTripTicket from "./pages/IssueTripTicket"
+import Login from "./pages/Auth/Login"
+import TicketPay from "./pages/TicketPay"
 import { Route, Routes } from "react-router-dom"
 
 function App() {
@@ -22,7 +24,9 @@ function App() {
                 <Route path="/Personnels" element={<Personnels />}/>
                 <Route path="/Account" element={<Account />}/>
                 <Route path="/CreateBus" element={<CreateBus />}/>
+                <Route path="/Auth/Login" element={<Login />}/>
                 <Route path="/EditBus/:id" element={<EditBus />}/>
+                <Route path="/TicketPay" element={<TicketPay />}/>
                 <Route path="/IssueTripTicket/:id" element={<IssueTripTicket />}/>
             </Routes>
         </div>
