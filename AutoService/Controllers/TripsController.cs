@@ -17,7 +17,7 @@ namespace AutoService.Controllers
         }
 
 
-        [HttpGet("FindTrips")]
+        [HttpPost("FindTrips")]
         public async Task<ActionResult<IEnumerable<Trip>>> FindTrips([FromBody] FindTripDTO model)
         {
             if (ModelState.IsValid)

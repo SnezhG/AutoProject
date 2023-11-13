@@ -7,9 +7,9 @@ public partial class Trip
 {
     public int TripId { get; set; }
 
-    public DateTime? DepTime { get; set; }
+    public DateTime DepTime { get; set; }
 
-    public DateTime? ArrTime { get; set; }
+    public DateTime ArrTime { get; set; }
 
     public int? BusId { get; set; }
 

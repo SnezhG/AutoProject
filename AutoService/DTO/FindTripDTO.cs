@@ -6,6 +6,6 @@
 
         public string ArrCity { get; set; }
 
-        public DateTime DepDate { get; set; }
+        public DateOnly DepDate { get; set; }
     }
 }

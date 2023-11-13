@@ -5,7 +5,7 @@ function Personnels() {
     const [personnels, setPersonnels] = useState([]);
     const usingAxios = () => {
         axios.get("https://localhost:7089/api/Personnels").then((response) => {
-            setBuses(response.data);
+            setPersonnels(response.data);
         });
     };
 
