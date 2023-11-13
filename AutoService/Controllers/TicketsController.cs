@@ -54,10 +54,14 @@ namespace AutoService.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await _ticketService.BookTicket(model);
+                /*var result = await _ticketService.BookTicket(model);
                 if (result.IsSuccess)
-                    return Ok();
-                return NotFound();
+                    return Ok();*/
+                var ticketId = await _ticketService.BuyTicket(model);
+                if (ticketId == -1)
+                    return BadRequest();
+                
+                return Ok(ticketId);
             }
 
             return BadRequest("Some properties are incorrect");
@@ -72,7 +76,7 @@ namespace AutoService.Controllers
             return NotFound();
         }
 
-        [HttpPut("PayForTicket")]
+        [HttpPut("PayForTicket/{id}")]
         public async Task<IActionResult> PayForTicket(int id) 
         {
             var result = await _ticketService.PayForTicket(id);

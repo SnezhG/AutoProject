@@ -26,7 +26,7 @@ function App() {
                 <Route path="/CreateBus" element={<CreateBus />}/>
                 <Route path="/Auth/Login" element={<Login />}/>
                 <Route path="/EditBus/:id" element={<EditBus />}/>
-                <Route path="/TicketPay" element={<TicketPay />}/>
+                <Route path="/TicketPay/:id" element={<TicketPay />}/>
                 <Route path="/IssueTripTicket/:id" element={<IssueTripTicket />}/>
             </Routes>
         </div>

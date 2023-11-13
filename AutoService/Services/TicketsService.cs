@@ -69,27 +69,27 @@ namespace AutoService.Services
                 IsSuccess = true
             };
         }
-        public async Task<ServiceResponce> BuyTicket(TicketDTO model)
+        public async Task<int> BuyTicket(TicketDTO model)
         {
             var ticketToBuyId = await IssueTicket(model);
-            if (ticketToBuyId == -1)
+            /*if (ticketToBuyId == -1)
                 return new ServiceResponce
                 {
                     IsSuccess = false
-                };
-            
-            var result = await PayForTicket(ticketToBuyId);
+                };*/
+            return ticketToBuyId;
+            /*var result = await PayForTicket(ticketToBuyId);
 
             if(result.IsSuccess)
                 return new ServiceResponce
                 {
                     IsSuccess = true
-                };
-            
-            return new ServiceResponce
+                };*/
+
+            /*return new ServiceResponce
             {
                 IsSuccess = false
-            };
+            };*/
         }
         public async Task<ServiceResponce> CancelBooking(int ticketId) 
         {
@@ -130,7 +130,7 @@ namespace AutoService.Services
             ticket.Status = "paid";
             ticket.DateTime = DateTime.Now;
             _context.Tickets.Update(ticket);
-            
+            await _context.SaveChangesAsync();
             return new ServiceResponce
             {
                 IsSuccess = true
@@ -159,6 +159,7 @@ namespace AutoService.Services
                 };
 
                 await _context.Passengers.AddAsync(passenger);
+                await _context.SaveChangesAsync();
             }
             else
             {

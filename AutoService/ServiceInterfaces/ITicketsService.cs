@@ -9,7 +9,7 @@ namespace AutoService.ServiceInterfaces
         Task<IEnumerable<Ticket>> GetTickets();
         Task<Ticket> GetTicket(int id);
         Task<ServiceResponce> BookTicket(TicketDTO model);
-        Task<ServiceResponce> BuyTicket(TicketDTO model);
+        Task<int> BuyTicket(TicketDTO model);
         Task<ServiceResponce> CancelBooking(int ticketId);
         Task<int> IssueTicket(TicketDTO model);
         Task<ServiceResponce> PayForTicket(int id);

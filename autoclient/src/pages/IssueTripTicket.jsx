@@ -9,9 +9,6 @@ function IssueTripTicket(){
     const [routeValues, setRouteValues] = useState( [])
     const [seatsValues, setSeatsValues] = useState( [])
 
-    const bus = tripValues.busId
-    const route = tripValues.routeId
-
     const [ticketValues, setTicketValues] = useState({
         lastName: '',
         name: '',
@@ -22,13 +19,14 @@ function IssueTripTicket(){
         passNum: '',
         phoneNum: '',
         seat: '',
-        trip: tripValues.tripId
+        trip: ''
     })
     
     useEffect(() => {
         axios.get(`https://localhost:7089/api/Trips/${id}`)
             .then(res => {
                 setTripValues(res.data)
+                console.log(res.data)
                 return res.data
             })
             .then((firstRes) =>{
@@ -48,10 +46,12 @@ function IssueTripTicket(){
             .catch(err => console.log(err))
        
     }, []);
-    
+
     const navigate = useNavigate();
     const handleBooking = (event) =>{
-        event.preventDefault();
+        event.preventDefault()
+        setTicketValues({...ticketValues, trip: tripValues.tripId})
+        console.log(ticketValues)
         axios.post(`https://localhost:7089/api/Tickets/BookTicket`, ticketValues)
             .then(res => {
                 console.log(res);
@@ -61,11 +61,15 @@ function IssueTripTicket(){
     }
 
     const handleBuying = (event) =>{
-        event.preventDefault();
+        event.preventDefault()
+        setTicketValues({...ticketValues, trip: tripValues.tripId})
         axios.post(`https://localhost:7089/api/Tickets/BuyTicket`, ticketValues)
             .then(res => {
                 console.log(res);
-                navigate('/TicketPay')
+                return res.data
+            })
+            .then((firstRes) =>{
+                navigate(`/TicketPay/${firstRes}`)
             })
             .catch(err => console.log(err))
     }
@@ -82,7 +86,7 @@ function IssueTripTicket(){
             </form>
 
             <h1>Issue Ticket</h1>
-            <form>
+            <form onSubmit={handleBooking}>
                 <div>
                     <label htmlFor="lastName">Name</label>
                     <input type="text" name='lastName' placeholder="Enter seat capacity"
@@ -155,8 +159,8 @@ function IssueTripTicket(){
                             ))}
                     </select>
                 </div>
-                <button onClick={() => handleBooking()}>Book</button>
-                <button onClick={() => handleBuying()}>Buy</button>
+                <button type="submit">Book</button>
+                <button onClick={handleBuying}>Buy</button>
             </form>
         </div>
     )
