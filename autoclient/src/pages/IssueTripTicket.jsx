@@ -6,7 +6,6 @@ function IssueTripTicket(){
     const {id} = useParams();
 
     const [tripValues, setTripValues] = useState( [])
-
     const [routeValues, setRouteValues] = useState( [])
     const [seatsValues, setSeatsValues] = useState( [])
 
@@ -25,33 +24,6 @@ function IssueTripTicket(){
         seat: '',
         trip: tripValues.tripId
     })
-
-/*    async function getData(){
-        const tripRequest = await axios.get(`https://localhost:7089/api/Trips/${id}`)
-            .then(res => {
-                setTripValues(res.data)
-                console.log(res.data)
-            })
-            .catch(err => console.log(err))
-
-        const routeData = await axios.get(`https://localhost:7089/api/Busroutes/${route}`)
-            .then(res => {
-                setRouteValues(res.data)
-                console.log(res.data)
-            })
-            .catch(err => console.log(err))
-        const seatsData = await axios.get(`https://localhost:7089/api/Buses/BusSeats/${bus}`)
-            .then(res => {
-                setSeatsValues(res.data)
-                console.log(res.data)
-            })
-            .catch(err => console.log(err))
-    }
-
-    useEffect(() =>{
-        getData()
-    }, [])*/
-    
     
     useEffect(() => {
         axios.get(`https://localhost:7089/api/Trips/${id}`)
@@ -76,30 +48,6 @@ function IssueTripTicket(){
             .catch(err => console.log(err))
        
     }, []);
-
-/*    useEffect(() => {
-        axios.get(`https://localhost:7089/api/Buses/BusSeats/${bus}`)
-            .then(res => {
-                setSeatsValues(res.data)
-                console.log(res.data)
-            })
-            .catch(err => console.log(err))
-    }, []);*/
-
-/*    useEffect(() => {
-        axios.get(`https://localhost:7089/api/Busroutes/${route}`)
-            .then(res => {
-                setRouteValues(res.data)
-                console.log(res.data)
-            })
-            .catch(err => console.log(err))
-        axios.get(`https://localhost:7089/api/Buses/BusSeats/${bus}`)
-            .then(res => {
-                setSeatsValues(res.data)
-                console.log(res.data)
-            })
-            .catch(err => console.log(err))
-    }, []);*/
     
     const navigate = useNavigate();
     const handleBooking = (event) =>{

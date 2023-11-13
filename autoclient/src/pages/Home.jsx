@@ -1,17 +1,18 @@
 ﻿import {useState} from "react";
 import axios from "axios";
+import {useNavigate} from "react-router-dom";
 
 function Home(){
     const [values, setValues] = useState({
-        DepCity: '',
-        ArrCity: '',
-        DepDate: ''
+        arrCity: '',
+        depCity: '',
+        depDate: ''
     })
 
     const [searchResults, setSearchResults] = useState([])
     const handleSubmit = (event) =>{
         event.preventDefault();
-        axios.get('https://localhost:7089/api/Trips/FindTrips', values)
+        axios.post('https://localhost:7089/api/Trips/FindTrips', values)
             .then(res => {
                 console.log(res);
                 setSearchResults(res.data);
@@ -19,33 +20,40 @@ function Home(){
             .catch(err => console.log(err));
     }
 
+    const navigator = useNavigate()
+    const buyTicket = (id) => {
+        navigator(`/IssueTripTicket/${id}`)
+    }
 
     return (
         <div>
             <h1>Search for a trip</h1>
             <form onSubmit={handleSubmit}>
                 <div>
-                    <label htmlFor="DepCity">Departure city:</label>
+                    <label htmlFor="depCity">Departure city:</label>
                     <input
                         type="text"
                         name="depCity"
-                        onChange={(e) => setValues({ ...values, DepCity: e.target.value })}
+                        onChange={(e) => 
+                            setValues({ ...values, depCity: e.target.value })}
                     />
                 </div>
                 <div>
-                    <label htmlFor="ArrCity">Arrival city:</label>
+                    <label htmlFor="arrCity">Arrival city:</label>
                     <input
                         type="text"
                         name="arrCity"
-                        onChange={(e) => setValues({ ...values, ArrCity: e.target.value })}
+                        onChange={(e) => 
+                            setValues({ ...values, arrCity: e.target.value })}
                     />
                 </div>
                 <div>
-                    <label htmlFor="DepDate">Departure time:</label>
+                    <label htmlFor="depDate">Departure time:</label>
                     <input
                         type="text"
                         name="depDate"
-                        onChange={(e) => setValues({ ...values, DepCity: e.target.value })}
+                        onChange={(e) => 
+                            setValues({ ...values, depDate: e.target.value })}
                     />
                 </div>
                 <button>Find</button>
@@ -58,6 +66,7 @@ function Home(){
                         {searchResults.map((trip) => (
                             <li key={trip.tripId}>
                                 <p>TripId: {trip.tripId}</p>
+                                <button onClick={() => buyTicket(trip.tripId)}>Buy Ticket</button>
                             </li>
                         ))}
                     </ul>
