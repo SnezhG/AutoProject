@@ -176,12 +176,12 @@ namespace AutoService.Services
             var newTicket = new Ticket
             {
                 Status = "issued",
-                Passenger = passenger,
+                PassengerId = passenger.PassengerId,
                 SeatId = model.Seat,
                 TripId = model.Trip
             };
 
-            await _context.Tickets.AddAsync(newTicket);
+            /*await _context.Tickets.AddAsync(newTicket);
             var clientId = GetClientIdFromToken();
             if (clientId == null)
                 return -1;
@@ -189,7 +189,9 @@ namespace AutoService.Services
             {
                 Client = clientId,
                 Ticket = newTicket.TicketId
-            });
+            });*/
+
+            _context.Tickets.Add(newTicket);
             await _context.SaveChangesAsync();
             
             return newTicket.TicketId;
