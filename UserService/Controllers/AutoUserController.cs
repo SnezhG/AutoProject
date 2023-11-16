@@ -16,13 +16,22 @@ namespace UserService.Controllers
             _autoUserService = autoUserService;
         }
         
-        [HttpGet("GetEmployees")]
-        public async Task<ActionResult<IEnumerable<AutoUserDTO>>> GetEmployees()
+        [HttpGet("GetUsers")]
+        public async Task<ActionResult<IEnumerable<AutoUserDTO>>> GetUsers()
         {
-            var users = await _autoUserService.GetEmployees();
+            var users = await _autoUserService.GetUsers();
             if (users == null)
                 return NotFound();
             return Ok(users);
+        }
+        
+        [HttpGet("GetUser/{id}")]
+        public async Task<ActionResult<ChangeUserRoleDTO>> GetUser(string id)
+        {
+            var user = await _autoUserService.GetUser(id);
+            if (user == null)
+                return NotFound();
+            return Ok(user);
         }
 
         [HttpPost("ChangeUserRole")]

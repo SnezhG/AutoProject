@@ -36,6 +36,17 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 builder.Services.AddScoped<IAutoUser, AutoUserService>();
 builder.Services.AddScoped<IUserService, AutoUserAuthService>();
 
+builder.Services.AddCors(o =>
+{
+    o.AddPolicy("MyOrigin",
+        b => b
+            .WithOrigins("https://localhost:5173")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials());
+});
+
+
 var app = builder.Build();
 
 
@@ -47,6 +58,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+
+app.UseCors("MyOrigin");
 app.UseHttpsRedirection();
 
 app.UseAuthentication();

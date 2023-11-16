@@ -5,7 +5,8 @@ namespace UserService.ServiceInterfaces;
 
 public interface IAutoUser
 {
-    Task<IEnumerable<AutoUserDTO>> GetEmployees();
+    Task<IEnumerable<AutoUserDTO>> GetUsers();
+    Task<ChangeUserRoleDTO> GetUser(string userId);
     Task<UserManagerResponce> ChangeUserRole(ChangeUserRoleDTO dto);
     Task<UserManagerResponce> DeleteUser(int id);
     Task<UserManagerResponce> CreateUser(RegistrationDTO dto);

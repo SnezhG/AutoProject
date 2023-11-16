@@ -17,7 +17,7 @@ public class AutoUserService : IAutoUser
         _userService = userService;
     }
 
-    public async Task<IEnumerable<AutoUserDTO>> GetEmployees()
+    public async Task<IEnumerable<AutoUserDTO>> GetUsers()
     {
         var admins = await _userManager.GetUsersInRoleAsync("admin");
         var dispatchers = await _userManager.GetUsersInRoleAsync("dispatcher");
@@ -30,12 +30,32 @@ public class AutoUserService : IAutoUser
             var role = await _userManager.GetRolesAsync(user);
             var userViewModel = new AutoUserDTO
             {
+                Id = user.Id,
                 Email = user.Email,
                 Role = role[0]
             };
+            users.Add(userViewModel);
         }
 
         return users;
+    }
+
+    public async Task<ChangeUserRoleDTO> GetUser(string userId)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user == null)
+            return null;
+        var userRole = await _userManager.GetRolesAsync(user);
+        var allRoles = _roleManager.Roles.ToList();
+        var autoUser = new ChangeUserRoleDTO
+        {
+            UserId = user.Id,
+            UserEmail = user.Email,
+            AllRoles = allRoles,
+            UserRole = userRole[0]
+        };
+
+        return autoUser;
     }
 
     public async Task<UserManagerResponce> ChangeUserRole(ChangeUserRoleDTO dto)
@@ -50,7 +70,7 @@ public class AutoUserService : IAutoUser
 
         var currRole = await _userManager.GetRolesAsync(user);
         await _userManager.RemoveFromRolesAsync(user, currRole);
-        await _userManager.AddToRoleAsync(user, dto.NewRole);
+        await _userManager.AddToRoleAsync(user, dto.UserRole);
         return new UserManagerResponce
         {
             IsSuccess = true
