@@ -27,37 +27,35 @@ function Home(){
 
     return (
         <div>
-            <h1>Search for a trip</h1>
+            <div className="findTickets">
+            <h1>Билеты на автобус</h1>
             <form onSubmit={handleSubmit}>
                 <div>
-                    <label htmlFor="depCity">Departure city:</label>
                     <input
                         type="text"
                         name="depCity"
-                        onChange={(e) => 
+                        placeholder="Откуда"
+                        onChange={(e) =>
                             setValues({ ...values, depCity: e.target.value })}
                     />
-                </div>
-                <div>
-                    <label htmlFor="arrCity">Arrival city:</label>
                     <input
                         type="text"
                         name="arrCity"
-                        onChange={(e) => 
+                        placeholder="Куда"
+                        onChange={(e) =>
                             setValues({ ...values, arrCity: e.target.value })}
                     />
-                </div>
-                <div>
-                    <label htmlFor="depDate">Departure time:</label>
                     <input
                         type="text"
                         name="depDate"
-                        onChange={(e) => 
+                        placeholder="Когда"
+                        onChange={(e) =>
                             setValues({ ...values, depDate: e.target.value })}
                     />
                 </div>
-                <button>Find</button>
+                <button>Найти</button>
             </form>
+            </div>
 
             <div>
                 <h1>Found trips</h1>

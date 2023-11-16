@@ -26,8 +26,10 @@ function CreateBus(){
             <form onSubmit={handleSubmit} className="formCreate">
                 <div>
                     <label htmlFor="seatCapacity">Seat capacity</label>
-                    <input type="text" name='seatCapacity' placeholder="Enter seat capacity"
-                    onChange={e => setValues({...values, seatCapacity: e.target.value})}/>
+                    <input type="text" name='seatCapacity' 
+                           placeholder="Enter seat capacity"
+                           onChange={e => 
+                               setValues({...values, seatCapacity: e.target.value})}/>
                 </div>
                 <div>
                     <label htmlFor="model">Seat capacity</label>
