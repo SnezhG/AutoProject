@@ -41,7 +41,14 @@ namespace UserService.Services;
 
             if (result.Succeeded)
             {
-                await _userManager.AddToRoleAsync(identityUser, UserRoles.Client);
+                if (dto.UserRole == null)
+                {
+                    await _userManager.AddToRoleAsync(identityUser, "client");
+                }
+                else
+                {
+                    await _userManager.AddToRoleAsync(identityUser, dto.UserRole);
+                }
 
                 return new UserManagerResponce
                 {

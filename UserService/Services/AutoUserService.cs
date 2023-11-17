@@ -40,13 +40,18 @@ public class AutoUserService : IAutoUser
         return users;
     }
 
+    public async Task<List<IdentityRole>> GetRoles()
+    {
+        return _roleManager.Roles.Where(r => r.Name != "client").ToList();
+    }
+
     public async Task<ChangeUserRoleDTO> GetUser(string userId)
     {
         var user = await _userManager.FindByIdAsync(userId);
         if (user == null)
             return null;
         var userRole = await _userManager.GetRolesAsync(user);
-        var allRoles = _roleManager.Roles.ToList();
+        var allRoles = _roleManager.Roles.Where(r => r.Name != "client").ToList();
         var autoUser = new ChangeUserRoleDTO
         {
             UserId = user.Id,

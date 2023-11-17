@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using UserService.DTO;
 using UserService.ServiceInterfaces;
 
@@ -23,6 +24,15 @@ namespace UserService.Controllers
             if (users == null)
                 return NotFound();
             return Ok(users);
+        }
+        
+        [HttpGet("GetRoles")]
+        public async Task<ActionResult<List<IdentityRole>>> GetRoles()
+        {
+            var allRoles = await _autoUserService.GetRoles();
+            if (allRoles == null)
+                return NotFound();
+            return Ok(allRoles);
         }
         
         [HttpGet("GetUser/{id}")]
