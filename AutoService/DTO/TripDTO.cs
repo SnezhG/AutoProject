@@ -9,7 +9,7 @@ namespace AutoService.DTO
 
         public int DriverId { get; set; }
 
-        public int CondId { get; set; }
+        public int ConductorId { get; set; }
 
         public decimal Price { get; set; }
 

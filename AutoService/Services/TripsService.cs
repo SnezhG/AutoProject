@@ -15,16 +15,16 @@ namespace AutoService.Services
         {
             _context = context;
         }
-
+        
         public async Task<IEnumerable<Trip>> FindTrips([FromBody] FindTripDTO model) 
         {
             return await _context.Trips.Where(trip =>
-                    trip.DepTime == model.DepDate &&
+                    DateOnly.FromDateTime(trip.DepTime) == model.DepDate &&
                     trip.Route.DepCity == model.DepCity &&
                     trip.Route.ArrCity == model.ArrCity).ToListAsync();
 
         }
-        public async Task<Trip> GetTrip(int id) 
+        public async Task<Trip> GetTrip(int id)
         {
             return await _context.Trips.FindAsync(id);
         }
@@ -58,9 +58,9 @@ namespace AutoService.Services
                 _context.Personnel.Update(newDriver);
             }
             
-            if (tripToEdit.ConductorId != model.CondId)
+            if (tripToEdit.ConductorId != model.ConductorId)
             {
-                var newCond = await _context.Personnel.FindAsync(model.CondId);
+                var newCond = await _context.Personnel.FindAsync(model.ConductorId);
                 var oldCond = await _context.Personnel.FindAsync(tripToEdit.ConductorId);
                 oldCond.Available = true;
                 newCond.Available = false;
@@ -73,7 +73,7 @@ namespace AutoService.Services
             tripToEdit.BusId = model.BusId;
             tripToEdit.RouteId = model.RouteId;
             tripToEdit.DriverId = model.DriverId;
-            tripToEdit.ConductorId = model.CondId;
+            tripToEdit.ConductorId = model.ConductorId;
             tripToEdit.Price = model.Price;
 
             _context.Trips.Update(tripToEdit);
@@ -94,7 +94,7 @@ namespace AutoService.Services
                 BusId = model.BusId,
                 RouteId = model.RouteId,
                 DriverId = model.DriverId,
-                ConductorId = model.CondId,
+                ConductorId = model.ConductorId,
                 Price = model.Price
             };
 
@@ -114,7 +114,7 @@ namespace AutoService.Services
                     IsSuccess = false
                 };
 
-            var conductor = await _context.Personnel.FindAsync(model.CondId);
+            var conductor = await _context.Personnel.FindAsync(model.ConductorId);
 
             if (conductor == null)
                 return new ServiceResponce

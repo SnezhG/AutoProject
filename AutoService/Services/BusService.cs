@@ -41,8 +41,7 @@ namespace AutoService.Services
                     IsSuccess = false
                 };
 
-            busToEdit.SeatCapacity = model.SeatCap;
-            busToEdit.Available = model.Avail;
+            busToEdit.SeatCapacity = model.SeatCapacity;
             busToEdit.Model = model.Model;
             busToEdit.Specs = model.Specs;
 
@@ -59,7 +58,7 @@ namespace AutoService.Services
         {
             var busToCreate = new Bus
             {
-                SeatCapacity = model.SeatCap,
+                SeatCapacity = model.SeatCapacity,
                 Model = model.Model,
                 Specs = model.Specs,
                 Available = true

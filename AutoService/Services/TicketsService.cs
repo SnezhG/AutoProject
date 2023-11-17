@@ -173,7 +173,7 @@ namespace AutoService.Services
 
             seatToBook.Available = false;
             _context.Seats.Update(seatToBook);
-
+            
             var newTicket = new Ticket
             {
                 Status = "issued",
