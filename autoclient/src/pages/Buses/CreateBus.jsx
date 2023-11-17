@@ -1,6 +1,7 @@
 ﻿import {Link, useNavigate} from "react-router-dom";
 import {useState} from "react";
 import axios from "axios";
+import {Container} from "react-bootstrap";
 
 function CreateBus(){
     const [values, setValues] = useState({
@@ -21,30 +22,46 @@ function CreateBus(){
     }
     
     return (
-        <div>
-            <h1>Create new bus</h1>
+        <Container className="mt-5">
+            <h2 className="text-center">Добавить новый автобус</h2>
             <form onSubmit={handleSubmit} className="formCreate">
-                <div>
-                    <label htmlFor="seatCapacity">Seat capacity</label>
-                    <input type="text" name='seatCapacity' 
-                           placeholder="Enter seat capacity"
-                           onChange={e => 
-                               setValues({...values, seatCapacity: e.target.value})}/>
+                <div className="mb-3">
+                    <label htmlFor="model" className="form-label">Модель</label>
+                    <input
+                        type="text"
+                        name='model'
+                        className="form-control"
+                        placeholder="Введите модель"
+                        onChange={(e) => 
+                            setValues({ ...values, model: e.target.value })}
+                    />
                 </div>
-                <div>
-                    <label htmlFor="model">Seat capacity</label>
-                    <input type="text" name='model' placeholder="Enter model" 
-                           onChange={e => setValues({...values, model: e.target.value})}/>
+                <div className="mb-3">
+                    <label htmlFor="seatCapacity" className="form-label">Кол-во мест</label>
+                    <input
+                        type="text"
+                        name='seatCapacity'
+                        className="form-control"
+                        placeholder="Введите кол-во мест"
+                        onChange={(e) =>
+                            setValues({ ...values, seatCapacity: e.target.value })}
+                    />
                 </div>
-                <div>
-                    <label htmlFor="specs">Seat capacity</label>
-                    <input type="text" name='specs' placeholder="Enter specs"
-                           onChange={e => setValues({...values, specs: e.target.value})}/>
+                <div className="mb-3">
+                    <label htmlFor="specs" className="form-label">Характеристики</label>
+                    <input
+                        type="text"
+                        name='specs'
+                        className="form-control"
+                        placeholder="Введите характеристик"
+                        onChange={(e) => 
+                            setValues({ ...values, specs: e.target.value })}
+                    />
                 </div>
-                <button>Submit</button>
-                <Link to="/Buses">Back</Link>
+                <button type="submit" className="btn btn-primary">Добавить</button>
+                <Link to="/Buses" className="btn btn-secondary ms-2">Назад</Link>
             </form>
-        </div>
+        </Container>
     )
 }
 
