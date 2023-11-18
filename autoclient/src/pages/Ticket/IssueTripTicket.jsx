@@ -76,34 +76,29 @@ function IssueTripTicket(){
     }
     
     return(
-        <Container className="mt-5" style={{ width: '33%' }}>
+        <Container className="mt-5" style={{ width: '70%' }}>
             <Row className="mb-3">
                 <Col>
-                    <div className="border p-3">
-                        <Form>
-                            <Form.Group className="mb-3">
-                                <Form.Control
-                                    type="text"
-                                    readOnly
-                                    plaintext
-                                    value={`${routeValues.depCity} - ${routeValues.arrCity}`}
-                                />
-                            </Form.Group>
-                            <Form.Group className="mb-3">
-                                <Form.Control type="text" readOnly plaintext 
-                                              value={`Время отправки: ${tripValues.depTime}`} />
-                            </Form.Group>
-                            <Form.Group className="mb-3">
-                                <Form.Control type="text" readOnly plaintext 
-                                              value={`Цена: ${tripValues.price}`} />
-                            </Form.Group>
-                        </Form>
+                    <div className="card mb-3">
+                        <div className="card-body">
+                            <Row className="col-4" style={{ width: '100%' }}>
+                                <Col className="d-flex flex-column align-items-center justify-content-center">
+                                    <p className="font-weight-bold">{`${routeValues.depCity} - ${routeValues.arrCity}`}</p>
+                                </Col>
+                                <Col className="d-flex flex-column align-items-center justify-content-center">
+                                    <p className="font-weight-bold">{`Время отправки: ${tripValues.depTime}`}</p>
+                                </Col>
+                                <Col className="d-flex flex-column align-items-center justify-content-center">
+                                    <p>{`Цена: ${tripValues.price}`}</p>
+                                </Col>
+                            </Row>
+                        </div>
                     </div>
                 </Col>
             </Row>
             <Row>
                 <Col>
-                    <Form onSubmit={handleBooking}>
+                    <Form onSubmit={handleBooking} style={{width: '70%'}}>
                         <Form.Group className="mb-3">
                             <Form.Label htmlFor="name">Фамилия Имя Отчество</Form.Label>
                             <div className="d-flex">
@@ -136,7 +131,7 @@ function IssueTripTicket(){
                             </div>
                         </Form.Group>
                         <Form.Group className="mb-3">
-                            <Form.Label htmlFor="passSeriesNum">Серия и Номер паспорта</Form.Label>
+                            <Form.Label htmlFor="passSeriesNum">Серия и номер паспорта</Form.Label>
                             <div className="d-flex">
                                 <Form.Control
                                     type="text"

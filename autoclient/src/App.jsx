@@ -53,6 +53,7 @@ function App() {
                 <Route path="/Auth/Login" element={<Login />}/>
                 <Route path="/Auth/Registration" element={<Registration />}/>
                 <Route path="/TicketPay/:id" element={<TicketPay />}/>
+                <Route path="/Ticket/:id" element={<Ticket />}/>
                 <Route path="/IssueTripTicket/:id" element={<IssueTripTicket />}/>
                 <Route path="/Account" element={<Account />}/>
             </Routes>

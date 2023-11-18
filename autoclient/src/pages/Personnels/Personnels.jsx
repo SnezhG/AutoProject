@@ -1,5 +1,6 @@
 ﻿import axios from "axios";
 import { useEffect, useState } from "react";
+import {Link} from "react-router-dom";
 
 function Personnels() {
     const [personnels, setPersonnels] = useState([]);
@@ -33,7 +34,12 @@ function Personnels() {
                         <td>{pers.surname}</td>
                         <td>{pers.name}</td>
                         <td>{pers.patronimyc}</td>
+                        <td>{pers.post}</td>
                         <td>{pers.experience}</td>
+                        <td>
+                            <Link to={`/EditPersonnel/${pers.personnelId}`}>Edit</Link>
+                            <button onClick={() => removeData(bus.busId)}>Delete</button>
+                        </td>
                     </tr>
                 ))}
                 </tbody>
