@@ -5,6 +5,7 @@ using AutoService.ServiceInterfaces;
 using AutoService.DTO;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
+using System.Transactions;
 using Microsoft.IdentityModel.Tokens;
 
 namespace AutoService.Services
@@ -22,24 +23,50 @@ namespace AutoService.Services
             _configuration = configuration;
         }
 
-        public async Task<IEnumerable<Ticket>> GetTickets()
+        public async Task<List<TicketInfoDTO>> GetTickets()
         {
             var clientId = GetClientIdFromToken();
-            var ticketsId = await _context.Clienttickets.Where(t => t.Client == clientId).ToListAsync();
-            if (ticketsId == null)
+            var clientTickets = await _context.Clienttickets.Where(t => t.Client == clientId).ToListAsync();
+            if (clientTickets == null)
                 return null;
 
-            var tickets = new List<Ticket>();
-            foreach (var ticketId in ticketsId) 
+            var tickets = new List<TicketInfoDTO>();
+            foreach (var ticket in clientTickets)
             {
-                tickets.Add(await _context.Tickets.FindAsync(ticketId));
+                var ticketInfo = await GetTicket(ticket.Ticket);
+                tickets.Add(ticketInfo);
             }
 
             return tickets;
         }
-        public async Task<Ticket> GetTicket(int id) 
+        public async Task<TicketInfoDTO> GetTicket(int id)
         {
-            return await _context.Tickets.FindAsync(id);
+            var ticket = await _context.Tickets
+                .Include(t => t.Seat)
+                .Include(t => t.Passenger)
+                .FirstOrDefaultAsync(t => t.TicketId == id);
+            
+            var trip = await _context.Trips
+                .Include(t => t.Route)
+                .FirstOrDefaultAsync(t => t.TripId == ticket.TripId);
+
+            var ticketInfo = new TicketInfoDTO
+            {
+                Name = ticket.Passenger.Name,
+                Surname = ticket.Passenger.Surname,
+                Patronymic = ticket.Passenger.Patronimyc,
+                DepCity = trip.Route.DepCity,
+                ArrCity = trip.Route.ArrCity,
+                DepDate = DateOnly.FromDateTime(trip.DepTime),
+                ArrDate = DateOnly.FromDateTime(trip.ArrTime),
+                DepTime = trip.DepTime.ToShortTimeString(),
+                ArrTime = trip.ArrTime.ToShortTimeString(),
+                Seat = ticket.Seat.Num,
+                Price = ticket.Trip.Price,
+                Status = ticket.Status
+            };
+            
+            return ticketInfo;
         }
         public async Task<ServiceResponce> BookTicket(TicketDTO model)
         {

@@ -7,11 +7,11 @@ public partial class Seat
 {
     public int SeatId { get; set; }
 
-    public sbyte? Num { get; set; }
+    public sbyte Num { get; set; }
 
-    public int? BusId { get; set; }
+    public int BusId { get; set; }
 
-    public bool? Available { get; set; }
+    public bool Available { get; set; }
 
     public virtual Bus? Bus { get; set; }
 

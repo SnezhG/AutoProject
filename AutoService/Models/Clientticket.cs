@@ -7,7 +7,7 @@ public partial class Clientticket
 {
     public int TempId { get; set; }
 
-    public int? Ticket { get; set; }
+    public int Ticket { get; set; }
 
-    public string? Client { get; set; }
+    public string Client { get; set; }
 }

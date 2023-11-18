@@ -17,7 +17,7 @@ namespace AutoService.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Ticket>>> GetTickets()
+        public async Task<ActionResult<List<TicketInfoDTO>>> GetTickets()
         {
             var tickets = await _ticketService.GetTickets();
             if (tickets == null)
@@ -26,7 +26,7 @@ namespace AutoService.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Ticket>> GetTicket(int id)
+        public async Task<ActionResult<TicketInfoDTO>> GetTicket(int id)
         {
             var ticket = await _ticketService.GetTicket(id);
             if (ticket == null)
