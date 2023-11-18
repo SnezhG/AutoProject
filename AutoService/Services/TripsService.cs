@@ -16,14 +16,35 @@ namespace AutoService.Services
             _context = context;
         }
         
-        public async Task<IEnumerable<Trip>> FindTrips([FromBody] FindTripDTO model) 
+        public async Task<List<TripInfoDTO>> FindTrips([FromBody] FindTripDTO model)
         {
-            return await _context.Trips.Where(trip =>
-                    DateOnly.FromDateTime(trip.DepTime) == model.DepDate &&
-                    trip.Route.DepCity == model.DepCity &&
-                    trip.Route.ArrCity == model.ArrCity).ToListAsync();
+            var tripsFiltered = await _context.Trips
+                .Include(trip => trip.Route)
+                .Where(trip =>
+                DateOnly.FromDateTime(trip.DepTime) == model.DepDate &&
+                trip.Route.DepCity == model.DepCity &&
+                trip.Route.ArrCity == model.ArrCity).ToListAsync();
 
+            var tripsInfo = new List<TripInfoDTO>();
+            
+            foreach (var trip in tripsFiltered)
+            {
+                var tripInfo = new TripInfoDTO
+                {
+                    TripId = trip.TripId,
+                    DepCity = trip.Route.DepCity,
+                    ArrCity = trip.Route.ArrCity,
+                    DepTime = trip.DepTime.ToShortTimeString(),
+                    DepDate = DateOnly.FromDateTime(trip.DepTime),
+                    ArrTime = trip.ArrTime.ToShortTimeString(),
+                    ArrDate = DateOnly.FromDateTime(trip.ArrTime),
+                    Price = trip.Price
+                };
+                tripsInfo.Add(tripInfo);
+            }
+            return tripsInfo;
         }
+        
         public async Task<Trip> GetTrip(int id)
         {
             return await _context.Trips.FindAsync(id);
