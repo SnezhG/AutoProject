@@ -112,7 +112,9 @@ namespace UserService.Services;
             return new UserManagerResponce
             {
                 Message = tokenString,
-                IsSuccess = true
+                IsSuccess = true,
+                Token = tokenString,
+                Role = userRoles[0]
             };
         }
     }
