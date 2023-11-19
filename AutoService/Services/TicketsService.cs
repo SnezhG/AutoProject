@@ -240,14 +240,19 @@ namespace AutoService.Services
                     IsSuccess = false,
                     Message = "ClientId not found"
                 };
+
+            _context.Tickets.Add(newTicket);
             
-            await _context.Clienttickets.AddAsync(new Clientticket
+            await _context.SaveChangesAsync();
+            
+            var clientTicket = new Clientticket
             {
                 Client = clientId,
                 Ticket = newTicket.TicketId
-            });
-
-            _context.Tickets.Add(newTicket);
+            };
+            
+            _context.Clienttickets.Add(clientTicket);
+            
             await _context.SaveChangesAsync();
             
             return new ServiceResponce
