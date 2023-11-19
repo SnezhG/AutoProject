@@ -7,17 +7,17 @@ public partial class Personnel
 {
     public int PersonnelId { get; set; }
 
-    public string? Surname { get; set; }
+    public string Surname { get; set; }
 
-    public string? Name { get; set; }
+    public string Name { get; set; }
 
     public string? Patronimyc { get; set; }
 
-    public string? Post { get; set; }
+    public string Post { get; set; }
 
-    public sbyte? Experience { get; set; }
+    public sbyte Experience { get; set; }
 
-    public bool? Available { get; set; }
+    public bool Available { get; set; }
 
     public virtual ICollection<Trip> TripConductors { get; set; } = new List<Trip>();
 

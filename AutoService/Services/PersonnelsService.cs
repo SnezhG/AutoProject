@@ -36,9 +36,9 @@ namespace AutoService.Services
 
             persToEdit.Surname = model.Surname;
             persToEdit.Name = model.Name;
-            persToEdit.Patronimyc = model.Patr;
+            persToEdit.Patronimyc = model.Patronimyc;
             persToEdit.Post = model.Post;
-            persToEdit.Experience = model.Exp;
+            persToEdit.Experience = model.Experience;
             persToEdit.Available = model.Avail;
 
             _context.Personnel.Update(persToEdit);
@@ -56,9 +56,9 @@ namespace AutoService.Services
             {
                 Surname = model.Surname,
                 Name = model.Name,
-                Patronimyc = model.Patr,
+                Patronimyc = model.Patronimyc,
                 Post = model.Post,
-                Experience = model.Exp,
+                Experience = model.Experience,
                 Available = true
             };
 

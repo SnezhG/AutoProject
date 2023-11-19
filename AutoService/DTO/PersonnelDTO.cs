@@ -6,11 +6,11 @@
 
         public string Name { get; set; }
 
-        public string Patr {  get; set; }
+        public string? Patronimyc {  get; set; }
 
         public string Post { get; set; }
 
-        public sbyte Exp { get; set; }
+        public sbyte Experience { get; set; }
 
         public bool Avail { get; set; }
     }
