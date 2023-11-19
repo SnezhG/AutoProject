@@ -1,11 +1,12 @@
 ﻿import React, {useState} from "react";
 import axios from "axios";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import iconPath from '../assets/swap.png'
 import {Button, Col, Container, Form, InputGroup, Row} from "react-bootstrap";
 
 function Home(){
     const isUserLoggedIn = localStorage.getItem('isUserLoggedIn');
+    const userRole = localStorage.getItem('role')
     const [values, setValues] = useState({
         arrCity: '',
         depCity: '',
@@ -114,6 +115,13 @@ function Home(){
                                                             style={{ borderColor: 'orange', backgroundColor: 'orange'}}>
                                                         Выбрать
                                                     </Button>
+                                                    {userRole === 'dispatcher' && (
+                                                        <Link to={`/EditTrip/${trip.tripId}`}
+                                                              className="btn m-2"
+                                                                style={{ borderColor: 'orange', backgroundColor: 'orange', color:'white'}}>
+                                                            Изменить
+                                                        </Link>
+                                                    )}
                                                 </Col>
                                             </Row>
                                         </div>
