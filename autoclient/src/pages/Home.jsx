@@ -1,9 +1,11 @@
 ﻿import React, {useState} from "react";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
+import iconPath from '../assets/swap.png'
 import {Button, Col, Container, Form, InputGroup, Row} from "react-bootstrap";
 
 function Home(){
+    const isUserLoggedIn = localStorage.getItem('isUserLoggedIn');
     const [values, setValues] = useState({
         arrCity: '',
         depCity: '',
@@ -25,26 +27,31 @@ function Home(){
 
     const navigator = useNavigate()
     const buyTicket = (id) => {
-        navigator(`/IssueTripTicket/${id}`)
+        console.log(isUserLoggedIn)
+        if(isUserLoggedIn === 'true'){
+            navigator(`/IssueTripTicket/${id}`);
+        } else {
+            navigator("/Auth/Login")
+        }
     }
 
     return (
-        <Container className="mt-5 textt-center" style={{ width: '80%', border: '1px solid' }}>
+        <Container className="mt-5 text-center border p-4 rounded" style={{ width: '80%'}}>
             <Row>
                 <Col>
                     <h1 className="mb-4">Билеты на автобус</h1>
                     <Form onSubmit={handleSubmit}>
-                                <InputGroup className="mb-3" style={{ width: '100%', border: '1px solid' }}>
+                                <InputGroup className="mb-3" style={{ width: '100%' }}>
                                     <Form.Control
                                         type="text"
                                         name="depCity"
                                         placeholder="Откуда"
                                         onChange={(e) =>
                                             setValues({ ...values, depCity: e.target.value })}
+                                        style={{ borderColor: 'orange'}}
                                     />
                                     <Button
                                         type="button"
-                                        variant="secondary"
                                         onClick={() => {
                                             setValues({
                                                 ...values,
@@ -52,9 +59,9 @@ function Home(){
                                                 arrCity: values.depCity,
                                             });
                                         }}
-                                        className="mb-3"
+                                        style={{color: 'black', backgroundColor: 'white', borderColor: 'orange'}}
                                     >
-                                        Поменять местами
+                                        Поменять
                                     </Button>
                                     <Form.Control
                                         type="text"
@@ -62,6 +69,7 @@ function Home(){
                                         placeholder="Куда"
                                         onChange={(e) =>
                                             setValues({ ...values, arrCity: e.target.value })}
+                                        style={{ borderColor: 'orange'}}
                                     />
                                     <Form.Control
                                         type="date"
@@ -69,8 +77,9 @@ function Home(){
                                         placeholder="Когда"
                                         onChange={(e) =>
                                             setValues({ ...values, depDate: e.target.value })}
+                                        style={{ borderColor: 'orange'}}
                                     />
-                                    <Button type="submit" variant="primary" className="mb-3">
+                                    <Button type="submit" style={{ borderColor: 'orange', backgroundColor: 'orange'}}>
                                         Найти
                                     </Button>
                                 </InputGroup>
@@ -87,19 +96,22 @@ function Home(){
                                         <div className="card-body">
                                             <Row className="col-4" style={{ width: '100%' }}>
                                                 <Col className="d-flex flex-column align-items-center justify-content-center">
-                                                    <p className="font-weight-bold">{trip.depTime}</p>
+                                                    <p style={{fontSize: '1.3rem'}}><strong>{trip.depTime}</strong></p>
+                                                    <p>{trip.depDate}</p>
                                                     <p>{trip.depCity}</p>
                                                 </Col>
                                                 <Col className="d-flex flex-column align-items-center justify-content-center">
-                                                    <p className="font-weight-bold">{trip.arrTime}</p>
+                                                    <p style={{fontSize: '1.3rem'}}><strong>{trip.arrTime}</strong></p>
+                                                    <p>{trip.arrDate}</p>
                                                     <p>{trip.arrCity}</p>
                                                 </Col>
                                                 <Col className="d-flex flex-column align-items-center justify-content-center">
-                                                    <p>Цена</p>
-                                                    <p>{trip.price}</p>
+                                                    <p><strong>Цена</strong></p>
+                                                    <p>{trip.price}р.</p>
                                                 </Col>
                                                 <Col className="d-flex flex-column align-items-center justify-content-center">
-                                                    <Button onClick={() => buyTicket(trip.tripId)} variant="primary">
+                                                    <Button onClick={() => buyTicket(trip.tripId)} 
+                                                            style={{ borderColor: 'orange', backgroundColor: 'orange'}}>
                                                         Выбрать
                                                     </Button>
                                                 </Col>

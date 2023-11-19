@@ -22,9 +22,9 @@ function CreateBus(){
     }
     
     return (
-        <Container className="mt-5">
+        <Container className="mt-5" style={{width: '40%'}}>
             <h2 className="text-center">Добавить новый автобус</h2>
-            <form onSubmit={handleSubmit} className="formCreate">
+            <form onSubmit={handleSubmit} className="border p-4 rounded">
                 <div className="mb-3">
                     <label htmlFor="model" className="form-label">Модель</label>
                     <input
@@ -32,6 +32,7 @@ function CreateBus(){
                         name='model'
                         className="form-control"
                         placeholder="Введите модель"
+                        required
                         onChange={(e) => 
                             setValues({ ...values, model: e.target.value })}
                     />
@@ -43,6 +44,7 @@ function CreateBus(){
                         name='seatCapacity'
                         className="form-control"
                         placeholder="Введите кол-во мест"
+                        required
                         onChange={(e) =>
                             setValues({ ...values, seatCapacity: e.target.value })}
                     />
@@ -54,6 +56,7 @@ function CreateBus(){
                         name='specs'
                         className="form-control"
                         placeholder="Введите характеристик"
+                        required
                         onChange={(e) => 
                             setValues({ ...values, specs: e.target.value })}
                     />

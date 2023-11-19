@@ -30,9 +30,9 @@ function EditBus(){
     }
     
     return (
-        <Container className="mt-5" style={{ width: '33%' }}>
-            <h1 className="text-center">Edit bus</h1>
-            <form onSubmit={handleUpdate} className="form-create">
+        <Container className="mt-5" style={{ width: '40%' }}>
+            <h1 className="text-center">Редактировать данные об автобусе</h1>
+            <form onSubmit={handleUpdate} className="border p-4 rounded">
                 <div className="mb-3">
                     <label htmlFor="model" className="form-label">Модель</label>
                     <input
@@ -40,6 +40,7 @@ function EditBus(){
                         name='model'
                         className="form-control"
                         placeholder="Введите модель"
+                        required
                         value={values.model}
                         onChange={(e) =>
                             setValues({ ...values, model: e.target.value })}
@@ -52,6 +53,7 @@ function EditBus(){
                         name='seatCapacity'
                         className="form-control"
                         placeholder="Введите кол-во мест"
+                        required
                         value={values.seatCapacity}
                         onChange={(e) => 
                             setValues({ ...values, seatCapacity: e.target.value })}
@@ -64,6 +66,7 @@ function EditBus(){
                         name='specs'
                         className="form-control"
                         placeholder="Введите характеристик"
+                        required
                         value={values.specs}
                         onChange={(e) => 
                             setValues({ ...values, specs: e.target.value })}

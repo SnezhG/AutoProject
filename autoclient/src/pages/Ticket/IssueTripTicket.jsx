@@ -56,17 +56,20 @@ function IssueTripTicket(){
         axios.post(`https://localhost:7089/api/Tickets/BookTicket`, ticketValues)
             .then(res => {
                 console.log(res);
-                navigate('/Account')
+                return res.data
+            })
+            .then((firstRes) =>{
+                navigate(`/Ticket/${firstRes}`)
             })
             .catch(err => console.log(err))
     }
 
-    const handleBuying = (event) =>{
+    const handleBuying = async (event) =>{
         event.preventDefault()
         setTicketValues({...ticketValues, trip: tripValues.tripId})
-        axios.post(`https://localhost:7089/api/Tickets/BuyTicket`, ticketValues)
+        await axios.post(`https://localhost:7089/api/Tickets/BuyTicket`, ticketValues)
             .then(res => {
-                console.log(res);
+                console.log(res)
                 return res.data
             })
             .then((firstRes) =>{
@@ -83,13 +86,18 @@ function IssueTripTicket(){
                         <div className="card-body">
                             <Row className="col-4" style={{ width: '100%' }}>
                                 <Col className="d-flex flex-column align-items-center justify-content-center">
-                                    <p className="font-weight-bold">{`${routeValues.depCity} - ${routeValues.arrCity}`}</p>
+                                    <p><strong>Время отправки</strong></p>
+                                    <p>{tripValues.depTime}</p>
+                                    <p>{routeValues.depCity}</p>
                                 </Col>
                                 <Col className="d-flex flex-column align-items-center justify-content-center">
-                                    <p className="font-weight-bold">{`Время отправки: ${tripValues.depTime}`}</p>
+                                    <p><strong>Время прибытия</strong></p>
+                                    <p>{tripValues.depTime}</p>
+                                    <p>{routeValues.arrCity}</p>
                                 </Col>
                                 <Col className="d-flex flex-column align-items-center justify-content-center">
-                                    <p>{`Цена: ${tripValues.price}`}</p>
+                                    <p><strong>Цена</strong></p>
+                                    <p>{tripValues.price}</p>
                                 </Col>
                             </Row>
                         </div>
@@ -100,7 +108,7 @@ function IssueTripTicket(){
                 <Col>
                     <Form onSubmit={handleBooking} style={{width: '70%'}}>
                         <Form.Group className="mb-3">
-                            <Form.Label htmlFor="name">Фамилия Имя Отчество</Form.Label>
+                            <Form.Label htmlFor="name">Пассажир</Form.Label>
                             <div className="d-flex">
                                 <Form.Control
                                     type="text"
@@ -172,7 +180,7 @@ function IssueTripTicket(){
                                     setTicketValues({ ...ticketValues, sex: e.target.value })}
                             >
                                 <option value="" disabled>
-                                    Выберите пол
+                                    Пол
                                 </option>
                                 <option value="Male">Мужской</option>
                                 <option value="Female">Женский</option>
@@ -183,6 +191,7 @@ function IssueTripTicket(){
                             <Form.Control
                                 type="text"
                                 name="phoneNum"
+                                placeholder="Номер телефона"
                                 value={ticketValues.phoneNum}
                                 onChange={(e) => 
                                     setTicketValues({ ...ticketValues, phoneNum: e.target.value })}
@@ -198,7 +207,7 @@ function IssueTripTicket(){
                                     setTicketValues({ ...ticketValues, seat: e.target.value })}
                             >
                                 <option value="" disabled>
-                                    Выберите место
+                                    Место
                                 </option>
                                 {seatsValues
                                     .filter((seat) => seat.available)
