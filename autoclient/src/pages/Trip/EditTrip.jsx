@@ -1,6 +1,7 @@
 import {Link, useNavigate, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import axios from "axios";
+import {Container} from "react-bootstrap";
 
 function EditTrip(){
     const {id} = useParams();
@@ -83,19 +84,20 @@ function EditTrip(){
     }
 
     return (
-        <div>
-            <h1>Edit trip</h1>
-            <form onSubmit={handleSubmit} className="formCreate">
-                <div>
-                    <label htmlFor="routeId">Route</label>
+        <Container className="mt-5" style={{ width: '40%' }}>
+            <h1 className="text-center">Редактировать данные о рейсе</h1>
+            <form onSubmit={handleSubmit} className="border p-4 rounded">
+                <div className="mb-3">
+                    <label htmlFor="routeId" className="form-label">Маршрут</label>
                     <select
+                        className="form-select"
                         onChange={(e) =>
                             setTripValues({ ...tripValues, routeId: e.target.value })}
                         value={tripValues.routeId}
                     >
                         <option value={tripValues.routeId} disabled hidden>
                             {tripValues.routeId ? routeValues.find((option) =>
-                            option.value == tripValues.routeId)?.label : 'Select route'}
+                                option.value == tripValues.routeId)?.label : 'Select route'}
                         </option>
                         {routeValues.map((option) => (
                             <option key={option.value} value={option.value}>
@@ -104,9 +106,10 @@ function EditTrip(){
                         ))}
                     </select>
                 </div>
-                <div>
-                    <label htmlFor="busId">Bus</label>
+                <div className="mb-3">
+                    <label htmlFor="busId" className="form-label">Автобус</label>
                     <select
+                        className="form-select"
                         onChange={(e) =>
                             setTripValues({ ...tripValues, busId: e.target.value })}
                         value={tripValues.busId}
@@ -118,15 +121,16 @@ function EditTrip(){
                         {busValues
                             .filter(option => option.status || option.value === defaultBus)
                             .map((option) => (
-                            <option key={option.value} value={option.value}>
-                                {option.label}
-                            </option>
-                        ))}
+                                <option key={option.value} value={option.value}>
+                                    {option.label}
+                                </option>
+                            ))}
                     </select>
                 </div>
-                <div>
-                    <label htmlFor="driverId">Driver</label>
+                <div className="mb-3">
+                    <label htmlFor="driverId" className="form-label">Водитель</label>
                     <select
+                        className="form-select"
                         onChange={(e) =>
                             setTripValues({ ...tripValues, driverId: e.target.value })}
                         value={tripValues.driverId}
@@ -138,18 +142,19 @@ function EditTrip(){
                         {driverValues
                             .filter(option => option.status || option.value === defaultDriver)
                             .map((option) => (
-                            <option key={option.value} value={option.value}>
-                                {option.label}
-                            </option>
-                        ))}
+                                <option key={option.value} value={option.value}>
+                                    {option.label}
+                                </option>
+                            ))}
                     </select>
                 </div>
-                <div>
-                    <label htmlFor="condId">Conductor</label>
+                <div className="mb-3">
+                    <label htmlFor="conductorId" className="form-label">Кондуктор</label>
                     <select
                         onChange={(e) =>
                             setTripValues({ ...tripValues, conductorId: e.target.value })}
                         value={tripValues.conductorId}
+                        className="form-select"
                     >
                         <option value={tripValues.conductorId} disabled hidden>
                             {tripValues.conductorId ? condValues.find((option) =>
@@ -158,37 +163,52 @@ function EditTrip(){
                         {condValues
                             .filter(option => option.status || option.value === defaultCond)
                             .map((option) => (
-                            <option key={option.value} value={option.value}>
-                                {option.label}
-                            </option>
-                        ))}
+                                <option key={option.value} value={option.value}>
+                                    {option.label}
+                                </option>
+                            ))}
                     </select>
                 </div>
-                <div>
-                    <label htmlFor="price">Price</label>
-                    <input type="text" name='price' 
-                           value={tripValues.price}
-                           onChange={e =>
-                               setTripValues({...tripValues, price: e.target.value})}/>
+                <div className="mb-3">
+                    <label htmlFor="price" className="form-label">Цена</label>
+                    <input
+                        type="text"
+                        name='price'
+                        className="form-control"
+                        required
+                        value={tripValues.price}
+                        onChange={e =>
+                            setTripValues({...tripValues, price: e.target.value})}
+                    />
                 </div>
-                <div>
-                    <label htmlFor="depTime">Departure time</label>
-                    <input type="datetime-local" name='depTime'
-                           value={tripValues.depTime}
-                           onChange={e =>
-                               setTripValues({...tripValues, depTime: e.target.value})}/>
+                <div className="mb-3">
+                    <label htmlFor="depTime" className="form-label">Дата и время отправки</label>
+                    <input
+                        type="datetime-local"
+                        name='depTime'
+                        className="form-control"
+                        required
+                        value={tripValues.depTime}
+                        onChange={e =>
+                            setTripValues({...tripValues, depTime: e.target.value})}
+                    />
                 </div>
-                <div>
-                    <label htmlFor="arrTime">Arrival time</label>
-                    <input type="datetime-local" name='arrTime'
-                           value={tripValues.arrTime}
-                           onChange={e =>
-                               setTripValues({...tripValues, arrTime: e.target.value})}/>
+                <div className="mb-3">
+                    <label htmlFor="arrTime" className="form-label">Дата и время прибытия</label>
+                    <input
+                        type="datetime-local"
+                        name='arrTime'
+                        className="form-control"
+                        required
+                        value={tripValues.arrTime}
+                        onChange={e =>
+                            setTripValues({...tripValues, arrTime: e.target.value})}
+                    />
                 </div>
-                <button>Edit</button>
-                <Link to="/">Back</Link>
+                <button type="submit" className="btn btn-primary">Изменить</button>
+                <Link to="/" className="btn btn-secondary ms-2">Назад</Link>
             </form>
-        </div>
+        </Container>
     )
 }
 
