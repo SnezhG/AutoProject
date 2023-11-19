@@ -220,7 +220,7 @@ function IssueTripTicket(){
                                 {seatsValues
                                     .filter((seat) => seat.available)
                                     .map((seat) => (
-                                        <option key={seat.seatId} value={seat.num}>
+                                        <option key={seat.seatId} value={seat.seatId}>
                                             {seat.num}
                                         </option>
                                     ))}

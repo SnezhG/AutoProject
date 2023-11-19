@@ -19,7 +19,11 @@ function Ticket(){
 
     const confirmDelete = () => {
         if (ticektIdToCancell) {
-            axios.put(`https://localhost:7089/api/Tickets/CancelBooking`, ticektIdToCancell)
+            axios.put(`https://localhost:7089/api/Tickets/CancelBooking`, JSON.stringify(id), {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
                 .then((res) => {
                     console.log("deleted^ ", res.data)
                     usingAxios()
@@ -47,13 +51,6 @@ function Ticket(){
                 return "";
         }
     }
-    
-/*    const handleCancelling = (id) => {
-        axios.put(`https://localhost:7089/api/Tickets/CancelBooking`, id)
-            .then(res =>{
-            console.log("Cancelled ", res.data)
-        })
-    }*/
 
     const usingAxios = () => {
         axios.get(`https://localhost:7089/api/Tickets/${id}`)
@@ -105,12 +102,16 @@ function Ticket(){
                     </p>
                 </div>
                 <CardFooter>
-                    <Link className="btn m-1" to={`/TicketPay/${values.id}`}>Оплатить</Link>
-                    <Button
-                        className="btn-danger m-1"
-                        onClick={() => removeData(values.id)}>
-                        Отменить бронь
-                    </Button>
+                    {values.status === "issued" && (
+                        <Link className="btn m-1" to={`/TicketPay/${values.id}`}>Оплатить</Link>
+                    )}
+                    {values.status === "booked" &&(
+                        <Button
+                            className="btn-danger m-1"
+                            onClick={() => removeData(values.id)}>
+                            Отменить бронь
+                        </Button>
+                    )}
                     <Link className="btn m-1" to={`/ClientTickets`}>Назад</Link>
                 </CardFooter>
             </Card>
