@@ -20,7 +20,7 @@ function IssueTripTicket(){
         passNum: '',
         phoneNum: '',
         seat: '',
-        trip: ''
+        trip: id
     })
     
     useEffect(() => {
