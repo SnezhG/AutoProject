@@ -26,7 +26,9 @@ namespace AutoService.Services
         public async Task<List<TicketInfoDTO>> GetTickets()
         {
             var clientId = GetClientIdFromToken();
-            var clientTickets = await _context.Clienttickets.Where(t => t.Client == clientId).ToListAsync();
+            var clientTickets = await _context.Clienttickets
+                .Where(t => t.Client == clientId).ToListAsync();
+            
             if (clientTickets == null)
                 return null;
 
@@ -45,11 +47,16 @@ namespace AutoService.Services
                 .Include(t => t.Seat)
                 .Include(t => t.Passenger)
                 .FirstOrDefaultAsync(t => t.TicketId == id);
+            if (ticket == null)
+                return null;
             
             var trip = await _context.Trips
                 .Include(t => t.Route)
                 .FirstOrDefaultAsync(t => t.TripId == ticket.TripId);
 
+            if (trip == null)
+                return null;
+            
             var ticketInfo = new TicketInfoDTO
             {
                 Id = ticket.TicketId,
@@ -72,17 +79,20 @@ namespace AutoService.Services
         public async Task<ServiceResponce> BookTicket(TicketDTO model)
         {
             var ticketToBookId = await IssueTicket(model);
+            
             if (ticketToBookId == -1)
                 return new ServiceResponce
                 {
-                    IsSuccess = false
+                    IsSuccess = false,
+                    Message = "Issued ticket id not found"
                 };
 
             var ticketToBook = await _context.Tickets.FindAsync(ticketToBookId);
             if (ticketToBook == null)
                 return new ServiceResponce
                 {
-                    IsSuccess = false
+                    IsSuccess = false,
+                    Message = "Ticket not found"
                 };
             
             ticketToBook.TriggerState(Ticket.Trigger.Book);
@@ -100,45 +110,12 @@ namespace AutoService.Services
         public async Task<int> BuyTicket(TicketDTO model)
         {
             var ticketToBuyId = await IssueTicket(model);
-            SetPaymentTimer(ticketToBuyId);
+
+            if (ticketToBuyId == null)
+                return -1;
             
-            /*if (ticketToBuyId == -1)
-                return new ServiceResponce
-                {
-                    IsSuccess = false
-                };*/
+            SetPaymentTimer(ticketToBuyId);
             return ticketToBuyId;
-        }
-
-        private void SetPaymentTimer(int ticketId)
-        {
-            int paymentTime = 10 * 1000;
-            Timer paymentTimer = new Timer(async state => 
-                    await CancelPayment((int)state), ticketId, 
-                (long)paymentTime, Timeout.Infinite);
-        }
-
-        private async Task CancelPayment(int ticketId)
-        {
-            using (var context = new AutoContext())
-            {
-                var ticketToCancel = await context.Tickets.FindAsync(ticketId);
-                Console.WriteLine("--------Вошел----------" + ticketToCancel.Status);
-
-                if (ticketToCancel != null && ticketToCancel.Status.Equals("issued"))
-                {
-                    ticketToCancel.TriggerState(Ticket.Trigger.Cancel);
-                    ticketToCancel.Status = "cancelled";
-                    context.Tickets.Update(ticketToCancel);
-                    Console.WriteLine("--------Изменил----------" + ticketToCancel.Status);
-
-                    var seat = await context.Seats.FindAsync(ticketToCancel.SeatId);
-                    seat.Available = true;
-                    context.Seats.Update(seat);
-
-                    await context.SaveChangesAsync();
-                }
-            }
         }
 
         public async Task<ServiceResponce> CancelBooking(int ticketId) 
@@ -148,7 +125,8 @@ namespace AutoService.Services
             if (ticketToCancel == null)
                 return new ServiceResponce 
                 {
-                    IsSuccess = false
+                    IsSuccess = false,
+                    Message = "Ticket not found"
                 };
 
             ticketToCancel.TriggerState(Ticket.Trigger.Cancel);
@@ -156,6 +134,12 @@ namespace AutoService.Services
             _context.Tickets.Update(ticketToCancel);
 
             var seat = await _context.Seats.FindAsync(ticketToCancel.SeatId);
+            if (seat == null)
+                return new ServiceResponce
+                {
+                    IsSuccess = false,
+                    Message = "Seat not found"
+                };
             seat.Available = true;
             _context.Seats.Update(seat);
 
@@ -174,13 +158,16 @@ namespace AutoService.Services
             if (ticket == null)
                 return new ServiceResponce
                 {
-                    IsSuccess = false
+                    IsSuccess = false,
+                    Message = "Ticket not found"
                 };
+            
             ticket.TriggerState(Ticket.Trigger.Pay);
             ticket.Status = "paid";
             ticket.DateTime = DateTime.Now;
             _context.Tickets.Update(ticket);
             await _context.SaveChangesAsync();
+            
             return new ServiceResponce
             {
                 IsSuccess = true
@@ -226,21 +213,22 @@ namespace AutoService.Services
             
             var newTicket = new Ticket
             {
+                DateTime = DateTime.Now,
                 Status = "issued",
                 PassengerId = passenger.PassengerId,
                 SeatId = model.Seat,
                 TripId = model.Trip
             };
-
-            /*await _context.Tickets.AddAsync(newTicket);
+            
             var clientId = GetClientIdFromToken();
             if (clientId == null)
                 return -1;
+            
             await _context.Clienttickets.AddAsync(new Clientticket
             {
                 Client = clientId,
                 Ticket = newTicket.TicketId
-            });*/
+            });
 
             _context.Tickets.Add(newTicket);
             await _context.SaveChangesAsync();
@@ -267,7 +255,33 @@ namespace AutoService.Services
                 c.Type == "ClientId")?.Value;
             return clientId;
         }
+        
+        private void SetPaymentTimer(int ticketId)
+        {
+            int paymentTime = 60 * 5 * 1000;
+            Timer paymentTimer = new Timer(async state => 
+                    await CancelPayment((int)state), ticketId, 
+                (long)paymentTime, Timeout.Infinite);
+        }
 
+        private async Task CancelPayment(int ticketId)
+        {
+            using (var context = new AutoContext())
+            {
+                var ticketToCancel = await context.Tickets.FindAsync(ticketId);
+                if (ticketToCancel != null && ticketToCancel.Status.Equals("issued"))
+                {
+                    ticketToCancel.TriggerState(Ticket.Trigger.Cancel);
+                    ticketToCancel.Status = "cancelled";
+                    context.Tickets.Update(ticketToCancel);
+                    var seat = await context.Seats.FindAsync(ticketToCancel.SeatId);
+                    seat.Available = true;
+                    context.Seats.Update(seat);
 
+                    await context.SaveChangesAsync();
+                }
+            }
+        }
+        
     }
 }

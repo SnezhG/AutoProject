@@ -5,7 +5,7 @@ namespace AutoService.DTO
 {
     public class TicketDTO
     {
-        /*public int clientId { get; set; }*/
+        public int ClientId { get; set; }
         public string LastName { get; set; }
 
         public string Name { get; set; }
@@ -19,8 +19,7 @@ namespace AutoService.DTO
         public string PassSeries { get; set; }
 
         public string PassNum { get; set; }
-
-        /*[Phone]*/
+        
         public string PhoneNum { get; set; }
 
         public int Seat { get; set; }
