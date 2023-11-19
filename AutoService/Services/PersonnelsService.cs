@@ -39,7 +39,6 @@ namespace AutoService.Services
             persToEdit.Patronimyc = model.Patronimyc;
             persToEdit.Post = model.Post;
             persToEdit.Experience = model.Experience;
-            persToEdit.Available = model.Avail;
 
             _context.Personnel.Update(persToEdit);
 
