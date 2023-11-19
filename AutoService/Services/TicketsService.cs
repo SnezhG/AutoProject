@@ -52,6 +52,7 @@ namespace AutoService.Services
 
             var ticketInfo = new TicketInfoDTO
             {
+                Id = ticket.TicketId,
                 Name = ticket.Passenger.Name,
                 Surname = ticket.Passenger.Surname,
                 Patronymic = ticket.Passenger.Patronimyc,
@@ -99,25 +100,47 @@ namespace AutoService.Services
         public async Task<int> BuyTicket(TicketDTO model)
         {
             var ticketToBuyId = await IssueTicket(model);
+            SetPaymentTimer(ticketToBuyId);
+            
             /*if (ticketToBuyId == -1)
                 return new ServiceResponce
                 {
                     IsSuccess = false
                 };*/
             return ticketToBuyId;
-            /*var result = await PayForTicket(ticketToBuyId);
-
-            if(result.IsSuccess)
-                return new ServiceResponce
-                {
-                    IsSuccess = true
-                };*/
-
-            /*return new ServiceResponce
-            {
-                IsSuccess = false
-            };*/
         }
+
+        private void SetPaymentTimer(int ticketId)
+        {
+            int paymentTime = 10 * 1000;
+            Timer paymentTimer = new Timer(async state => 
+                    await CancelPayment((int)state), ticketId, 
+                (long)paymentTime, Timeout.Infinite);
+        }
+
+        private async Task CancelPayment(int ticketId)
+        {
+            using (var context = new AutoContext())
+            {
+                var ticketToCancel = await context.Tickets.FindAsync(ticketId);
+                Console.WriteLine("--------Вошел----------" + ticketToCancel.Status);
+
+                if (ticketToCancel != null && ticketToCancel.Status.Equals("issued"))
+                {
+                    ticketToCancel.TriggerState(Ticket.Trigger.Cancel);
+                    ticketToCancel.Status = "cancelled";
+                    context.Tickets.Update(ticketToCancel);
+                    Console.WriteLine("--------Изменил----------" + ticketToCancel.Status);
+
+                    var seat = await context.Seats.FindAsync(ticketToCancel.SeatId);
+                    seat.Available = true;
+                    context.Seats.Update(seat);
+
+                    await context.SaveChangesAsync();
+                }
+            }
+        }
+
         public async Task<ServiceResponce> CancelBooking(int ticketId) 
         {
             var ticketToCancel = await _context.Tickets.FindAsync(ticketId);
@@ -129,7 +152,7 @@ namespace AutoService.Services
                 };
 
             ticketToCancel.TriggerState(Ticket.Trigger.Cancel);
-            ticketToCancel.Status = "canceled";
+            ticketToCancel.Status = "cancelled";
             _context.Tickets.Update(ticketToCancel);
 
             var seat = await _context.Seats.FindAsync(ticketToCancel.SeatId);

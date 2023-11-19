@@ -7,9 +7,24 @@ namespace AutoService.Data;
 
 public partial class AutoContext : DbContext
 {
+    public AutoContext()
+    {
+    }
+
     public AutoContext(DbContextOptions<AutoContext> options)
         : base(options)
     {
+    }
+    
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        if (!optionsBuilder.IsConfigured)
+        {
+            optionsBuilder
+                .UseMySql(
+                    "server=localhost;port=3306;database=autodb;uid=root;pwd=GIzy!", 
+                    Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.32-mysql"));
+        }
     }
 
     public virtual DbSet<Bus> Buses { get; set; }
