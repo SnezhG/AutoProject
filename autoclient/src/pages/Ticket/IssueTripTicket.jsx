@@ -53,7 +53,11 @@ function IssueTripTicket(){
         event.preventDefault()
         setTicketValues({...ticketValues, trip: tripValues.tripId})
         console.log(ticketValues)
-        axios.post(`https://localhost:7089/api/Tickets/BookTicket`, ticketValues)
+        axios.post(`https://localhost:7089/api/Tickets/BookTicket`, ticketValues, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+        })
             .then(res => {
                 console.log(res);
                 return res.data
@@ -67,7 +71,11 @@ function IssueTripTicket(){
     const handleBuying = async (event) =>{
         event.preventDefault()
         setTicketValues({...ticketValues, trip: tripValues.tripId})
-        await axios.post(`https://localhost:7089/api/Tickets/BuyTicket`, ticketValues)
+        await axios.post(`https://localhost:7089/api/Tickets/BuyTicket`, ticketValues, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+        })
             .then(res => {
                 console.log(res)
                 return res.data

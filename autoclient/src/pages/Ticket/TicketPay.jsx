@@ -1,11 +1,15 @@
-﻿import {useParams} from "react-router-dom";
+﻿import {useNavigate, useParams} from "react-router-dom";
 import axios from "axios";
 
 function TicketPay(){
-    const {id} = useParams();
-    
+    const {id} = useParams()
+    const navigate = useNavigate()
     const handlePaying = () => {
-        axios.put(`https://localhost:7089/api/Tickets/PayForTicket/${id}`)
+        axios.post(`https://localhost:7089/api/Tickets/PayForTicket`, JSON.stringify(id), {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
             .then(res => {
             console.log(res)
             return res.data
@@ -32,7 +36,10 @@ function TicketPay(){
                     <label className="form-label">CVV</label>
                     <input type="text" className="form-control" name="cardCVV" />
                 </div>
-                <button onClick={() => handlePaying()} className="btn btn-primary">Оплатить</button>
+                <button 
+                    onClick={() => handlePaying()} className="btn btn-primary">
+                    Оплатить
+                </button>
             </div>
         </div>
     )
