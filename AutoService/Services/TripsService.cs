@@ -51,42 +51,80 @@ namespace AutoService.Services
         }
         public async Task<ServiceResponce> PutTrip(int id, TripDTO model) 
         {
-            var tripToEdit = await _context.Trips.FindAsync(id);
+            var tripToEdit = await _context.Trips
+                .Include(trip => trip.Bus)
+                .Include(trip => trip.Driver)
+                .Include(trip => trip.Conductor)
+                .FirstOrDefaultAsync(trip => trip.TripId == id);
 
             if (tripToEdit == null)
                 return new ServiceResponce 
                 {
-                    IsSuccess = false
+                    IsSuccess = false,
+                    Message = "Trip not found"
                 };
 
             if (tripToEdit.Bus.BusId != model.BusId)
             {
                 var newBus = await _context.Buses.FindAsync(model.BusId);
                 var oldBus = await _context.Buses.FindAsync(tripToEdit.Bus.BusId);
-                oldBus.Available = true;
-                newBus.Available = false;
-                _context.Buses.Update(oldBus);
-                _context.Buses.Update(newBus);
+                if (newBus != null && oldBus != null)
+                {
+                    oldBus.Available = true;
+                    newBus.Available = false;
+                    _context.Buses.Update(oldBus);
+                    _context.Buses.Update(newBus);
+                }
+                else
+                {
+                    return new ServiceResponce
+                    {   
+                        IsSuccess = false,
+                        Message = "Buses not found"
+                    };
+                }
             }
             
             if (tripToEdit.DriverId != model.DriverId)
             {
                 var newDriver = await _context.Personnel.FindAsync(model.DriverId);
                 var oldDriver = await _context.Personnel.FindAsync(tripToEdit.DriverId);
-                oldDriver.Available = true;
-                newDriver.Available = false;
-                _context.Personnel.Update(oldDriver);
-                _context.Personnel.Update(newDriver);
+                if (newDriver != null && oldDriver != null)
+                {
+                    oldDriver.Available = true;
+                    newDriver.Available = false;
+                    _context.Personnel.Update(oldDriver);
+                    _context.Personnel.Update(newDriver); 
+                }
+                else
+                {
+                    return new ServiceResponce
+                    {   
+                        IsSuccess = false,
+                        Message = "Drivers not found"
+                    };
+                }
             }
             
             if (tripToEdit.ConductorId != model.ConductorId)
             {
                 var newCond = await _context.Personnel.FindAsync(model.ConductorId);
                 var oldCond = await _context.Personnel.FindAsync(tripToEdit.ConductorId);
-                oldCond.Available = true;
-                newCond.Available = false;
-                _context.Personnel.Update(oldCond);
-                _context.Personnel.Update(newCond);
+                if (newCond != null && oldCond != null)
+                {
+                    oldCond.Available = true;
+                    newCond.Available = false;
+                    _context.Personnel.Update(oldCond);
+                    _context.Personnel.Update(newCond);
+                }
+                else
+                {
+                    return new ServiceResponce
+                    {   
+                        IsSuccess = false,
+                        Message = "Conductors not found"
+                    };
+                }
             }
 
             tripToEdit.DepTime = model.DepTime;
@@ -124,7 +162,8 @@ namespace AutoService.Services
             if (bus == null)
                 return new ServiceResponce 
                 {
-                    IsSuccess = false
+                    IsSuccess = false,
+                    Message = "Bus not found"
                 };
 
             var driver = await _context.Personnel.FindAsync(model.DriverId);
@@ -132,7 +171,8 @@ namespace AutoService.Services
             if (driver == null)
                 return new ServiceResponce
                 {
-                    IsSuccess = false
+                    IsSuccess = false,
+                    Message = "Driver not found"
                 };
 
             var conductor = await _context.Personnel.FindAsync(model.ConductorId);
@@ -140,7 +180,8 @@ namespace AutoService.Services
             if (conductor == null)
                 return new ServiceResponce
                 {
-                    IsSuccess = false
+                    IsSuccess = false,
+                    Message = "Conductor not found"
                 };
 
             bus.Available = false;
