@@ -8,6 +8,7 @@ body {
 
 .nav {
     background-color: #333;
+    font-size: 1.5rem;
     color: white;
     display: flex;
     justify-content: space-between;
@@ -52,4 +53,71 @@ body {
     background-color: #f5f5f5;
     padding: 2rem;
     justify-content: center;
+}
+
+.findTickets{
+    margin-top: 10rem;
+    border: 1px solid;
+    padding: 1.5rem;
+}
+
+.findTickets form{
+    text-align: center;
+    margin: 20px;
+}
+
+.findTickets div{
+    display: inline-block;
+    margin-bottom: 10px;
+}
+
+.findTickets input{
+    width: 20rem;
+    height: 3rem;
+    padding: 5px;
+    margin-top: 5px;
+}
+
+.findTickets button{
+    width: 4rem;
+    height: 3rem;
+    padding: 8px;
+    margin-top: 10px;
+}
+
+.tripInfo{
+    border: 1px solid;
+    margin-top: 3rem;
+    padding: 1rem;
+}
+
+.tripInfo  input[readonly]{
+/*    border: none;*/
+    outline: none;
+    height: 3rem;
+    background-color: transparent;
+}
+
+.ticketForm{
+    border: 1px solid;
+    margin: 1.5rem;
+    padding: .5rem;
+    display: inline-block;
+}
+
+.ticketForm form{
+    border: #535bf2 1px solid;
+    width: 40%;
+}
+
+.ticketForm input{
+    width: 70%;
+    padding: .5rem;
+}
+
+.ticketField{
+    border: 1px solid red;
+    display: inline-flex;
+    margin: .5rem;
+    align-items: center;
 }
