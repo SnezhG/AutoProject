@@ -20,21 +20,24 @@ namespace AutoService.Services
         public async Task Execute(IJobExecutionContext context)
         {
             _logger.LogInformation("job being done {UtcNow}", DateTime.UtcNow);
+            var ticketsToCheck = await _context.Tickets
+                .Where(ticket =>
+                ticket.Status == "booked")
+                .ToListAsync();
 
-            var ticketsToCheck = await _context.Tickets.Where(ticket =>
-                ticket.Status == "booked").ToListAsync();
-
-            foreach(var tick in ticketsToCheck) 
+            if (ticketsToCheck != null)
             {
-                if (DateTime.Now > tick.DateTime.AddMinutes(1)) 
+                foreach(var tick in ticketsToCheck) 
                 {
-                    tick.TriggerState(Ticket.Trigger.Expire);
-                    tick.Status = "expired";
-                    _context.Tickets.Update(tick);
+                    if (DateTime.Now > tick.DateTime.AddMinutes(1)) 
+                    {
+                        tick.TriggerState(Ticket.Trigger.Expire);
+                        tick.Status = "expired";
+                        _context.Tickets.Update(tick);
+                    }
                 }
+                await _context.SaveChangesAsync();
             }
-
-            await _context.SaveChangesAsync();
         }
     }
 }
