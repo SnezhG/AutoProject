@@ -34,7 +34,7 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 .AddDefaultTokenProviders();
 
 builder.Services.AddScoped<IAutoUser, AutoUserService>();
-builder.Services.AddScoped<IUserService, AutoUserAuthService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 builder.Services.AddCors(o =>
 {

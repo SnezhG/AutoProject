@@ -1,8 +1,9 @@
 ﻿using UserService.DTO;
+using UserService.Services;
 
-namespace UserService.Services;
+namespace UserService.ServiceInterfaces;
 
-public interface IUserService
+public interface IAuthService
 {
         Task<UserManagerResponce> RegisterUserAsync(RegistrationDTO dto);
 

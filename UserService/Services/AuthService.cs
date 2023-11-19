@@ -5,15 +5,16 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using UserService.Models;
 using UserService.DTO;
+using UserService.ServiceInterfaces;
 
 namespace UserService.Services;
 
-    public partial class AutoUserAuthService : IUserService
+    public partial class AuthService : IAuthService
     {
         private UserManager<IdentityUser> _userManager;
         private IConfiguration _configuration;
 
-        public AutoUserAuthService(UserManager<IdentityUser> userManager, IConfiguration configuration)
+        public AuthService(UserManager<IdentityUser> userManager, IConfiguration configuration)
         {
             _userManager = userManager;
             _configuration = configuration;
@@ -24,11 +25,12 @@ namespace UserService.Services;
         public async Task<UserManagerResponce> RegisterUserAsync(RegistrationDTO dto)
         {
             if (dto == null)
-                throw new NullReferenceException("Registration model is null!");
+                throw new NullReferenceException("Registration model is null");
+            
             if (dto.Password != dto.ConfirmPassword)
                 return new UserManagerResponce
                 {
-                    Message = "Passwords doesnt match!",
+                    Message = "Passwords doesnt match",
                     IsSuccess = false
                 };
             var identityUser = new IdentityUser
@@ -52,14 +54,13 @@ namespace UserService.Services;
 
                 return new UserManagerResponce
                 {
-                    Message = "User created!",
                     IsSuccess = true
                 };
             }
 
             return new UserManagerResponce
             {
-                Message = "User is not created!",
+                Message = "User is not created",
                 IsSuccess = false,
                 Errors = result.Errors.Select(e => e.Description)
             };
@@ -73,7 +74,7 @@ namespace UserService.Services;
             {
                 return new UserManagerResponce
                 {
-                    Message = "User not found!",
+                    Message = "User not found",
                     IsSuccess = false
                 };
             }
@@ -84,7 +85,7 @@ namespace UserService.Services;
             {
                 return new UserManagerResponce
                 {
-                    Message = "Invalid password!",
+                    Message = "Invalid password",
                     IsSuccess = false
                 };
             }
@@ -111,7 +112,6 @@ namespace UserService.Services;
 
             return new UserManagerResponce
             {
-                Message = tokenString,
                 IsSuccess = true,
                 Token = tokenString,
                 Role = userRoles[0]

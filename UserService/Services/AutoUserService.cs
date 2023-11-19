@@ -8,13 +8,13 @@ public class AutoUserService : IAutoUser
 {
     private readonly UserManager<IdentityUser> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
-    private readonly IUserService _userService;
+    private readonly IAuthService _authService;
 
-    public AutoUserService(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, IUserService userService)
+    public AutoUserService(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, IAuthService authService)
     {
         _userManager = userManager;
         _roleManager = roleManager;
-        _userService = userService;
+        _authService = authService;
     }
 
     public async Task<IEnumerable<AutoUserDTO>> GetUsers()
@@ -108,7 +108,7 @@ public class AutoUserService : IAutoUser
 
     public async Task<UserManagerResponce> CreateUser(RegistrationDTO dto)
     {
-        var result = await _userService.RegisterUserAsync(dto);
+        var result = await _authService.RegisterUserAsync(dto);
 
         return result;
     }

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using UserService.DTO;
+using UserService.ServiceInterfaces;
 using UserService.Services;
 
 namespace UserService.Controllers
@@ -10,11 +11,11 @@ namespace UserService.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private IUserService _userService;
+        private IAuthService _authService;
 
-        public AuthController(IUserService userService)
+        public AuthController(IAuthService authService)
         {
-            _userService = userService;
+            _authService = authService;
         }
 
         [HttpPost("Registration")]
@@ -23,7 +24,7 @@ namespace UserService.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await _userService.RegisterUserAsync(dto);
+                var result = await _authService.RegisterUserAsync(dto);
 
                 if (result.IsSuccess)
                     return Ok(result);
@@ -39,7 +40,7 @@ namespace UserService.Controllers
         {
             if (ModelState.IsValid) 
             {
-                var result = await _userService.LoginUserAsync(dto);
+                var result = await _authService.LoginUserAsync(dto);
 
                 if (result.IsSuccess)
                     return Ok(result);
