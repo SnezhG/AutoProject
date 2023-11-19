@@ -38,7 +38,8 @@ namespace AutoService.Services
             if (busToEdit == null)
                 return new ServiceResponce
                 {
-                    IsSuccess = false
+                    IsSuccess = false,
+                    Message = "Bus not found"
                 };
 
             busToEdit.SeatCapacity = model.SeatCapacity;
@@ -78,7 +79,8 @@ namespace AutoService.Services
             if (bus == null)
                 return new ServiceResponce 
                 {
-                    IsSuccess = false
+                    IsSuccess = false,
+                    Message = "Bus not found"
                 };
 
             _context.Buses.Remove(bus);

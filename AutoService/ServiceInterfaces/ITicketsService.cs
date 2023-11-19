@@ -9,9 +9,9 @@ namespace AutoService.ServiceInterfaces
         Task<List<TicketInfoDTO>> GetTickets();
         Task<TicketInfoDTO> GetTicket(int id);
         Task<ServiceResponce> BookTicket(TicketDTO model);
-        Task<int> BuyTicket(TicketDTO model);
+        Task<ServiceResponce> BuyTicket(TicketDTO model);
         Task<ServiceResponce> CancelBooking(int ticketId);
-        Task<int> IssueTicket(TicketDTO model);
+        Task<ServiceResponce> IssueTicket(TicketDTO model);
         Task<ServiceResponce> PayForTicket(int id);
     }
 }

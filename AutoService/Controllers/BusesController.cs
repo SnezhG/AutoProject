@@ -42,10 +42,10 @@ namespace AutoService.Controllers
         }
         
         [HttpGet("BusSeats/{id}")]
-        public async Task<ActionResult<IEnumerable<Seat>>> GetBusSeats(int id)
+        public async Task<ActionResult<IEnumerable<Seat>>> GetBusSeats(int busId)
         {
 
-            var seats = await _busService.GetBusSeats(id);
+            var seats = await _busService.GetBusSeats(busId);
 
             if (seats == null)
                 return NotFound();
@@ -69,17 +69,12 @@ namespace AutoService.Controllers
         [HttpPost]
         public async Task<ActionResult> PostBus([FromBody] BusDTO model)
         {
-          if (ModelState.IsValid)
-          {
-                var result = await _busService.PostBus(model);
+            var result = await _busService.PostBus(model);
 
-                if (result.IsSuccess)
-                    return Ok();
+            if (result.IsSuccess)
+                return Ok();
 
-                return BadRequest();
-          };
-
-            return BadRequest("Some properties are incorrect");
+            return NotFound(result);
         }
 
         [HttpDelete("{id}")]
@@ -90,7 +85,7 @@ namespace AutoService.Controllers
             if (result.IsSuccess)
                 return Ok();
 
-            return NotFound();
+            return NotFound(result);
         }
     }
 }

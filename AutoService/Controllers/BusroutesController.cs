@@ -42,21 +42,16 @@ namespace AutoService.Controllers
             if (result.IsSuccess)
                 return Ok();
 
-            return BadRequest();
+            return NotFound(result);
         }
 
         [HttpPost]
         public async Task<ActionResult> PostBusroute([FromBody] BusRouteDTO model)
         {
-            if (ModelState.IsValid)
-            {
-                var result = await _busroutesService.PostBusroute(model);
-                if (result.IsSuccess)
-                    return Ok();
-                return BadRequest();
-            };
-
-            return BadRequest("Route properties are incorrect");
+            var result = await _busroutesService.PostBusroute(model);
+            if (result.IsSuccess)
+                return Ok();
+            return NotFound(result);
         }
 
         [HttpDelete("{id}")]
@@ -65,7 +60,7 @@ namespace AutoService.Controllers
             var result = await _busroutesService.DeleteBusroute(id);
             if (result.IsSuccess)
                 return Ok();
-            return NotFound();
+            return NotFound(result);
         }
     }
 }

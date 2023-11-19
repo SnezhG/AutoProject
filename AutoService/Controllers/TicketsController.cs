@@ -38,42 +38,28 @@ namespace AutoService.Controllers
         [HttpPost("BookTicket")]
         public async Task<IActionResult> BookTicket([FromBody]TicketDTO model)
         {
-            if (ModelState.IsValid)
-            {
-                var result = await _ticketService.BookTicket(model);
-                if (result.IsSuccess)
-                    return Ok();
-                return NotFound();
-            }
-
-            return BadRequest("Some properties are incorrect");
+            var result = await _ticketService.BookTicket(model);
+            if (result.IsSuccess)
+                return Ok(int.Parse(result.Message));
+            return NotFound(result);
         }
 
         [HttpPost("BuyTicket")]
         public async Task<IActionResult> BuyTicket([FromBody] TicketDTO model)
         {
-            if (ModelState.IsValid)
-            {
-                /*var result = await _ticketService.BookTicket(model);
-                if (result.IsSuccess)
-                    return Ok();*/
-                var ticketId = await _ticketService.BuyTicket(model);
-                if (ticketId == -1)
-                    return BadRequest();
-                
-                return Ok(ticketId);
-            }
-
-            return BadRequest("Some properties are incorrect");
+            var result = await _ticketService.BuyTicket(model);
+            if (result.IsSuccess)
+                return Ok(int.Parse(result.Message));
+            return NotFound(result);
         }
 
-        [HttpPut("CancelBooking")]
-        public async Task<IActionResult> CancelBooking(int ticketId)
+        [HttpPut("CancelBooking/{id}")]
+        public async Task<IActionResult> CancelBooking(int id)
         {
-            var result = await _ticketService.CancelBooking(ticketId);
+            var result = await _ticketService.CancelBooking(id);
             if (result.IsSuccess)
                 return Ok();
-            return NotFound();
+            return NotFound(result);
         }
 
         [HttpPut("PayForTicket/{id}")]
@@ -81,8 +67,8 @@ namespace AutoService.Controllers
         {
             var result = await _ticketService.PayForTicket(id);
             if (result.IsSuccess)
-                return Ok();
-            return NotFound();
+                return Ok(int.Parse(result.Message));
+            return NotFound(result);
         }
         
     }

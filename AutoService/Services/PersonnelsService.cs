@@ -31,7 +31,8 @@ namespace AutoService.Services
             if (persToEdit == null)
                 return new ServiceResponce 
                 {
-                    IsSuccess = false
+                    IsSuccess = false,
+                    Message = "Personnel not found"
                 };
 
             persToEdit.Surname = model.Surname;
@@ -75,7 +76,8 @@ namespace AutoService.Services
             if (persToDelete == null)
                 return new ServiceResponce 
                 {
-                    IsSuccess = false
+                    IsSuccess = false,
+                    Message = "Personnel not found"
                 };
 
             _context.Personnel.Remove(persToDelete);

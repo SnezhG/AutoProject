@@ -40,21 +40,16 @@ namespace AutoService.Controllers
             var result = await _personnelsService.PutPersonnel(id, model);
             if (result.IsSuccess)
                 return Ok();
-            return BadRequest();
+            return NotFound(result);
         }
 
         [HttpPost]
         public async Task<ActionResult> PostPersonnel([FromBody] PersonnelDTO model)
         {
-            if (ModelState.IsValid)
-            {
-                var result = await _personnelsService.PostPersonnel(model);
-                if (result.IsSuccess)
-                    return Ok();
-                return BadRequest();
-            };
-
-            return BadRequest("Some properties are incorrect");
+            var result = await _personnelsService.PostPersonnel(model);
+            if (result.IsSuccess)
+                return Ok();
+            return NotFound(result);
         }
 
         [HttpDelete("{id}")]
@@ -63,7 +58,7 @@ namespace AutoService.Controllers
             var result = await _personnelsService.DeletePersonnel(id);
             if (result.IsSuccess)
                 return Ok();
-            return NotFound();
+            return NotFound(result);
         }
     }
 }

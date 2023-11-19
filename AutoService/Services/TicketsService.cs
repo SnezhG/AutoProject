@@ -78,44 +78,51 @@ namespace AutoService.Services
         }
         public async Task<ServiceResponce> BookTicket(TicketDTO model)
         {
-            var ticketToBookId = await IssueTicket(model);
-            
-            if (ticketToBookId == -1)
-                return new ServiceResponce
-                {
-                    IsSuccess = false,
-                    Message = "Issued ticket id not found"
-                };
+            var responce = await IssueTicket(model);
 
-            var ticketToBook = await _context.Tickets.FindAsync(ticketToBookId);
-            if (ticketToBook == null)
-                return new ServiceResponce
-                {
-                    IsSuccess = false,
-                    Message = "Ticket not found"
-                };
-            
-            ticketToBook.TriggerState(Ticket.Trigger.Book);
-            ticketToBook.Status = "booked";
-            
-            _context.Tickets.Update(ticketToBook);
-
-            await _context.SaveChangesAsync();
-
-            return new ServiceResponce 
+            if (responce.IsSuccess)
             {
-                IsSuccess = true
-            };
-        }
-        public async Task<int> BuyTicket(TicketDTO model)
-        {
-            var ticketToBuyId = await IssueTicket(model);
-
-            if (ticketToBuyId == null)
-                return -1;
+                var ticketToBook = await _context.Tickets
+                    .FindAsync(int.Parse(responce.Message));
+                
+                if (ticketToBook == null)
+                    return new ServiceResponce
+                    {
+                        IsSuccess = false,
+                        Message = "Ticket not found"
+                    };
             
-            SetPaymentTimer(ticketToBuyId);
-            return ticketToBuyId;
+                ticketToBook.TriggerState(Ticket.Trigger.Book);
+                ticketToBook.Status = "booked";
+            
+                _context.Tickets.Update(ticketToBook);
+
+                await _context.SaveChangesAsync();
+
+                return new ServiceResponce
+                {
+                    IsSuccess = true,
+                    Message = ticketToBook.TicketId.ToString()
+                };
+            }
+
+            return responce;
+        }
+        public async Task<ServiceResponce> BuyTicket(TicketDTO model)
+        {
+            var responce = await IssueTicket(model);
+
+            if (responce.IsSuccess)
+            {
+                SetPaymentTimer(int.Parse(responce.Message));
+                return new ServiceResponce
+                {
+                    IsSuccess = true,
+                    Message = responce.Message
+                };
+            }
+
+            return responce;
         }
 
         public async Task<ServiceResponce> CancelBooking(int ticketId) 
@@ -174,7 +181,7 @@ namespace AutoService.Services
             };
         }
 
-        public async Task<int> IssueTicket(TicketDTO model)
+        public async Task<ServiceResponce> IssueTicket(TicketDTO model)
         {
             var checkPassenger = await _context.Passengers.FirstOrDefaultAsync(p =>
                 p.PassportNum == model.PassNum && p.PassportSeries == model.PassSeries
@@ -206,7 +213,11 @@ namespace AutoService.Services
             var seatToBook = await _context.Seats.FindAsync(model.Seat);
 
             if (seatToBook == null)
-                return -1;
+                return new ServiceResponce
+                {
+                    IsSuccess = false,
+                    Message = "Seat not found"
+                };
 
             seatToBook.Available = false;
             _context.Seats.Update(seatToBook);
@@ -221,8 +232,13 @@ namespace AutoService.Services
             };
             
             var clientId = GetClientIdFromToken();
+
             if (clientId == null)
-                return -1;
+                return new ServiceResponce
+                {
+                    IsSuccess = false,
+                    Message = "ClientId not found"
+                };
             
             await _context.Clienttickets.AddAsync(new Clientticket
             {
@@ -233,7 +249,11 @@ namespace AutoService.Services
             _context.Tickets.Add(newTicket);
             await _context.SaveChangesAsync();
             
-            return newTicket.TicketId;
+            return new ServiceResponce
+            {
+                IsSuccess = true,
+                Message = newTicket.TicketId.ToString()
+            };
         }
 
         private string GetClientIdFromToken()
