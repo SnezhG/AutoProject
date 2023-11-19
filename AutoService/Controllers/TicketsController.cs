@@ -53,8 +53,8 @@ namespace AutoService.Controllers
             return NotFound(result);
         }
 
-        [HttpPut("CancelBooking/{id}")]
-        public async Task<IActionResult> CancelBooking(int id)
+        [HttpPost("CancelBooking")]
+        public async Task<IActionResult> CancelBooking([FromBody] int id)
         {
             var result = await _ticketService.CancelBooking(id);
             if (result.IsSuccess)
@@ -62,8 +62,8 @@ namespace AutoService.Controllers
             return NotFound(result);
         }
 
-        [HttpPut("PayForTicket/{id}")]
-        public async Task<IActionResult> PayForTicket(int id) 
+        [HttpPost("PayForTicket")]
+        public async Task<IActionResult> PayForTicket([FromBody] int id) 
         {
             var result = await _ticketService.PayForTicket(id);
             if (result.IsSuccess)

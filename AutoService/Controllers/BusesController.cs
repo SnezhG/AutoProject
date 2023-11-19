@@ -42,10 +42,10 @@ namespace AutoService.Controllers
         }
         
         [HttpGet("BusSeats/{id}")]
-        public async Task<ActionResult<IEnumerable<Seat>>> GetBusSeats(int busId)
+        public async Task<ActionResult<IEnumerable<Seat>>> GetBusSeats(int id)
         {
 
-            var seats = await _busService.GetBusSeats(busId);
+            var seats = await _busService.GetBusSeats(id);
 
             if (seats == null)
                 return NotFound();

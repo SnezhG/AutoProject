@@ -166,7 +166,7 @@ namespace AutoService.Services
                 return new ServiceResponce
                 {
                     IsSuccess = false,
-                    Message = "Ticket not found"
+                    Message = id.ToString()
                 };
             
             ticket.TriggerState(Ticket.Trigger.Pay);
@@ -177,7 +177,8 @@ namespace AutoService.Services
             
             return new ServiceResponce
             {
-                IsSuccess = true
+                IsSuccess = true,
+                Message = ticket.TicketId.ToString()
             };
         }
 
