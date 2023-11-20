@@ -30,10 +30,21 @@ builder.Services.AddAuthentication(auth =>
     };
 });
 
+builder.Services.AddCors(o =>
+{
+    o.AddPolicy("AutoClient",
+        b => b
+            .WithOrigins("https://localhost:5173")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials());
+});
+
 var app = builder.Build();
 
 await app.UseOcelot();
 
+app.UseCors("AutoClient");
 app.UseAuthentication();
 app.UseAuthorization();
 

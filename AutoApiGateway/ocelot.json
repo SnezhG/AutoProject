@@ -25,7 +25,7 @@
       "DownstreamPathTemplate": "/api/Auth/Registration"
     },
     {
-      "UpstreamPathTemplate": "/api/AutoUser/GetEmployees",
+      "UpstreamPathTemplate": "/api/AutoUser/GetUsers",
       "UpstreamHttpMethod": [ "Get" ],
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
@@ -34,7 +34,26 @@
           "Port": 7069
         }
       ],
-      "DownstreamPathTemplate": "/api/AutoUser/GetEmployees",
+      "DownstreamPathTemplate": "/api/AutoUser/GetUsers",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": {
+        "Role": "admin"
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/api/AutoUser/GetUser/{id}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7069
+        }
+      ],
+      "DownstreamPathTemplate": "/api/AutoUser/GetUser/{id}",
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
@@ -101,7 +120,7 @@
       }
     },
     {
-      "UpstreamPathTemplate": "/api/AutoUser/GetEmployees",
+      "UpstreamPathTemplate": "/api/AutoUser/GetRoles",
       "UpstreamHttpMethod": [ "Get" ],
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
@@ -110,7 +129,7 @@
           "Port": 7069
         }
       ],
-      "DownstreamPathTemplate": "/api/AutoUser/GetEmployees",
+      "DownstreamPathTemplate": "/api/AutoUser/GetRoles",
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
@@ -161,6 +180,18 @@
         }
       ],
       "DownstreamPathTemplate": "/api/Buses/{id}"
+    },
+    {
+      "UpstreamPathTemplate": "/api/Buses/BusSeats/{id}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7089
+        }
+      ],
+      "DownstreamPathTemplate": "/api/Buses/BusSeats/{id}"
     },
     {
       "UpstreamPathTemplate": "/api/Buses/{id}",
@@ -426,7 +457,7 @@
     },
     {
       "UpstreamPathTemplate": "/api/Tickets/CancelBooking",
-      "UpstreamHttpMethod": [ "Put" ],
+      "UpstreamHttpMethod": [ "Post" ],
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -445,7 +476,7 @@
     },
     {
       "UpstreamPathTemplate": "/api/Tickets/PayForTicket",
-      "UpstreamHttpMethod": [ "Put" ],
+      "UpstreamHttpMethod": [ "Post" ],
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
