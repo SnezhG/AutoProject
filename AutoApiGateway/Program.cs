@@ -42,9 +42,9 @@ builder.Services.AddCors(o =>
 
 var app = builder.Build();
 
-await app.UseOcelot();
-
 app.UseCors("AutoClient");
+await app.UseOcelot();
+app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
