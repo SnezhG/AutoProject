@@ -13,7 +13,7 @@ function EditBus(){
     })
     
     useEffect(() => {
-        axios.get(`https://localhost:7089/api/Buses/${id}`)
+        axios.get(`https://localhost:5275/api/Buses/${id}`)
             .then(res => setValues(res.data))
             .catch(err => console.log(err))
     }, []);
@@ -21,7 +21,11 @@ function EditBus(){
     const navigate = useNavigate();
     const handleUpdate = (event) =>{
         event.preventDefault();
-        axios.put(`https://localhost:7089/api/Buses/${id}`, values)
+        axios.put(`https://localhost:5275/api/Buses/${id}`, values, {
+            headers:{
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+        })
             .then(res => {
                 console.log(res);
                 navigate('/Buses');
@@ -32,7 +36,7 @@ function EditBus(){
     return (
         <Container className="mt-5" style={{ width: '40%' }}>
             <h1 className="text-center">Редактировать данные об автобусе</h1>
-            <form onSubmit={handleUpdate} className="border p-4 rounded">
+            <form onSubmit={handleUpdate} className="border p-4 rounded" style={{backgroundColor:'white'}}>
                 <div className="mb-3">
                     <label htmlFor="model" className="form-label">Модель</label>
                     <input
@@ -72,7 +76,7 @@ function EditBus(){
                             setValues({ ...values, specs: e.target.value })}
                     />
                 </div>
-                <button type="submit" className="btn btn-primary">Изменить</button>
+                <button type="submit" className="btn btn-primary" style={{backgroundColor:'#7e5539', borderColor:'#7e5539'}}>Изменить</button>
                 <Link to="/Buses" className="btn btn-secondary ms-2">Назад</Link>
             </form>
         </Container>

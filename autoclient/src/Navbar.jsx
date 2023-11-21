@@ -4,10 +4,10 @@ export default function Navbar(){
     const { isUserLoggedIn } = useAuth(AuthProvider)
     const userRole = localStorage.getItem('role')
     return (
-        <nav className="navbar navbar-expand navbar-dark bg-dark">
+        <nav className="navbar navbar-expand" style={{backgroundColor: '#deb893'}}>
             <div className="container">
                 <Link to="/" className="navbar-brand">
-                    Five Tickets at Freddy's
+                    <strong>Five Tickets by Freddie</strong>
                 </Link>
                 <ul className="navbar-nav">
                     <li className="nav-item">

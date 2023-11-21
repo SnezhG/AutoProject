@@ -24,20 +24,20 @@ function IssueTripTicket(){
     })
     
     useEffect(() => {
-        axios.get(`https://localhost:7089/api/Trips/${id}`)
+        axios.get(`https://localhost:5275/api/Trips/${id}`)
             .then(res => {
                 setTripValues(res.data)
                 console.log(res.data)
                 return res.data
             })
             .then((firstRes) =>{
-                axios.get(`https://localhost:7089/api/Busroutes/${firstRes.routeId}`)
+                axios.get(`https://localhost:5275/api/Busroutes/${firstRes.routeId}`)
                     .then(res => {
                         setRouteValues(res.data)
                         console.log(res.data)
                     })
                     .catch(err => console.log(err))
-                    axios.get(`https://localhost:7089/api/Buses/BusSeats/${firstRes.busId}`)
+                    axios.get(`https://localhost:5275/api/Buses/BusSeats/${firstRes.busId}`)
                     .then(res => {
                         setSeatsValues(res.data)
                         console.log(res.data)
@@ -53,7 +53,7 @@ function IssueTripTicket(){
         event.preventDefault()
         setTicketValues({...ticketValues, trip: tripValues.tripId})
         console.log(ticketValues)
-        axios.post(`https://localhost:7089/api/Tickets/BookTicket`, ticketValues, {
+        axios.post(`https://localhost:5275/api/Tickets/BookTicket`, ticketValues, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('token')}`
             }
@@ -71,7 +71,7 @@ function IssueTripTicket(){
     const handleBuying = async (event) =>{
         event.preventDefault()
         setTicketValues({...ticketValues, trip: tripValues.tripId})
-        await axios.post(`https://localhost:7089/api/Tickets/BuyTicket`, ticketValues, {
+        await axios.post(`https://localhost:5275/api/Tickets/BuyTicket`, ticketValues, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('token')}`
             }
@@ -88,7 +88,7 @@ function IssueTripTicket(){
     
     return(
         <Container className="mt-5" style={{ width: '70%' }}>
-            <Row className="mb-3">
+            <Row className="mb-3" style={{width:'80%'}}>
                 <Col>
                     <div className="card mb-3">
                         <div className="card-body">
@@ -190,8 +190,8 @@ function IssueTripTicket(){
                                 <option value="" disabled>
                                     Пол
                                 </option>
-                                <option value="Male">Мужской</option>
-                                <option value="Female">Женский</option>
+                                <option value="male">Мужской</option>
+                                <option value="female">Женский</option>
                             </Form.Control>
                         </Form.Group>
                         <Form.Group className="mb-3">
@@ -226,10 +226,10 @@ function IssueTripTicket(){
                                     ))}
                             </Form.Control>
                         </Form.Group>
-                        <button type="submit" className="btn btn-primary" onClick={handleBuying}>
+                        <button type="submit" style={{backgroundColor:'#7e5539', borderColor:'#7e5539'}} className="btn btn-primary" onClick={handleBuying}>
                             Купить
                         </button>
-                        <button type="button" className="btn btn-secondary ms-2" onClick={handleBuying}>
+                        <button type="button" style={{backgroundColor:'#7e5539', borderColor:'#7e5539'}} className="btn btn-secondary ms-2" onClick={handleBuying}>
                             Забронировать
                         </button>
                     </Form>

@@ -12,7 +12,6 @@ import EditBusroute from "./pages/Busroutes/EditBusroute"
 import Personnels from "./pages/Personnels/Personnels.jsx"
 import CreatePersonnel from "./pages/Personnels/CreatePersonnel"
 import EditPersonnel from "./pages/Personnels/EditPersonnel"
-import Trips from "./pages/Trip/Trips"
 import CreateTrip from "./pages/Trip/CreateTrip"
 import EditTrip from "./pages/Trip/EditTrip"
 import IssueTripTicket from "./pages/Ticket/IssueTripTicket"
@@ -25,7 +24,7 @@ import ChangeUserRole from "./pages/Users/ChangeUserRole"
 import Login from "./pages/Auth/Login.jsx"
 import Registration from "./pages/Auth/Registration"
 import Logout from "./pages/Auth/Logout"
-import {BrowserRouter, Route, Routes} from "react-router-dom"
+import {Route, Routes} from "react-router-dom"
 import {AuthProvider} from "./pages/Auth/AuthContext.jsx"
 
 function App() {
@@ -43,7 +42,6 @@ function App() {
                     <Route path="/Busroutes" element={<Busroutes />}/>
                     <Route path="/CreateBusroute" element={<CreateBusroute />}/>
                     <Route path="/EditBusroute/:id" element={<EditBusroute />}/>
-                    <Route path="/Trips" element={<Trips />}/>
                     <Route path="/CreateTrip" element={<CreateTrip />}/>
                     <Route path="/EditTrip/:id" element={<EditTrip />}/>
                     <Route path="/Users" element={<Users />}/>

@@ -15,7 +15,11 @@ function CreatePersonnel(){
     const navigate = useNavigate();
     const handleSubmit = (event) =>{
         event.preventDefault();
-        axios.post('https://localhost:7089/api/Personnels', values)
+        axios.post('https://localhost:5275/api/Personnels', values, {
+            headers:{
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+        })
             .then(res => {
                 console.log(res);
                 navigate('/Personnels')
@@ -26,7 +30,7 @@ function CreatePersonnel(){
     return (
         <Container className="mt-5" style={{width: '40%'}}>
             <h2 className="text-center">Добавить нового сотрудника</h2>
-            <form onSubmit={handleSubmit} className="border p-4 rounded">
+            <form onSubmit={handleSubmit} className="border p-4 rounded" style={{backgroundColor:'white'}}>
                 <div className="mb-3">
                     <label htmlFor="surname" className="form-label">Фамилия</label>
                     <input
@@ -67,13 +71,14 @@ function CreatePersonnel(){
                     <select
                         name='post'
                         className="form-select"
-                        onChange={(e) =>
-                            setValues({ ...values, post: e.target.value })}
+                        onChange={(e) => {
+                            setValues({ ...values, post: e.target.value });
+                        }}
                         required
                     >
                         <option value="" disabled>Должность</option>
-                        <option value="Кондуктор">Кондуктор</option>
-                        <option value="Водитель">Водитель</option>
+                        <option value="conductor">Кондуктор</option>
+                        <option value="driver">Водитель</option>
                     </select>
                 </div>
                 <div className="mb-3">
@@ -87,7 +92,7 @@ function CreatePersonnel(){
                             setValues({ ...values, experience: e.target.value })}
                     />
                 </div>
-                <button type="submit" className="btn btn-primary">Добавить</button>
+                <button type="submit" className="btn btn-primary" style={{backgroundColor:'#7e5539', borderColor:'#7e5539'}}>Добавить</button>
                 <Link to="/Personnels" className="btn btn-secondary ms-2">Назад</Link>
             </form>
         </Container>

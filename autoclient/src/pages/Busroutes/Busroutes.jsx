@@ -18,7 +18,7 @@ function Busroutes(){
 
     const confirmDelete = () => {
         if (routeIdToDelete) {
-            axios.delete(`https://localhost:7089/api/Busroutes/${routeIdToDelete}`)
+            axios.delete(`https://localhost:5275/api/Busroutes/${routeIdToDelete}`)
                 .then((res) => {
                     console.log("deleted^ ", res.data)
                     usingAxios()
@@ -30,7 +30,11 @@ function Busroutes(){
 
     const [busroutes, setBusroutes] = useState([]);
     const usingAxios = () => {
-        axios.get("https://localhost:7089/api/Busroutes")
+        axios.get("https://localhost:5275/api/Busroutes", {
+            headers:{
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+        })
             .then((response) => {
             setBusroutes(response.data);
         })
@@ -44,7 +48,7 @@ function Busroutes(){
         <div className="container" style={{marginTop: '2rem'}}>
             {userRole === 'admin' && (
                 <div className="mb-3">
-                    <Link to="/CreateBusroute" className="btn btn-primary">
+                    <Link to="/CreateBusroute" className="btn btn-primary" style={{backgroundColor:'#7e5539', borderColor:'#7e5539'}}>
                         Создать
                     </Link>
                 </div>
@@ -63,7 +67,7 @@ function Busroutes(){
                             </Card.Body>
                             {userRole === 'admin' && (
                                 <Card.Footer className="d-flex justify-content-end p-2">
-                                    <Link to={`/EditBusroute/${route.routeId}`} className="btn btn-primary m-1">
+                                    <Link to={`/EditBusroute/${route.routeId}`} style={{backgroundColor:'#7e5539', borderColor:'#7e5539'}} className="btn btn-primary m-1">
                                         Изменить
                                     </Link>
                                     <button

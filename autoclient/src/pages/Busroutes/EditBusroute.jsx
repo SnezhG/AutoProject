@@ -32,7 +32,7 @@ function EditBusroute(){
     return (
         <Container className="mt-5" style={{ width: '40%' }}>
             <h1 className="text-center">Редактировать данные о маршруте</h1>
-            <form onSubmit={handleUpdate} className="border p-4 rounded">
+            <form onSubmit={handleUpdate} className="border p-4 rounded" style={{backgroundColor:'white'}}>
                 <div className="mb-3">
                     <label htmlFor="depCity" className="form-label">Город отправки</label>
                     <input
@@ -59,7 +59,7 @@ function EditBusroute(){
                             setValues({ ...values, arrCity: e.target.value })}
                     />
                 </div>
-                <button type="submit" className="btn btn-primary">Изменить</button>
+                <button type="submit" className="btn btn-primary" style={{backgroundColor:'#7e5539', borderColor:'#7e5539'}}>Изменить</button>
                 <Link to="/Busroutes" className="btn btn-secondary ms-2">Назад</Link>
             </form>
         </Container>

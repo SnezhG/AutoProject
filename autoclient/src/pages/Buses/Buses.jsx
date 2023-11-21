@@ -19,7 +19,11 @@ function Buses() {
 
     const confirmDelete = () => {
         if (busIdToDelete) {
-            axios.delete(`https://localhost:7089/api/Buses/${busIdToDelete}`)
+            axios.delete(`https://localhost:5275/api/Buses/${busIdToDelete}`, {
+                headers:{
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+            })
                 .then((res) => {
                 console.log("deleted^ ", res.data)
                 usingAxios()
@@ -31,7 +35,7 @@ function Buses() {
     
     const [buses, setBuses] = useState([]);
     const usingAxios = () => {
-        axios.get("https://localhost:7089/api/Buses")
+        axios.get("https://localhost:5275/api/Buses")
             .then((response) => {
             setBuses(response.data);
         })
@@ -45,7 +49,7 @@ function Buses() {
         <div className="container" style={{marginTop: '2rem'}}>
             {userRole === 'admin' && (
                 <div className="mb-3">
-                    <Link to="/CreateBus" className="btn btn-primary">
+                    <Link to="/CreateBus" className="btn btn-primary" style={{backgroundColor: '#7e5539', borderColor:'#7e5539'}}>
                         Создать
                     </Link>
                 </div>
@@ -66,7 +70,7 @@ function Buses() {
                                 </Card.Body>
                                 {userRole === 'admin' && (
                                     <Card.Footer className="d-flex justify-content-end p-2">
-                                        <Link to={`/EditBus/${bus.busId}`} className="btn btn-primary m-1">
+                                        <Link to={`/EditBus/${bus.busId}`} className="btn btn-primary m-1" style={{backgroundColor: '#7e5539', borderColor:'#7e5539'}}>
                                             Изменить
                                         </Link>
                                         <button

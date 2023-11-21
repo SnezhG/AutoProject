@@ -24,7 +24,7 @@ function EditTrip(){
     const [driverValues, setDriverValues] = useState([])
     const [condValues, setCondValues] = useState([])
     const getData = () => {
-        axios.get(`https://localhost:7089/api/Trips/${id}`)
+        axios.get(`https://localhost:5275/api/Trips/${id}`)
             .then(res =>{
                 setTripValues(res.data)
                 setDefaultBus(res.data.busId)
@@ -32,14 +32,14 @@ function EditTrip(){
                 setDefaultCond(res.data.conductorId)
             })
             .catch(err => console.log(err))
-        axios.get("https://localhost:7089/api/Busroutes")
+        axios.get("https://localhost:5275/api/Busroutes")
             .then((response) => {
                 setRouteValues(response.data.map(route => ({
                     label: `${route.depCity} - ${route.arrCity}`,
                     value: route.routeId
                 })));
             });
-        axios.get("https://localhost:7089/api/Buses")
+        axios.get("https://localhost:5275/api/Buses")
             .then((response) => {
                 setBusValues(response.data
                     .map(bus =>({
@@ -48,17 +48,17 @@ function EditTrip(){
                         status: bus.available
                     })));
             });
-        axios.get("https://localhost:7089/api/Personnels")
+        axios.get("https://localhost:5275/api/Personnels")
             .then((response) => {
                 setDriverValues(response.data
-                    .filter(person => person.post == 'Водитель')
+                    .filter(person => person.post == 'driver')
                     .map(driver =>({
                         label: `${driver.name} ${driver.surname}`,
                         value: driver.personnelId,
                         status: driver.available
                     })));
                 setCondValues(response.data
-                    .filter(person => person.post == 'Кондуктор')
+                    .filter(person => person.post == 'conductor')
                     .map(cond =>({
                         label: `${cond.name} ${cond.surname}`,
                         value: cond.personnelId,
@@ -75,7 +75,11 @@ function EditTrip(){
     const navigate = useNavigate();
     const handleSubmit = (event) =>{
         event.preventDefault();
-        axios.put('https://localhost:7089/api/Trips', tripValues)
+        axios.put('https://localhost:5275/api/Trips', tripValues, {
+            headers:{
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+        })
             .then(res => {
                 console.log(res);
                 navigate('/')
@@ -86,7 +90,7 @@ function EditTrip(){
     return (
         <Container className="mt-5" style={{ width: '40%' }}>
             <h1 className="text-center">Редактировать данные о рейсе</h1>
-            <form onSubmit={handleSubmit} className="border p-4 rounded">
+            <form onSubmit={handleSubmit} className="border p-4 rounded" style={{backgroundColor:'white'}}>
                 <div className="mb-3">
                     <label htmlFor="routeId" className="form-label">Маршрут</label>
                     <select
@@ -205,7 +209,7 @@ function EditTrip(){
                             setTripValues({...tripValues, arrTime: e.target.value})}
                     />
                 </div>
-                <button type="submit" className="btn btn-primary">Изменить</button>
+                <button type="submit" className="btn btn-primary" style={{backgroundColor:'#7e5539', borderColor:'#7e5539'}}>Изменить</button>
                 <Link to="/" className="btn btn-secondary ms-2">Назад</Link>
             </form>
         </Container>

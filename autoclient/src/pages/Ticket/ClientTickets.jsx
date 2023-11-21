@@ -7,7 +7,7 @@ function ClientTickets(){
     
     const [tickets, setTickets] = useState([]);
     const usingAxios = () => {
-        axios.get("https://localhost:7089/api/Tickets", {
+        axios.get("https://localhost:5275/api/Tickets", {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('token')}`
             }
@@ -43,21 +43,23 @@ function ClientTickets(){
                 {tickets.length > 0 ? (
                     tickets.map((ticket) => (
                         <Col>
-                            <div key={ticket.id} className="mb-3 border p-3 rounded">
+                            <div key={ticket.id} className="mb-3 border p-3 rounded" style={{backgroundColor:'white'}}>
                                 <label className="form-label" style={{fontWeight: 'bold'}}>Маршрут</label>
                                 <p>{`${ticket.depCity} - ${ticket.arrCity}`}</p>
                                 <label className="form-label" style={{fontWeight: 'bold'}}>Время</label>
                                 <p>{`${ticket.depTime} - ${ticket.arrTime}`}</p>
                                 <label className="form-label" style={{fontWeight: 'bold'}}>Статус</label>
                                 <p className={getStatusColor(ticket.status)}>
-                                    {ticket.status === "paid" ? "Оплачен" :
-                                        ticket.status === "expired" ? "Истек" :
-                                            ticket.status === "cancelled" ? "Отменен" :
-                                                ticket.status === "booked" ? "Забронирован" :
-                                                    ticket.status === "issued" ? "Оформлен" : ""}
+                                    <strong>
+                                        {ticket.status === "paid" ? "Оплачен" :
+                                            ticket.status === "expired" ? "Истек" :
+                                                ticket.status === "cancelled" ? "Отменен" :
+                                                    ticket.status === "booked" ? "Забронирован" :
+                                                        ticket.status === "issued" ? "Оформлен" : ""}
+                                    </strong>
                                 </p>
                                 <Link className="btn m-1"
-                                        style={{backgroundColor: 'blue', color:'white'}}      
+                                      style={{backgroundColor:'#7e5539', borderColor:'#7e5539', color:'white'}}      
                                       to={`/Ticket/${ticket.id}`}>Детали</Link>
                             </div>
                         </Col>

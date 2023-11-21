@@ -14,7 +14,11 @@ function ChangeUserRole(){
     )
 
     useEffect(() => {
-        axios.get(`https://localhost:7069/api/AutoUser/GetUser/${id}`)
+        axios.get(`https://localhost:5275/api/AutoUser/GetUser/${id}`, {
+            headers:{
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+        })
             .then(res => setValues(res.data))
             .catch(err => console.log(err))
     }, []);
@@ -22,7 +26,11 @@ function ChangeUserRole(){
     const navigate = useNavigate();
     const handleChangeRole = (event) =>{
         event.preventDefault();
-        axios.post(`https://localhost:7069/api/AutoUser/ChangeUserRole`, values)
+        axios.post(`https://localhost:5275/api/AutoUser/ChangeUserRole`, values, {
+            headers:{
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+        })
             .then(res => {
                 console.log(res);
                 navigate('/Users');
@@ -33,7 +41,7 @@ function ChangeUserRole(){
     return (
         <Container className="mt-5" style={{ width: '40%' }}>
             <h1 className="text-center">Изменить роль пользователя</h1>
-            <form onSubmit={handleChangeRole} className="border p-4 rounded">
+            <form onSubmit={handleChangeRole} className="border p-4 rounded" style={{backgroundColor:'white'}}>
                 <div className="mb-3">
                     <label htmlFor="userEmail" className="form-label">Пользователь</label>
                     <input
@@ -63,7 +71,7 @@ function ChangeUserRole(){
                             ))}
                     </select>
                 </div>
-                <button type="submit" className="btn btn-primary">Изменить</button>
+                <button type="submit" className="btn btn-primary" style={{backgroundColor:'#7e5539', borderColor:'#7e5539'}}>Изменить</button>
                 <Link to="/Users" className="btn btn-secondary ms-2">Назад</Link>
             </form>
         </Container>

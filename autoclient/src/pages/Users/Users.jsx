@@ -18,7 +18,11 @@ function Users(){
 
     const confirmDelete = () => {
         if (userIdToDelete) {
-            axios.delete(`https://localhost:7069/api/AutoUser/${userIdToDelete}`)
+            axios.delete(`https://localhost:5275/api/AutoUser/${userIdToDelete}`, {
+                headers:{
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+            })
                 .then((res) => {
                     console.log("deleted^ ", res.data)
                     usingAxios()
@@ -30,7 +34,11 @@ function Users(){
 
     const [users, serUsers] = useState([]);
     const usingAxios = () => {
-        axios.get("https://localhost:7069/api/AutoUser/GetUsers")
+        axios.get("https://localhost:5275/api/AutoUser/GetUsers", {
+            headers:{
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+        })
             .then((response) => {
             serUsers(response.data);
         });
@@ -43,7 +51,7 @@ function Users(){
     return (
         <div className="container" style={{marginTop: '2rem'}}>
             <div className="mb-3">
-                <Link to="/CreateUser" className="btn btn-primary">
+                <Link to="/CreateUser" style={{backgroundColor:'#7e5539', borderColor:'#7e5539'}} className="btn btn-primary">
                     Создать
                 </Link>
             </div>
@@ -59,7 +67,7 @@ function Users(){
                                 </Card.Text>
                             </Card.Body>
                             <Card.Footer className="d-flex justify-content-end p-2">
-                                <Link to={`/ChangeUserRole/${user.id}`} className="btn btn-primary m-1">
+                                <Link to={`/ChangeUserRole/${user.id}`} style={{backgroundColor:'#7e5539', borderColor:'#7e5539'}} className="btn btn-primary m-1">
                                     Изменить
                                 </Link>
                                 <button

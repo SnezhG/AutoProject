@@ -5,10 +5,11 @@ function TicketPay(){
     const {id} = useParams()
     const navigate = useNavigate()
     const handlePaying = () => {
-        axios.post(`https://localhost:7089/api/Tickets/PayForTicket`, JSON.stringify(id), {
-            headers: {
+        axios.post(`https://localhost:5275/api/Tickets/PayForTicket`, JSON.stringify(id),{
+            headers:{
                 'Content-Type': 'application/json',
-            },
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
         })
             .then(res => {
             console.log(res)
@@ -21,7 +22,7 @@ function TicketPay(){
     }
     
     return(
-        <div className="container mt-5" style={{width: '70%'}}>
+        <div className="container mt-5" style={{width: '50%'}}>
             <div className="card p-3 rounded">
                 <h1 className="text-center">Оплата билета</h1>
                 <div className="mb-3">
@@ -37,7 +38,9 @@ function TicketPay(){
                     <input type="text" className="form-control" name="cardCVV" />
                 </div>
                 <button 
-                    onClick={() => handlePaying()} className="btn btn-primary">
+                    onClick={() => handlePaying()}
+                    style={{backgroundColor:'#7e5539', borderColor:'#7e5539'}}
+                    className="btn btn-primary">
                     Оплатить
                 </button>
             </div>

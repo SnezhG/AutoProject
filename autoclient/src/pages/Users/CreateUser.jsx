@@ -15,7 +15,11 @@ function CreateUser(){
 
     const [roleValues, setRoleValues] = useState([])
     useEffect(() => {
-        axios.get(`https://localhost:7069/api/AutoUser/GetRoles`)
+        axios.get(`https://localhost:5275/api/AutoUser/GetRoles`, {
+            headers:{
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+        })
             .then(res =>{
                 setRoleValues(res.data)
             })
@@ -23,7 +27,11 @@ function CreateUser(){
     }, []);
     const handleSubmit = (event) =>{
         event.preventDefault();
-        axios.post('https://localhost:7069/api/AutoUser/CreateUser', values)
+        axios.post('https://localhost:5275/api/AutoUser/CreateUser', values, {
+            headers:{
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+        })
             .then(res => {
                 console.log(res);
                 navigate('/Users')
@@ -34,7 +42,7 @@ function CreateUser(){
     return (
         <Container className="mt-5" style={{width: '40%'}}>
             <h2 className="text-center">Добавить нового пользователя</h2>
-            <form onSubmit={handleSubmit} className="border p-4 rounded">
+            <form onSubmit={handleSubmit} className="border p-4 rounded" style={{backgroundColor:'white'}}>
                 <div className="mb-3">
                     <label htmlFor="email" className="form-label">Email</label>
                     <input
@@ -87,7 +95,7 @@ function CreateUser(){
                             ))}
                     </select>
                 </div>
-                <button type="submit" className="btn btn-primary">Добавить</button>
+                <button type="submit" className="btn btn-primary" style={{backgroundColor:'#7e5539', borderColor:'#7e5539'}}>Добавить</button>
                 <Link to="/Users" className="btn btn-secondary ms-2">Назад</Link>
             </form>
         </Container>

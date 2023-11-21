@@ -17,7 +17,7 @@ function Home(){
     const [showResults, setShowResults] = useState(false)
     const handleSubmit = (event) =>{
         event.preventDefault();
-        axios.post('https://localhost:7089/api/Trips/FindTrips', values)
+        axios.post('https://localhost:5275/api/Trips/FindTrips', values)
             .then(res => {
                 console.log(res);
                 setSearchResults(res.data);
@@ -49,28 +49,15 @@ function Home(){
                                         placeholder="Откуда"
                                         onChange={(e) =>
                                             setValues({ ...values, depCity: e.target.value })}
-                                        style={{ borderColor: 'orange'}}
+                                        style={{ borderColor: '#7e5539', borderWidth:'medium'}}
                                     />
-                                    <Button
-                                        type="button"
-                                        onClick={() => {
-                                            setValues({
-                                                ...values,
-                                                depCity: values.arrCity,
-                                                arrCity: values.depCity,
-                                            });
-                                        }}
-                                        style={{color: 'black', backgroundColor: 'white', borderColor: 'orange'}}
-                                    >
-                                        Поменять
-                                    </Button>
                                     <Form.Control
                                         type="text"
                                         name="arrCity"
                                         placeholder="Куда"
                                         onChange={(e) =>
                                             setValues({ ...values, arrCity: e.target.value })}
-                                        style={{ borderColor: 'orange'}}
+                                        style={{ borderColor: '#7e5539', borderWidth:'medium'}}
                                     />
                                     <Form.Control
                                         type="date"
@@ -78,9 +65,9 @@ function Home(){
                                         placeholder="Когда"
                                         onChange={(e) =>
                                             setValues({ ...values, depDate: e.target.value })}
-                                        style={{ borderColor: 'orange'}}
+                                        style={{ borderColor: '#7e5539', borderWidth:'medium'}}
                                     />
-                                    <Button type="submit" style={{ borderColor: 'orange', backgroundColor: 'orange'}}>
+                                    <Button type="submit" style={{ borderColor: '#7e5539', backgroundColor: '#7e5539'}}>
                                         Найти
                                     </Button>
                                 </InputGroup>
@@ -112,13 +99,13 @@ function Home(){
                                                 </Col>
                                                 <Col className="d-flex flex-column align-items-center justify-content-center">
                                                     <Button onClick={() => buyTicket(trip.tripId)} 
-                                                            style={{ borderColor: 'orange', backgroundColor: 'orange'}}>
+                                                            style={{ borderColor: '#7e5539', backgroundColor: '#7e5539'}}>
                                                         Выбрать
                                                     </Button>
                                                     {userRole === 'dispatcher' && (
                                                         <Link to={`/EditTrip/${trip.tripId}`}
                                                               className="btn m-2"
-                                                                style={{ borderColor: 'orange', backgroundColor: 'orange', color:'white'}}>
+                                                                style={{ borderColor: '#7e5539', backgroundColor: '#7e5539', color:'white'}}>
                                                             Изменить
                                                         </Link>
                                                     )}

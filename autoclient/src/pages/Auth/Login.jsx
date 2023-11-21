@@ -14,7 +14,7 @@ function Login(){
     const { login } = useAuth();
     const handleLogin = (event) =>{
         event.preventDefault();
-        axios.post('https://localhost:7069/api/Auth/Login', values)
+        axios.post('https://localhost:5275/api/Auth/Login', values)
             .then(res => {
                 console.log(res)
                 localStorage.setItem('isUserLoggedIn', 'true')
@@ -26,9 +26,9 @@ function Login(){
             .catch(err => console.log(err));
     }
     return (
-        <Container className="mt-5" style={{width: '50%'}}>
+        <Container className="mt-5" style={{width: '33%'}}>
             <h1 className="text-center">Вход</h1>
-            <form onSubmit={handleLogin} className="border p-4 rounded">
+            <form onSubmit={handleLogin} className="border p-4 rounded" style={{backgroundColor:'white'}}>
                 <div className="form-group">
                     <label htmlFor="email">Email</label>
                     <input
@@ -51,7 +51,7 @@ function Login(){
                         }
                     />
                 </div>
-                <button type="submit" className="btn btn-primary mt-2">
+                <button type="submit" style={{backgroundColor:'#7e5539', borderColor:'#7e5539'}} className="btn btn-primary mt-2 mb-1">
                     Войти
                 </button>
                 <p>Нет аккаунта? <Link to={'/Auth/Registration'}>Зарегистрироваться</Link></p>

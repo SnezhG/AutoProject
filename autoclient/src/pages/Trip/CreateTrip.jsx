@@ -19,14 +19,14 @@ function CreateTrip(){
     const [driverValues, setDriverValues] = useState([])
     const [condValues, setCondValues] = useState([])
     const getData = () => {
-        axios.get("https://localhost:7089/api/Busroutes")
+        axios.get("https://localhost:5275/api/Busroutes")
             .then((response) => {
             setRouteValues(response.data.map(route => ({
                 label: `${route.depCity} - ${route.arrCity}`,
                 value: route.routeId
             })));
         });
-        axios.get("https://localhost:7089/api/Buses")
+        axios.get("https://localhost:5275/api/Buses")
             .then((response) => {
                 setBusValues(response.data
                     .filter(bus => bus.available)
@@ -35,16 +35,16 @@ function CreateTrip(){
                     value:bus.busId
                 })));
             });
-        axios.get("https://localhost:7089/api/Personnels")
+        axios.get("https://localhost:5275/api/Personnels")
             .then((response) => {
                 setDriverValues(response.data
-                    .filter(person => person.post == 'Водитель' && person.available)
+                    .filter(person => person.post == 'driver' && person.available)
                     .map(driver =>({
                         label: `${driver.name} ${driver.surname}`,
                         value: driver.personnelId
                     })));
                 setCondValues(response.data
-                    .filter(person => person.post == 'Кондуктор' && person.available)
+                    .filter(person => person.post == 'conductor' && person.available)
                     .map(cond =>({
                         label: `${cond.name} ${cond.surname}`,
                         value: cond.personnelId
@@ -59,7 +59,11 @@ function CreateTrip(){
     const navigate = useNavigate();
     const handleSubmit = (event) =>{
         event.preventDefault();
-        axios.post('https://localhost:7089/api/Trips', tripValues)
+        axios.post('https://localhost:5275/api/Trips', tripValues, {
+            headers:{
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+        })
             .then(res => {
                 console.log(res);
                 navigate('/')
@@ -70,7 +74,7 @@ function CreateTrip(){
     return (
         <Container className="mt-5" style={{width: '40%'}}>
             <h2 className="text-center">Добавить новый рейс</h2>
-            <form onSubmit={handleSubmit} className="border p-4 rounded">
+            <form onSubmit={handleSubmit} className="border p-4 rounded" style={{backgroundColor:'white'}}>
                 <div className="mb-3">
                     <label htmlFor="routeId" className="form-label">Маршрут</label>
                     <select
@@ -166,7 +170,7 @@ function CreateTrip(){
                         onChange={e =>
                                setTripValues({...tripValues, arrTime: e.target.value})}/>
                 </div>
-                <button type="submit" className="btn btn-primary">Добавить</button>
+                <button type="submit" className="btn btn-primary" style={{backgroundColor:'#7e5539', borderColor:'#7e5539'}}>Добавить</button>
                 <Link to="/" className="btn btn-secondary ms-2">Назад</Link>
             </form>
         </Container>

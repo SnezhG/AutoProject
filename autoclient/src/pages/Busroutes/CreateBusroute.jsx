@@ -12,7 +12,11 @@ function CreateBusroute(){
     const navigate = useNavigate();
     const handleSubmit = (event) =>{
         event.preventDefault();
-        axios.post('https://localhost:7089/api/Busroutes', values)
+        axios.post('https://localhost:5275/api/Busroutes', values, {
+            headers:{
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+        })
             .then(res => {
                 console.log(res);
                 navigate('/Busroutes')
@@ -23,7 +27,7 @@ function CreateBusroute(){
     return (
         <Container className="mt-5" style={{width: '40%'}}>
             <h2 className="text-center">Добавить новый маршрут</h2>
-            <form onSubmit={handleSubmit} className="border p-4 rounded">
+            <form onSubmit={handleSubmit} className="border p-4 rounded" style={{backgroundColor:'white'}}>
                 <div className="mb-3">
                     <label htmlFor="depCity" className="form-label">Город отправки</label>
                     <input
@@ -48,7 +52,7 @@ function CreateBusroute(){
                             setValues({ ...values, arrCity: e.target.value })}
                     />
                 </div>
-                <button type="submit" className="btn btn-primary">Добавить</button>
+                <button type="submit" className="btn btn-primary" style={{backgroundColor:'#7e5539', borderColor:'#7e5539'}}>Добавить</button>
                 <Link to="/Busroutes" className="btn btn-secondary ms-2">Назад</Link>
             </form>
         </Container>

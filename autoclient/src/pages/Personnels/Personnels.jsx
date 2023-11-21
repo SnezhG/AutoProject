@@ -18,7 +18,7 @@ function Personnels() {
 
     const confirmDelete = () => {
         if (persIdToDelete) {
-            axios.delete(`https://localhost:7089/api/Personnels/${persIdToDelete}`)
+            axios.delete(`https://localhost:5275/api/Personnels/${persIdToDelete}`)
                 .then((res) => {
                     console.log("deleted^ ", res.data)
                     usingAxios()
@@ -30,7 +30,11 @@ function Personnels() {
     
     const [personnels, setPersonnels] = useState([]);
     const usingAxios = () => {
-        axios.get("https://localhost:7089/api/Personnels")
+        axios.get("https://localhost:5275/api/Personnels", {
+            headers:{
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+        })
             .then((response) => {
             setPersonnels(response.data);
         })
@@ -44,7 +48,7 @@ function Personnels() {
         <div className="container" style={{marginTop: '2rem'}}>
             {userRole === 'admin' && (            
                 <div className="mb-3">
-                    <Link to="/CreatePersonnel" className="btn btn-primary">
+                    <Link to="/CreatePersonnel" className="btn btn-primary" style={{backgroundColor:'#7e5539', borderColor:'#7e5539'}}>
                         Создать
                     </Link>
                 </div>
@@ -55,7 +59,10 @@ function Personnels() {
                         <Card className="h-100">
                             <Card.Body>
                                 <Card.Text>
-                                    <p><strong>{pers.post}</strong></p>
+                                    <p><strong>
+                                        {pers.post === "driver" ? "Водитель" :
+                                            pers.post === "conductor" ? "Кондуктор" : ""}
+                                    </strong></p>
                                     <p><strong>ФИО</strong></p>
                                     <p>{pers.surname} {pers.name} {pers.patronimyc}</p>
                                     <p><strong>Стаж (в годах)</strong></p>
@@ -64,7 +71,7 @@ function Personnels() {
                             </Card.Body>
                             {userRole === 'admin' && (
                                 <Card.Footer className="d-flex justify-content-end p-2">
-                                    <Link to={`/EditPersonnel/${pers.personnelId}`} className="btn btn-primary m-1">
+                                    <Link to={`/EditPersonnel/${pers.personnelId}`} style={{backgroundColor:'#7e5539', borderColor:'#7e5539'}} className="btn btn-primary m-1">
                                         Изменить
                                     </Link>
                                     <button

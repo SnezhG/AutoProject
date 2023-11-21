@@ -19,10 +19,11 @@ function Ticket(){
 
     const confirmDelete = () => {
         if (ticektIdToCancell) {
-            axios.put(`https://localhost:7089/api/Tickets/CancelBooking`, JSON.stringify(id), {
-                headers: {
+            axios.post(`https://localhost:5275/api/Tickets/CancelBooking`, JSON.stringify(id), {
+                headers:{
                     'Content-Type': 'application/json',
-                },
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
             })
                 .then((res) => {
                     console.log("deleted^ ", res.data)
@@ -53,7 +54,11 @@ function Ticket(){
     }
 
     const usingAxios = () => {
-        axios.get(`https://localhost:7089/api/Tickets/${id}`)
+        axios.get(`https://localhost:5275/api/Tickets/${id}`, {
+            headers:{
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+        })
             .then(res =>
                 setValues(res.data))
             .catch(err => console.log(err))
@@ -93,13 +98,15 @@ function Ticket(){
                 </div>
                 <div>
                     <label className="form-label" style={{fontWeight: 'bold'}}>Статус</label>
-                    <p className={getStatusColor(values.status)}>
-                        {values.status === "paid" ? "Оплачен" :
-                            values.status === "expired" ? "Истек" :
-                                values.status === "cancelled" ? "Отменен" :
-                                    values.status === "booked" ? "Забронирован" :
-                                        values.status === "issued" ? "Оформлен" : ""}
-                    </p>
+                    <strong>
+                        <p className={getStatusColor(values.status)}>
+                            {values.status === "paid" ? "Оплачен" :
+                                values.status === "expired" ? "Истек" :
+                                    values.status === "cancelled" ? "Отменен" :
+                                        values.status === "booked" ? "Забронирован" :
+                                            values.status === "issued" ? "Оформлен" : ""}
+                        </p>
+                    </strong>
                 </div>
                 <CardFooter>
                     {values.status === "issued" && (

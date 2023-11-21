@@ -13,7 +13,7 @@ const [values, setValues] = useState({
 const navigate = useNavigate();
 const handleRegistration = (event) =>{
     event.preventDefault();
-    axios.post('https://localhost:7069/api/Auth/Registration', values)
+    axios.post('https://localhost:5275/api/Auth/Registration', values)
         .then(res => {
             console.log(res)
             navigate('/Auth/Login')
@@ -21,9 +21,9 @@ const handleRegistration = (event) =>{
         .catch(err => console.log(err));
 }
 return (
-    <Container className="mt-5" style={{width: '50%'}}>
+    <Container className="mt-5" style={{width: '33%'}}>
         <h1 className="text-center">Регистрация</h1>
-        <form onSubmit={handleRegistration} className="border p-4 rounded">
+        <form onSubmit={handleRegistration} className="border p-4 rounded" style={{backgroundColor:'white'}}>
             <div className="form-group">
                 <label htmlFor="email">Email</label>
                 <input
@@ -60,7 +60,7 @@ return (
                     }
                 />
             </div>
-            <button type="submit" className="btn btn-primary mt-2">
+            <button type="submit" style={{backgroundColor:'#7e5539', borderColor:'#7e5539'}} className="btn btn-primary mt-2">
                 Регистрация
             </button>
         </form>
