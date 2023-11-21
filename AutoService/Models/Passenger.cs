@@ -9,19 +9,19 @@ public partial class Passenger
 
     public string? Surname { get; set; }
 
-    public string? Name { get; set; }
+    public string Name { get; set; } = null!;
 
-    public string? Patronimyc { get; set; }
+    public string Patronimyc { get; set; } = null!;
 
-    public string? Sex { get; set; }
+    public DateOnly DateOfBirth { get; set; }
 
-    public DateOnly? DateOfBirth { get; set; }
+    public string PassportNum { get; set; } = null!;
 
-    public string? PassportNum { get; set; }
+    public string PassportSeries { get; set; } = null!;
 
-    public string? PassportSeries { get; set; }
+    public string Phone { get; set; } = null!;
 
-    public string? Phone { get; set; }
+    public string Sex { get; set; } = null!;
 
     public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
 }

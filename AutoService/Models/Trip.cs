@@ -21,13 +21,13 @@ public partial class Trip
 
     public decimal Price { get; set; }
 
-    public virtual Bus Bus { get; set; }
+    public virtual Bus? Bus { get; set; }
 
-    public virtual Personnel Conductor { get; set; }
+    public virtual Personnel? Conductor { get; set; }
 
-    public virtual Personnel Driver { get; set; }
+    public virtual Personnel? Driver { get; set; }
 
-    public virtual Busroute Route { get; set; }
+    public virtual Busroute? Route { get; set; }
 
     public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
 }

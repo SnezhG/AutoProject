@@ -1,19 +1,26 @@
-﻿using AutoService.Data;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Text;
+using AutoService.Data;
 using AutoService.Models;
 using AutoService.ServiceInterfaces;
 using AutoService.DTO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace AutoService.Services
 {
     public class PersonnelsService : IPersonnelsService
     {
         private readonly AutoContext _context;
+        private readonly IHttpContextAccessor _httpContext;
+        private readonly IConfiguration _configuration;
 
-        public PersonnelsService(AutoContext context)
+        public PersonnelsService(AutoContext context, IHttpContextAccessor httpContext, IConfiguration configuration)
         {
             _context = context;
+            _httpContext = httpContext;
+            _configuration = configuration;
         }
 
         public async Task<IEnumerable<Personnel>> GetPersonnels() 
@@ -24,6 +31,7 @@ namespace AutoService.Services
         {
             return await _context.Personnel.FindAsync(id);
         }
+
         public async Task<ServiceResponce> PutPersonnel(int id, PersonnelDTO model) 
         {
             var persToEdit = await _context.Personnel.FindAsync(id);

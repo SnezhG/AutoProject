@@ -13,7 +13,7 @@ public partial class Seat
 
     public bool Available { get; set; }
 
-    public virtual Bus? Bus { get; set; }
+    public virtual Bus Bus { get; set; } = null!;
 
     public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
 }

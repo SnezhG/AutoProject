@@ -21,7 +21,6 @@ namespace UserService.Services;
 
         }
 
-        
         public async Task<UserManagerResponce> RegisterUserAsync(RegistrationDTO dto)
         {
             if (dto == null)

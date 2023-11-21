@@ -15,7 +15,7 @@ public partial class AutoContext : DbContext
         : base(options)
     {
     }
-    
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         if (!optionsBuilder.IsConfigured)
@@ -118,7 +118,7 @@ public partial class AutoContext : DbContext
                 .HasMaxLength(15)
                 .HasColumnName("phone");
             entity.Property(e => e.Sex)
-                .HasMaxLength(10)
+                .HasColumnType("enum('female','male')")
                 .HasColumnName("sex");
             entity.Property(e => e.Surname)
                 .HasMaxLength(255)
@@ -141,7 +141,7 @@ public partial class AutoContext : DbContext
                 .HasMaxLength(255)
                 .HasColumnName("patronimyc");
             entity.Property(e => e.Post)
-                .HasColumnType("enum('Водитель','Кондуктор')")
+                .HasColumnType("enum('conductor','driver')")
                 .HasColumnName("post");
             entity.Property(e => e.Surname)
                 .HasMaxLength(255)
@@ -163,6 +163,7 @@ public partial class AutoContext : DbContext
 
             entity.HasOne(d => d.Bus).WithMany(p => p.Seats)
                 .HasForeignKey(d => d.BusId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("seat_ibfk_1");
         });
 
@@ -184,19 +185,24 @@ public partial class AutoContext : DbContext
                 .HasColumnName("dateTime");
             entity.Property(e => e.PassengerId).HasColumnName("passengerId");
             entity.Property(e => e.SeatId).HasColumnName("seatId");
-            entity.Property(e => e.Status).HasColumnType("enum('issued','booked','paid','expired','cancelled')");
+            entity.Property(e => e.Status)
+                .HasColumnType("enum('issued','booked','paid','cancelled','expired')")
+                .HasColumnName("status");
             entity.Property(e => e.TripId).HasColumnName("tripId");
 
             entity.HasOne(d => d.Passenger).WithMany(p => p.Tickets)
                 .HasForeignKey(d => d.PassengerId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("ticket_ibfk_2");
 
             entity.HasOne(d => d.Seat).WithMany(p => p.Tickets)
                 .HasForeignKey(d => d.SeatId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("ticket_ibfk_3");
 
             entity.HasOne(d => d.Trip).WithMany(p => p.Tickets)
                 .HasForeignKey(d => d.TripId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("ticket_ibfk_1");
         });
 

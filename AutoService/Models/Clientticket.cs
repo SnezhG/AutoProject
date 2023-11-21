@@ -9,5 +9,5 @@ public partial class Clientticket
 
     public int Ticket { get; set; }
 
-    public string Client { get; set; }
+    public string Client { get; set; } = null!;
 }

@@ -7,13 +7,13 @@ public partial class Personnel
 {
     public int PersonnelId { get; set; }
 
-    public string Surname { get; set; }
+    public string Surname { get; set; } = null!;
 
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
 
-    public string? Patronimyc { get; set; }
+    public string Patronimyc { get; set; } = null!;
 
-    public string Post { get; set; }
+    public string Post { get; set; } = null!;
 
     public sbyte Experience { get; set; }
 

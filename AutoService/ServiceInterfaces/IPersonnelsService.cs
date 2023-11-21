@@ -6,6 +6,7 @@ namespace AutoService.ServiceInterfaces
 {
     public interface IPersonnelsService
     {
+        
         Task<IEnumerable<Personnel>> GetPersonnels();
         Task<Personnel> GetPersonnel(int id);
         Task<ServiceResponce> PutPersonnel(int id, PersonnelDTO model);

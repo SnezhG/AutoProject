@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using UserService.DTO;
 using UserService.ServiceInterfaces;
+using UserService.Services;
 
 namespace UserService.Controllers
 {
@@ -16,7 +17,7 @@ namespace UserService.Controllers
         {
             _autoUserService = autoUserService;
         }
-        
+
         [HttpGet("GetUsers")]
         public async Task<ActionResult<IEnumerable<AutoUserDTO>>> GetUsers()
         {
