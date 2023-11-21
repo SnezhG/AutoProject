@@ -338,7 +338,7 @@
     },
     {
       "UpstreamPathTemplate": "/api/Trips/FindTrips",
-      "UpstreamHttpMethod": [ "Get" ],
+      "UpstreamHttpMethod": [ "Post" ],
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
